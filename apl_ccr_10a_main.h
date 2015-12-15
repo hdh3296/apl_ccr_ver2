@@ -10,58 +10,58 @@
 extern volatile bit RB0x                @ ((unsigned)&PORTB*8)+0;
 extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 
-// I/O Name
-#define NoUse_CDS				RA0
-#define V_IN 					RA1 
-#define _V_IN					V_IN
-#define A_IN 					RA2
-#define _A_IN					A_IN
-#define ISET_HI 				RA3	
-#define _VR1_SET_HI				ISET_HI	
-#define ISET_LO					RA5
-#define _VR2_SET_LO				ISET_LO
+// Pic18f45k80 PIN Name
+ #define PIN_A_IN				RA0
+ #define PIN_V_IN 				RA1 
+#define _V_IN					PIN_V_IN
+ #define PIN_RA2_NoUse 			RA2
+#define _A_IN					PIN_RA2_NoUse
+ #define PIN_RA3_NoUse 			RA3	
+#define _VR1_SET_HI				PIN_RA3_NoUse	
+ #define PIN_RA5_NoUse			RA5
+#define _VR2_SET_LO				PIN_RA5_NoUse
 
-#define NIGHT_IN 				RB0x
-#define _CDS_NIGHT_IN			NIGHT_IN
-#define SAVE_HI 				RB1x
-#define _SW_SET_HI				SAVE_HI
-#define SAVE_LO 				RB2
-#define _SW_SET_LO				SAVE_LO 	
-#define NoUse_MODE3 			RB3	
-#define NoUse_MODE4 			RB4	
-#define NoUse_MODE5 			RB5
-#define PGC 					RB6
-#define PGD 					RB7
+ #define PIN_IN_DAY 			RB0x
+#define _CDS_NIGHT_IN			PIN_IN_DAY
+ #define PIN_IN_NIGHT 			RB1x
+#define _SW_SET_HI				PIN_IN_NIGHT
+ #define PIN_CAN_TX 			RB2
+#define _SW_SET_LO				PIN_CAN_TX 	
+ #define PIN_CAN_RX 			RB3	
+ #define PIN_IN_BLINK 			RB4	
+ #define PIN_RB5_NoUse 			RB5
+ #define PIN_PGC 				RB6
+ #define PIN_PGD 				RB7
 	
-#define NoUse_MODE6 			RC0	
-#define NoUse_MODE7 			RC1	
-#define NoUse_FORCE 			RC2	
-#define NoUse_INVALID 			RC3	
-#define NoUse_RC4	 			RC4	
-#define LED_RUN2	 			RC5	
-#define _LED_NIG	 			LED_RUN2 // Night 상태 LED 
-#define NoUse_TX1	 			RC6	// CCP3/CK1/TX1/CANTX	
-#define NoUse_RX1	 			RC7	// CANRX/RX1/DT1/CCP4
+ #define PIN_MODE_0 			RC0	
+ #define PIN_MODE_1 			RC1	
+ #define PIN_MODE_2 			RC2	
+ #define PIN_MODE_3 			RC3	
+ #define PIN_MODE_4	 			RC4	
+ #define PIN_RC5_NoUse	 		RC5	
+#define _LED_NIG	 			PIN_RC5_NoUse // Night 상태 LED 
+ #define PIN_TX_232	 			RC6	// CCP3/CK1/TX1/CANTX	
+ #define PIN_RX_232	 			RC7	// CANRX/RX1/DT1/CCP4
 
-#define LED_ON 					RD0
-#define _LAMP_ON				LED_ON // APL Lamp On/Off  		
-#define NoUse_EX2_ON 			RD1	
-#define NoUse_GPS_ON 			RD2	
-#define LED_RUN0 				RD3
-#define _LED_AplLampState		LED_RUN0 // APL Lamp On 듀티 LED
-#define PWM 					RD4
-#define	_PWM					PWM	
-#define LED_RUN1 				RD5
-#define	_LED_GpsGoodState		LED_RUN1 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED	 
-#define NoUse_TX2 				RD6	// 통신 TX2 
-#define TX_DP 					RD7	// 통신 RX2
-#define	_RX_CDS					TX_DP
+ #define PIN_LED_ON 			RD0
+#define _LAMP_ON				PIN_LED_ON // APL Lamp On/Off  		
+ #define PIN_LED_RUN0 			RD1	
+ #define PIN_LED_RUN1 			RD2	
+ #define PIN_LED_RUN2 			RD3
+#define _LED_AplLampState		PIN_LED_RUN2 // APL Lamp On 듀티 LED
+ #define PIN_PWM 				RD4
+#define	_PWM					PIN_PWM	
+ #define PIN_LED_RUN3 			RD5
+#define	_LED_GpsGoodState		PIN_LED_RUN3 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED	 
+ #define PIN_LED_RUN4 			RD6	// 통신 TX2 
+ #define PIN_TX_DP 				RD7	// 통신 RX2
+#define	_RX_CDS					PIN_TX_DP
 
-#define PPS 					RE0
-#define	_PPS					PPS 
-#define NoUse_OPTION 			RE1	
-#define NoUse_M3 				RE2
-#define MCLR					RE3
+ #define PIN_1PPS 				RE0
+#define	_PPS					PIN_1PPS 
+ #define PIN_RE1_NoUse 			RE1	
+ #define PIN_RE2_NoUse 			RE2
+ #define PIN_MCLR				RE3
 
 // Tris
 #define NoUse_CDS_TRIS 			TRISA0	
@@ -198,8 +198,8 @@ unsigned char InDayTimer = 0;
 unsigned int SetAVoltage=0; 
 unsigned int SetA1_Volt=0; // SER A1 Voltage, AN0 , 낮 
 unsigned int SetA3_Volt=0; // SER A3 Voltage, AN2 , 밤 
-unsigned int A_IN_Volt=0; // A_IN Voltage, AN3
-unsigned int V_IN_Volt=0; // V_IN Voltage, AN4
+unsigned int A_IN_Volt=0; // PIN_RA2_NoUse Voltage, AN3
+unsigned int V_IN_Volt=0; // PIN_V_IN Voltage, AN4
 
 bit bAgoBlkLedOff;
 

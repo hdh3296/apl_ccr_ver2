@@ -36,7 +36,7 @@ void	InitAD(void)
     bAn6_Updated = 0;
     bAn7_Updated = 0;
 
-	BefAdChSel = AdChSel = 2; // 채널 초기값 A_IN
+	BefAdChSel = AdChSel = 2; // 채널 초기값 PIN_RA2_NoUse
 }
 
 
@@ -56,14 +56,14 @@ void ADRead(void)
     AdValue[AdChSel] = (unsigned int)(LongBuf);
     switch (AdChSel)
     {
-    case    1: // AN1 : V_IN
+    case    1: // AN1 : PIN_V_IN
         bAn1_Updated = TRUE;
         CHS2 = 0;
         CHS1 = 1;
         CHS0 = 0;
         AdChSel = 2;
         break;		
-    case    2: // AN2 : A_IN , 출력 전류 값 !!
+    case    2: // AN2 : PIN_RA2_NoUse , 출력 전류 값 !!
         bAn2_Updated = TRUE;
         CHS2 = 0;
         CHS1 = 1;
@@ -180,10 +180,10 @@ UCHAR ChangeAdChSel(UCHAR AdSel, tag_CurDay ch)
 	
     switch (AdSel)
     {
-    case 1: // V_IN 
+    case 1: // PIN_V_IN 
         AdSel = 2;
         break;
-    case 2: // A_IN 
+    case 2: // PIN_RA2_NoUse 
     	cnt++;
         if(cnt > 100)
         {

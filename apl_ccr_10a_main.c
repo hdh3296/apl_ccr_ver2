@@ -73,15 +73,15 @@ void    InitPort(void)
 
     _LAMP_ON = 0;
     _PWM = 0;
-    NoUse_GPS_ON = 1;
-    NoUse_FORCE = 0;  // ????
-    NoUse_INVALID = 1;
-    NoUse_EX2_ON = 0;
+    PIN_LED_RUN1 = 1;
+    PIN_MODE_2 = 0;  // ????
+    PIN_MODE_3 = 1;
+    PIN_LED_RUN0 = 0;
     _LED_GpsGoodState = 1;	// 1 : Led Off
     _LED_AplLampState = 1;	// 1 : Led Off
     _LED_NIG = 1;			// 1 : Led Off
-    NoUse_TX2 = 1;
-    NoUse_TX1 = 1;
+    PIN_LED_RUN4 = 1;
+    PIN_TX_232 = 1;
 }
 
 
@@ -175,7 +175,7 @@ void LedBlinkModeInit(void)
 
 unsigned int ReSettingDayNigntChk(void)
 {
-    if (NoUse_MODE5)
+    if (PIN_RB5_NoUse)
     {
         SettingReadyTime = 0;
         NightDaySetTime = 0;
@@ -187,7 +187,7 @@ unsigned int ReSettingDayNigntChk(void)
     }
 
 
-    if (!NoUse_MODE7 && NoUse_MODE6)
+    if (!PIN_MODE_1 && PIN_MODE_0)
     {
         if ((NightSetTime > 5) && (!bNight))
         {
@@ -198,7 +198,7 @@ unsigned int ReSettingDayNigntChk(void)
         }
         if (bNight)	_LED_NIG = 0;
     }
-    else if (!NoUse_MODE6 && NoUse_MODE7)
+    else if (!PIN_MODE_0 && PIN_MODE_1)
     {
         if ((NightDaySetTime > 5) && (!bNightDay))
         {
@@ -238,11 +238,11 @@ void ModeChk(void)
 
 	modesw=0;
 
-	if( !NIGHT_IN)	modesw=(modesw | 0x01);
-	if( !SAVE_HI)	modesw=(modesw | 0x02);
-	if( !SAVE_LO)	modesw=(modesw | 0x04);
-	if( !NoUse_MODE3)	modesw=(modesw | 0x08);
-	if( !NoUse_MODE4)	modesw=(modesw | 0x10);
+	if( !PIN_IN_DAY)	modesw=(modesw | 0x01);
+	if( !PIN_IN_NIGHT)	modesw=(modesw | 0x02);
+	if( !PIN_CAN_TX)	modesw=(modesw | 0x04);
+	if( !PIN_CAN_RX)	modesw=(modesw | 0x08);
+	if( !PIN_IN_BLINK)	modesw=(modesw | 0x10);
 
 
 	if( (modesw & 0x1f) != (befmodesw & 0x1f)){
@@ -430,7 +430,7 @@ void ActiveOnChk(void)
 void ApaLampOnOff(void)
 {
 	ActiveOnChk();
-	if(bActiveOn || !NoUse_MODE5){
+	if(bActiveOn || !PIN_RB5_NoUse){
 		if(!bPwmOn)	PwmOn();
 
 		if(bAn2_Updated && bAn3_Updated){
@@ -518,7 +518,7 @@ void ApaLampOnOff(void)
 		}
 		bPwmOn=0;
 
-		PWM=0;
+		PIN_PWM=0;
 		_APLLAMP=0;
 		GPS_ON=1;
 
@@ -543,7 +543,7 @@ void ApaLampOnOff(void)
 /*
 void SetApaLamp(void)
 {
-    if (bAn2_Updated) // A_IN 아날로그 값이 업데이트 됬으면 ?
+    if (bAn2_Updated) // PIN_RA2_NoUse 아날로그 값이 업데이트 됬으면 ?
     {
         bAn2_Updated = FALSE;
 
@@ -563,7 +563,7 @@ void SetApaLamp(void)
 void ApaLampOnOff(void)
 {
     // bBlink_DutyOn 상태 (-On듀티상태-)에서
-    // _LAMP_ON 및 PWM 출력을 내보내면 LAMP에 실제로 불이 켜진다.
+    // _LAMP_ON 및 PIN_PWM 출력을 내보내면 LAMP에 실제로 불이 켜진다.
     if (bBlink_DutyOn)
     {
         if (bPwmOn == FALSE)
@@ -584,7 +584,7 @@ void ApaLampOnOff(void)
         {
             if (StartTimer > 100)
             {
-                if (bAn2_Updated) // A_IN 아날로그 값이 업데이트 됬으면 ?
+                if (bAn2_Updated) // PIN_RA2_NoUse 아날로그 값이 업데이트 됬으면 ?
                 {
                     bAn2_Updated = FALSE;
 
@@ -1122,7 +1122,7 @@ void ChkSwTwoTouch(void)
 }
 
 
-// 기준 셋팅값에 따라 PWM 주기 레지스트 설정 값 변경 
+// 기준 셋팅값에 따라 PIN_PWM 주기 레지스트 설정 값 변경 
 void ChangPwmCycleRegedit(tag_CurDay CurDayNight)
 {
 	if (stApl[CurDayNight].Set_Current > JUNG_GIJUN)
