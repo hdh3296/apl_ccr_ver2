@@ -32,56 +32,53 @@ void    InitPort(void)
     LATD = 0xff;
     LATE = 0xff;
 
-    NoUse_CDS_TRIS = 1;
-    V_IN_TRIS = 1;
-    A_IN_TRIS = 1;
-    ISET_HI_TRIS = 1;
-    ISET_LO_TRIS = 1;
+    PIN_A_IN_TRIS = 1;
+    PIN_V_IN_TRIS = 1;
+    PIN_RA2_NoUse_TRIS = 1;
+    PIN_RA3_NoUse_TRIS = 1;
+    PIN_RA5_NoUse_TRIS = 1;
 
-    NIGHT_IN_TRIS = 1;
-    SAVE_HI_TRIS = 1;
-    SAVE_LO_TRIS = 1;
-    NoUse_MODE3_TRIS = 1;
-    NoUse_MODE4_TRIS = 1;
-    NoUse_MODE5_TRIS = 1;
-    PGC_TRIS = 1;
-    PGD_TRIS = 1;
+    PIN_IN_DAY_TRIS = 1;
+    PIN_IN_NIGHT_TRIS = 1;
+    PIN_CAN_TX_TRIS = 0;
+    PIN_CAN_RX_TRIS = 1;
+    PIN_IN_BLINK_TRIS = 1;
+    PIN_RB5_NoUse_TRIS = 1;
+    PIN_PGC_TRIS = 1;
+    PIN_PGD_TRIS = 1;
 
-    NoUse_MODE6_TRIS = 1;
-    NoUse_MODE7_TRIS = 1;
-    NoUse_FORCE_TRIS = 0;
-    NoUse_INVALID_TRIS = 0;
-    NoUse_RC4_TRIS = 1;
-    LED_RUN2_TRIS = 0;
-    NoUse_TX1_TRIS = 0;
-    NoUse_RX1_TRIS = 1;
+    PIN_MODE_0_TRIS = 1;
+    PIN_MODE_1_TRIS = 1;
+    PIN_MODE_2_TRIS = 0;
+    PIN_MODE_3_TRIS = 0;
+    PIN_MODE_4_TRIS = 1;
+    PIN_RC5_NoUse_TRIS = 1;
+    PIN_TX_232_TRIS = 0;
+    PIN_RX_232_TRIS = 1;
 
-    LED_ON_TRIS = 0;
-    NoUse_EX2_ON_TRIS = 0;
-    NoUse_GPS_ON_TRIS = 0;
-    LED_RUN0_TRIS = 0;
-    PWM_TRIS = 0;
-    LED_RUN1_TRIS = 0;
-    NoUse_TX2_TRIS = 0;
-    TX_DP_TRIS = 1;
+    PIN_LED_ON_TRIS = 0;
+    PIN_LED_RUN0_TRIS = 0;
+    PIN_LED_RUN1_TRIS = 0;
+    PIN_LED_RUN2_TRIS = 0;
+    PIN_PWM_TRIS = 0;
+    PIN_LED_RUN3_TRIS = 0;
+    PIN_LED_RUN4_TRIS = 0;
+    PIN_TX_DP_TRIS = 1;
 
-    PPS_TRIS = 1;
-    NoUse_OPTION_TRIS = 1;
-    NoUse_M3_TRIS = 1;
+    PIN_1PPS_TRIS = 1;
+    PIN_RE1_NoUse_TRIS = 1;
+    PIN_RE2_NoUse_TRIS = 1;
 
 
-
-    _LAMP_ON = 0;
-    _PWM = 0;
-    PIN_LED_RUN1 = 1;
-    PIN_MODE_2 = 0;  // ????
-    PIN_MODE_3 = 1;
-    PIN_LED_RUN0 = 0;
-    _LED_GpsGoodState = 1;	// 1 : Led Off
-    _LED_AplLampState = 1;	// 1 : Led Off
-    _LED_NIG = 1;			// 1 : Led Off
-    PIN_LED_RUN4 = 1;
-    PIN_TX_232 = 1;
+	// APL LAMP 제어 
+	_LAMP_ON = 0;  			
+	_PWM = 0; 
+	// LED : 1 = Led Off
+	_LED_CPU_RUN  = 1; // CPU RUN				
+	_LED_NIGHT = 1; // Night 상태 LED 				
+	_LED_RUN2 = 1;	
+	_LED_LAMP_ON = 1;// APL Lamp On 듀티 LED			
+	_LED_GPS_GOOD = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED 					
 }
 
 
@@ -143,7 +140,7 @@ void  Serial2Check(void)
 // High Edge 값을 체크한다.
 void GpsPPS1Chk(void)
 {
-    if (_PPS)
+    if (_PPS_GPS)
     {
         if (bPPS_On == FALSE)
         {
@@ -182,7 +179,7 @@ unsigned int ReSettingDayNigntChk(void)
         bNightDay = 0;
         NightSetTime = 0;
         bNight = 0;
-        _LED_NIG = 1;
+        _LED_NIGHT = 1;
         return(0);
     }
 
@@ -196,7 +193,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNight)	_LED_NIG = 0;
+        if (bNight)	_LED_NIGHT = 0;
     }
     else if (!PIN_MODE_0 && PIN_MODE_1)
     {
@@ -207,7 +204,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNightDay)	_LED_NIG = 0;
+        if (bNightDay)	_LED_NIGHT = 0;
     }
     else
     {
@@ -219,7 +216,7 @@ unsigned int ReSettingDayNigntChk(void)
 
         if (SettingReadyTime > 4)
         {
-            _LED_NIG = !_LED_NIG;
+            _LED_NIGHT = !_LED_NIGHT;
             SettingReadyTime = 0;
         }
     }
@@ -406,17 +403,17 @@ void ActiveOnChk(void)
 	if(AdValue[0] >= SetNightDayVolt){
 		if(DayNightTimer > 5 ){
 			DayNightTimer=0;
-			_LED_GpsGoodState = !_LED_GpsGoodState;
+			_LED_GPS_GOOD = !_LED_GPS_GOOD;
 		}
 
 		if(AdValue[0] >= SetNightVolt){
 			bActiveOn=1;
-			_LED_GpsGoodState=0;
+			_LED_GPS_GOOD=0;
 		}
 	}
 	else{
 		bActiveOn=0;
-		_LED_GpsGoodState=1;
+		_LED_GPS_GOOD=1;
 	}
 
 	if(bAn0_Updated){
@@ -508,7 +505,7 @@ void ApaLampOnOff(void)
 		bPwmOn=1;
 		GPS_ON=0;
 
-		_LED_AplLampState= !_APLLAMP;
+		_LED_LAMP_ON= !_APLLAMP;
 	}
 	else{
 		if(bPwmOn){
@@ -522,15 +519,15 @@ void ApaLampOnOff(void)
 		_APLLAMP=0;
 		GPS_ON=1;
 
-		_LED_AplLampState=1;
+		_LED_LAMP_ON=1;
 
 		if(WakeupTime > 0){
 			bAn0_Updated=0;
 			CLRWDT();
 			MainTimer=0;
 			WakeupTime=0;
-			_LED_GpsGoodState=1;
-			_LED_NIG=1;
+			_LED_GPS_GOOD=1;
+			_LED_NIGHT=1;
 
 			SLEEP();
 		}
@@ -598,7 +595,7 @@ void ApaLampOnOff(void)
         _LAMP_ON = ON_lamp; // 실제 APL 램프 ON
         PwmOut(DutyCycle);
         bPwmOn = TRUE;
-        _LED_AplLampState = ON_runled1; // 상태 LED 깜빡 깜빡 !!!
+        _LED_LAMP_ON = ON_runled1; // 상태 LED 깜빡 깜빡 !!!
 
     }
     else
@@ -612,7 +609,7 @@ void ApaLampOnOff(void)
         bPwmOn = FALSE;
         _PWM = 0;
         _LAMP_ON = OFF_lamp;
-        _LED_AplLampState = OFF_runled1;
+        _LED_LAMP_ON = OFF_runled1;
         bAgoBlkLedOff = TRUE;
     }
 }
@@ -690,7 +687,7 @@ void GpsRx2DataProc(void)
 
     if (Com2RxBuffer[18] == 'A') // GPS 수신 GOOD !
     {
-	    _LED_GpsGoodState = !_LED_GpsGoodState; // GPS 수신 GOOD 상태 LED
+	    _LED_GPS_GOOD = !_LED_GPS_GOOD; // GPS 수신 GOOD 상태 LED
         i = (Com2RxBuffer[7] - 0x30) * 10;
         i = (Com2RxBuffer[8] - 0x30) + i;
         rx_hour = i;
@@ -748,7 +745,7 @@ unsigned char GetDayEveningNight(void)
     static bit bDayLed, bNightLed;
     unsigned char ret;
 
-    bNightLed = IsInLED_ON(_CDS_NIGHT_IN, &InDayTimer);
+    bNightLed = IsInLED_ON(_IN_NIGHT, &InDayTimer);
 
     if (bNightLed)
         ret = NIGHT;	// 밤
@@ -982,7 +979,7 @@ void OnOffAplLamp(tag_CurDay CurDayNig)
 {
 	if (bBlink_DutyOn && (CurDayNig != NONE)) // Blink Led 가 On 일 때
 	{	
-		_LED_AplLampState = ON_runled1; // Run 상태 LED On
+		_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
 		_LAMP_ON = TRUE; // LAMP ON
 		if (bStEnab)
 		{
@@ -1020,7 +1017,7 @@ void OnOffAplLamp(tag_CurDay CurDayNig)
 	}
 	else // Blink Led 가 Off 일 때
 	{
-		_LED_AplLampState = OFF_runled1; // Run 상태 LED Off
+		_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
 		_LAMP_ON = FALSE; // LAMP OFF 
 		
 		DutyCycle = ((stApl[CurDayNig].DutyCycle * 6) / 100);
@@ -1262,8 +1259,8 @@ void main(void)
 		// 낮, 밤 체크 
 		// 밤 일때 NIG LED ON
         CurDayNight = GetDayEveningNight(); // NONE, DAY , EVENING , NIGHT 값 가져온다. 
-        if(CurDayNight == NIGHT) 	_LED_NIG = LED_NIG_ON;
-		else						_LED_NIG = LED_NIG_OFF;
+        if(CurDayNight == NIGHT) 	_LED_NIGHT = LED_NIG_ON;
+		else						_LED_NIGHT = LED_NIG_OFF;
 		// 낮, 밤이 바뀔 때 처리 
 		if (CurDayNight != BefCurDayNight)
 		{

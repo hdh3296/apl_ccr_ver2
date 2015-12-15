@@ -11,95 +11,140 @@ extern volatile bit RB0x                @ ((unsigned)&PORTB*8)+0;
 extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 
 // Pic18f45k80 PIN Name
- #define PIN_A_IN				RA0
- #define PIN_V_IN 				RA1 
-#define _V_IN					PIN_V_IN
- #define PIN_RA2_NoUse 			RA2
-#define _A_IN					PIN_RA2_NoUse
- #define PIN_RA3_NoUse 			RA3	
-#define _VR1_SET_HI				PIN_RA3_NoUse	
- #define PIN_RA5_NoUse			RA5
-#define _VR2_SET_LO				PIN_RA5_NoUse
-
- #define PIN_IN_DAY 			RB0x
-#define _CDS_NIGHT_IN			PIN_IN_DAY
- #define PIN_IN_NIGHT 			RB1x
-#define _SW_SET_HI				PIN_IN_NIGHT
- #define PIN_CAN_TX 			RB2
-#define _SW_SET_LO				PIN_CAN_TX 	
- #define PIN_CAN_RX 			RB3	
- #define PIN_IN_BLINK 			RB4	
- #define PIN_RB5_NoUse 			RB5
- #define PIN_PGC 				RB6
- #define PIN_PGD 				RB7
+#define PIN_A_IN				RA0
+#define PIN_V_IN 				RA1 	
+#define PIN_RA2_NoUse 			RA2	
+#define PIN_RA3_NoUse 			RA3		
+#define PIN_RA5_NoUse			RA5
 	
- #define PIN_MODE_0 			RC0	
- #define PIN_MODE_1 			RC1	
- #define PIN_MODE_2 			RC2	
- #define PIN_MODE_3 			RC3	
- #define PIN_MODE_4	 			RC4	
- #define PIN_RC5_NoUse	 		RC5	
-#define _LED_NIG	 			PIN_RC5_NoUse // Night 상태 LED 
- #define PIN_TX_232	 			RC6	// CCP3/CK1/TX1/CANTX	
- #define PIN_RX_232	 			RC7	// CANRX/RX1/DT1/CCP4
+#define PIN_IN_DAY 				RB0x
+#define PIN_IN_NIGHT 			RB1x	
+#define PIN_CAN_TX 				RB2	 	
+#define PIN_CAN_RX 				RB3	
+#define PIN_IN_BLINK 			RB4	
+#define PIN_RB5_NoUse 			RB5
+#define PIN_PGC 				RB6
+#define PIN_PGD 				RB7
+	
+#define PIN_MODE_0 				RC0	
+#define PIN_MODE_1 				RC1	
+#define PIN_MODE_2 				RC2	
+#define PIN_MODE_3 				RC3	
+#define PIN_MODE_4	 			RC4	
+#define PIN_RC5_NoUse	 		RC5	
+#define PIN_TX_232	 			RC6	// CCP3/CK1/TX1/CANTX	
+#define PIN_RX_232	 			RC7	// CANRX/RX1/DT1/CCP4
 
- #define PIN_LED_ON 			RD0
-#define _LAMP_ON				PIN_LED_ON // APL Lamp On/Off  		
- #define PIN_LED_RUN0 			RD1	
- #define PIN_LED_RUN1 			RD2	
- #define PIN_LED_RUN2 			RD3
-#define _LED_AplLampState		PIN_LED_RUN2 // APL Lamp On 듀티 LED
- #define PIN_PWM 				RD4
-#define	_PWM					PIN_PWM	
- #define PIN_LED_RUN3 			RD5
-#define	_LED_GpsGoodState		PIN_LED_RUN3 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED	 
- #define PIN_LED_RUN4 			RD6	// 통신 TX2 
- #define PIN_TX_DP 				RD7	// 통신 RX2
-#define	_RX_CDS					PIN_TX_DP
+#define PIN_LED_ON 				RD0 // APL_LAMP ON
+#define PIN_LED_RUN0 			RD1	
+#define PIN_LED_RUN1 			RD2	
+#define PIN_LED_RUN2 			RD3
+#define PIN_PWM 				RD4
+#define PIN_LED_RUN3 			RD5
+#define PIN_LED_RUN4 			RD6	// 통신 TX2 
+#define PIN_TX_DP 				RD7	// 통신 RX2
 
- #define PIN_1PPS 				RE0
-#define	_PPS					PIN_1PPS 
- #define PIN_RE1_NoUse 			RE1	
- #define PIN_RE2_NoUse 			RE2
- #define PIN_MCLR				RE3
+#define PIN_1PPS 				RE0
+#define PIN_RE1_NoUse 			RE1	
+#define PIN_RE2_NoUse 			RE2
+#define PIN_MCLR				RE3
+
 
 // Tris
-#define NoUse_CDS_TRIS 			TRISA0	
-#define V_IN_TRIS 				TRISA1	
-#define A_IN_TRIS 				TRISA2	
-#define ISET_HI_TRIS 			TRISA3	
-#define ISET_LO_TRIS			TRISA5	
+#define PIN_A_IN_TRIS 			TRISA0 	// in	
+#define PIN_V_IN_TRIS 			TRISA1 	// in
+#define PIN_RA2_NoUse_TRIS 		TRISA2 	//
+#define PIN_RA3_NoUse_TRIS 		TRISA3 	//
+#define PIN_RA5_NoUse_TRIS		TRISA5 	//
 
-#define NIGHT_IN_TRIS 			TRISB0	
-#define SAVE_HI_TRIS 			TRISB1	
-#define SAVE_LO_TRIS 			TRISB2	
-#define NoUse_MODE3_TRIS 		TRISB3	
-#define NoUse_MODE4_TRIS 		TRISB4	
-#define NoUse_MODE5_TRIS 		TRISB5
-#define PGC_TRIS 				TRISB6
-#define PGD_TRIS 				TRISB7
+#define PIN_IN_DAY_TRIS 		TRISB0 	// in
+#define PIN_IN_NIGHT_TRIS 		TRISB1 	// in
+#define PIN_CAN_TX_TRIS 		TRISB2 	// out
+#define PIN_CAN_RX_TRIS 		TRISB3 	// in
+#define PIN_IN_BLINK_TRIS 		TRISB4 	// in
+#define PIN_RB5_NoUse_TRIS 		TRISB5 	//
+#define PIN_PGC_TRIS 			TRISB6 	//	
+#define PIN_PGD_TRIS 			TRISB7 	//
 	
-#define NoUse_MODE6_TRIS 		TRISC0	
-#define NoUse_MODE7_TRIS 		TRISC1	
-#define NoUse_FORCE_TRIS 		TRISC2	
-#define NoUse_INVALID_TRIS 		TRISC3	
-#define NoUse_RC4_TRIS	 		TRISC4	
-#define LED_RUN2_TRIS			TRISC5	
-#define NoUse_TX1_TRIS	 		TRISC6	
-#define NoUse_RX1_TRIS	 		TRISC7	
+#define PIN_MODE_0_TRIS 		TRISC0 	// in	
+#define PIN_MODE_1_TRIS 		TRISC1 	// in	
+#define PIN_MODE_2_TRIS 		TRISC2 	// in	
+#define PIN_MODE_3_TRIS 		TRISC3	// in
+#define PIN_MODE_4_TRIS	 		TRISC4	// in 
+#define PIN_RC5_NoUse_TRIS		TRISC5	//
+#define PIN_TX_232_TRIS	 		TRISC6	// out
+#define PIN_RX_232_TRIS	 		TRISC7	// in
 
-#define LED_ON_TRIS 			TRISD0	
-#define NoUse_EX2_ON_TRIS 		TRISD1	
-#define NoUse_GPS_ON_TRIS 		TRISD2	
-#define LED_RUN0_TRIS 			TRISD3	
-#define PWM_TRIS 				TRISD4	
-#define LED_RUN1_TRIS 			TRISD5	
-#define NoUse_TX2_TRIS 			TRISD6	
-#define TX_DP_TRIS 				TRISD7	
+#define PIN_LED_ON_TRIS 		TRISD0	// out
+#define PIN_LED_RUN0_TRIS 		TRISD1	// out
+#define PIN_LED_RUN1_TRIS 		TRISD2	// out
+#define PIN_LED_RUN2_TRIS 		TRISD3	// out
+#define PIN_PWM_TRIS 			TRISD4	// out
+#define PIN_LED_RUN3_TRIS 		TRISD5	// out
+#define PIN_LED_RUN4_TRIS 		TRISD6	// out
+#define PIN_TX_DP_TRIS 			TRISD7  // in	
 
-#define PPS_TRIS 				TRISE0	
-#define NoUse_OPTION_TRIS 		TRISE1	
-#define NoUse_M3_TRIS 			TRISE2	
+#define PIN_1PPS_TRIS 			TRISE0	// in
+#define PIN_RE1_NoUse_TRIS 		TRISE1	//
+#define PIN_RE2_NoUse_TRIS 		TRISE2	//
+
+
+
+// AD 입력 
+#define _A_IN		PIN_A_IN		
+#define _V_IN		PIN_V_IN
+// APL LAMP 출력 제어 
+#define _LAMP_ON	PIN_LED_ON // APL Lamp On/Off  			
+#define _PWM		PIN_PWM 
+// CDS
+#define _IN_DAY		PIN_IN_DAY 				
+#define _IN_NIGHT	PIN_IN_NIGHT
+// 깜빡임 외부에서 제어 
+#define _IN_BLINK	PIN_IN_BLINK 				
+// 딥스위치 	
+#define _DIP_SW0	PIN_MODE_0 					
+#define _DIP_SW1	PIN_MODE_1 					
+#define _DIP_SW2	PIN_MODE_2 					
+#define _DIP_SW3	PIN_MODE_3 					
+#define _DIP_SW4	PIN_MODE_4	 				
+// 232통신 			
+#define _TX_232		PIN_TX_232	 				// CCP3/CK1/TX1/CANTX	
+#define _RX_232		PIN_RX_232	 				// CANRX/RX1/DT1/CCP4
+// CAN 통신 
+#define _CAN_TX		PIN_CAN_TX 					 	
+#define _CAN_RX		PIN_CAN_RX 
+// LED
+#define _LED_CPU_RUN	PIN_LED_RUN0 // CPU RUN				
+#define _LED_NIGHT		PIN_LED_RUN1 // Night 상태 LED 				
+#define _LED_RUN2		PIN_LED_RUN2 	
+#define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
+#define _LED_GPS_GOOD	PIN_LED_RUN4 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 				
+// GPS
+#define _RX_GPS		PIN_TX_DP 					// 통신 RX2
+#define _PPS_GPS	PIN_1PPS 				
+// 기타 			
+#define _MCLR		PIN_MCLR	
+#define _PGC		PIN_PGC 				
+#define _PGD		PIN_PGD 
+// 미사용 
+#define _NoUse1		PIN_RA2_NoUse 				
+#define _NoUse2		PIN_RA3_NoUse 					
+#define _NoUse3		PIN_RA5_NoUse
+#define _NoUse4		PIN_RC5_NoUse	
+#define _NoUse5		PIN_RE1_NoUse 				
+#define _NoUse6		PIN_RE2_NoUse 
+#define _NoUse7		PIN_RB5_NoUse 
+
+
+// 미사용(이전) Q??추후 삭제 
+#define _SW_SET_HI				_NoUse1
+#define _SW_SET_LO				_NoUse2
+#define _VR1_SET_HI				_NoUse3
+#define _VR2_SET_LO				_NoUse4
+
+
+
+	
 
 
 #define     MSEC_H    0xfc
