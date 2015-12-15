@@ -91,8 +91,8 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 
 
 // AD 입력 
-#define _A_IN		PIN_A_IN		
-#define _V_IN		PIN_V_IN
+#define _A_IN		PIN_A_IN // AN0		
+#define _V_IN		PIN_V_IN // AN1
 // APL LAMP 출력 제어 
 #define _LAMP_ON	PIN_LED_ON // APL Lamp On/Off  			
 #define _PWM		PIN_PWM 

@@ -1214,6 +1214,7 @@ void main(void)
     //UserBaudRate();
     Com1_Init();
     Com2_Init();
+
     ei();
 
     DONE = 1;	// A/D Conversion Status bit
