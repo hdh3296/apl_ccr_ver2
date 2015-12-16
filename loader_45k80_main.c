@@ -8,6 +8,7 @@
 #include        "loader_45k80.h"
 #include        "com1_port.h"
 #include        "ladder_cmd.h"
+#include    	"serial.h"
 
 
 

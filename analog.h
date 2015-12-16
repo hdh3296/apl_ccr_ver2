@@ -42,7 +42,7 @@ unsigned    int   	BefAdChSel	= 0;
 unsigned    int     AdValue[nAD_MAX_CHANEL]; // 채널별 Ad 값 저장 버퍼 
 
 // 5000이면 5V이다.
-#define ADCH_MAX	5
+#define ADCH_MAX	2
 unsigned int arInPut_mV[ADCH_MAX] = {0,}; // 각 채널에서 읽어드린 AD 값 
 UCHAR arIs_AdUpd[ADCH_MAX] = {0,};
 

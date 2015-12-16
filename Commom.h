@@ -13,7 +13,7 @@ typedef unsigned long 	ULONG;
 #define SW_DAY		0
 #define SW_NIGHT	2
 
-#define	A_SET_V_MAX 5000 // mV
+#define	A_SET_V_MAX 3300 // mV
 #define	A_SET_V_MIN 0
 #define A_SET_A_MAX1 10000 // mA
 #define A_SET_A_MIN1 0
@@ -36,13 +36,13 @@ tag_CurDay	CurDayNight = 100, BefCurDayNight = 100;
 
 typedef struct 
 {
-	unsigned int 	Setting_mV;
+	unsigned int 	Setting_mV; // 셋팅값 
 	unsigned int 	SwPushTimer;
 	unsigned char 	SwTouchCnt;
 	unsigned int 	SwTouchCntTimer;
 	unsigned char   SetSwCharterTimer;
 	unsigned long 	Set_Current; // 변환된 볼륨에의한 셋팅 전류 값
-	unsigned int	DutyCycle;
+	unsigned int	DutyCycle; 
 	
 	unsigned char 	bSetSwPushOK	: 1;
 	unsigned char 	bSetSw_UpEdge 	: 1;

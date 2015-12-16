@@ -1195,12 +1195,18 @@ void main(void)
     while (1)
     {
         CLRWDT();
-		
+
+// 로더를 통해 셋팅하고자 하는 값을 가져온다. 
  		Loader_Func(); // 
-//		Chk232TxErr();	
+		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
+		//stApl[SW_NIGHT].bSetSwPushOK = bL_NightSetMode;
+		//stApl[SW_NIGHT].Setting_mV = L_NightSetValue;
+
 		
-// BLink 기능	
-		// Gps 232Rx 데이타 수신
+//		Chk232TxErr();	
+	
+// BLink 기능 	
+		// Gps : com2 232Rx 데이타 수신
         if (Com2RxStatus == RX_GOOD) // GPS RX2 통신 GOOD !
         {
             Com2RxStatus = STX_CHK;
@@ -1221,30 +1227,17 @@ void main(void)
 			bStEnab = TRUE;
 		}		
 
-// CCR 기능 (APL LAMP 출력 제어) 
-		// 스위치가 On 및 Edge 여부 체크 
-        ChkSetupSw(); 
-		// 스위치 Two Touch 여부 체크 
-		ChkSwTwoTouch();
-		
-		//  셋업모드의 PwmDutyCycle, 셋팅값 저장  
-		WriteProc();
 
-
-		// AD 처리 
+// AD 처리 
 		bUdtAd = IsUdtAd(arInPut_mV, arIs_AdUpd, AdChSel);
         if(bUdtAd) // input AD 값 얻음.
-        {
-			// 각 AD 값이 Updated 이면, 각 관련 변수에 저장 한다. 
-			GetMyAD();
+        {			
+			GetMyAD(); // 각 AD 값이 Updated 이면, 각 관련 변수에 저장 한다. 		
+			AdChSel = ChangeAdChSel(AdChSel, 1); // 채널 변경 	
+			Set_AdCh(AdChSel); // 채널 설정 
 			
-			// 채널 변경 
-			if(stApl[SW_DAY].bSetSwPushOK)			AdChSel = ChangeAdChSel(AdChSel, 3);
-			else if(stApl[SW_NIGHT].bSetSwPushOK)	AdChSel = ChangeAdChSel(AdChSel, 4);
-			else									AdChSel = ChangeAdChSel(AdChSel, 1);	
-			Set_AdCh(AdChSel);
-
 			// AD 채널이 변경 되었다. 
+			// 변경시 쓰레기 값이 저장되는 문제 때문에 추가 하였다. 
 			if (AdChSel != BefAdChSel)
 			{
 				bAdCalcEnable = FALSE;
@@ -1255,9 +1248,12 @@ void main(void)
 			bAdConversion = FALSE;
 			DONE = 1;
         }
-		
-		// 셋팅모드에서 AMP Lamp 셋업값 얻어온다.
-		if ((stApl[SW_DAY].SwPushTimer > 1000) || (stApl[SW_NIGHT].SwPushTimer > 1000))
+
+// CCR 기능 (APL LAMP 출력 제어) 
+		// 셋팅 모드 !!!
+		// 셋팅모드에서 ALP Lamp 셋업값 얻어온다.
+		if ((stApl[SW_DAY].SwPushTimer > 1000) 
+			|| (stApl[SW_NIGHT].SwPushTimer > 1000))
 		{
 			bSettingMode = TRUE;	
 			
@@ -1265,10 +1261,9 @@ void main(void)
 			{
 				_LAMP_ON = TRUE; // LAMP ON
 				bSetSt = FALSE;
-				DutyCycle = 0;
 				SetStTimer = 0;
 				T2CON = 0x06; // 2000천 간델라 일 떄 !
-				PwmOut(DutyCycle);	
+				PwmOut(0);	
 			}
 			else
 			{
@@ -1276,13 +1271,15 @@ void main(void)
 				{
 					if(stApl[SW_DAY].bSetSwPushOK)
 					{
-						stApl[SW_DAY].Set_Current = GetSetCurrent(stApl[SW_DAY].Setting_mV, SW_DAY);
+						stApl[SW_DAY].Set_Current 
+							= GetSetCurrent(stApl[SW_DAY].Setting_mV, SW_DAY);
 						OnSetAplLamp(SW_DAY);
 						stApl[SW_DAY].bWriteEnab = TRUE;
 					}
 					if(stApl[SW_NIGHT].bSetSwPushOK)
 					{
-						stApl[SW_NIGHT].Set_Current = GetSetCurrent(stApl[SW_NIGHT].Setting_mV, SW_NIGHT);
+						stApl[SW_NIGHT].Set_Current 
+							= GetSetCurrent(stApl[SW_NIGHT].Setting_mV, SW_NIGHT);
 						OnSetAplLamp(SW_NIGHT);
 						stApl[SW_NIGHT].bWriteEnab = TRUE;
 					}					
@@ -1290,6 +1287,7 @@ void main(void)
 			}
 			bStEnab = TRUE;
 		}
+		// 일반 모드 !!!
 		// 일반 모드에서 APL LAMP On, OFF 처리 
 		else 		
 		{

@@ -36,7 +36,8 @@ void	InitAD(void)
     bAn6_Updated = 0;
     bAn7_Updated = 0;
 
-	BefAdChSel = AdChSel = 2; // 채널 초기값 PIN_RA2_NoUse
+	bAdCalcEnable = FALSE;
+	BefAdChSel = AdChSel = 0; // 채널 초기값 PIN_RA2_NoUse	
 }
 
 
@@ -101,7 +102,7 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 	
     if (bAdConversion)
     {
-		if (bAdCalcEnable == FALSE)
+		if (bAdCalcEnable == FALSE) // 변경시 쓰레기 값이 저장되는 문제 때문에 추가 하였다.
 		{
 			AdCalcWaitCnt++;
 			if (AdCalcWaitCnt >= 3)
@@ -149,14 +150,6 @@ void GetMyAD(void)
 			switch (ch)
 			{
 			case 0:
-				break;
-			case 3: // 낮 일 때 
-				stApl[SW_DAY].Setting_mV = arInPut_mV[ch]; // 낮 셋팅 값 저장 (0)
-				break;				
-			case 4: // 밤 일 때 	
-				stApl[SW_NIGHT].Setting_mV = arInPut_mV[ch]; // 밤 셋팅값 저장 (2)
-				break;
-			case 2:
 				CurA_IN_mV = arInPut_mV[ch];
 				bCurA_IN_mV_Upd = TRUE;
 				break;
@@ -180,25 +173,19 @@ UCHAR ChangeAdChSel(UCHAR AdSel, tag_CurDay ch)
 	
     switch (AdSel)
     {
-    case 1: // PIN_V_IN 
-        AdSel = 2;
-        break;
-    case 2: // PIN_RA2_NoUse 
+    case 0: // A_IN
     	cnt++;
         if(cnt > 100)
         {
-			AdSel = ch; // 셋팅모드 일때: 3 or 4  / 일반(nomal)모드 일때: 1 
+			AdSel = 1; 
 			cnt = 0;
         }
-        break;
-    case 3: // 낮 셋팅 스위치 볼륨     	
-        AdSel = 1;
-        break;
-    case 4: // 밤 셋팅 스위치 볼륨 
-        AdSel = 1;
+        break;		
+    case 1: // V_IN 
+        AdSel = 0;
         break;		
     default:
-		AdSel = 1;		        
+		AdSel = 0;		        
         break;
     }
 	return AdSel;
