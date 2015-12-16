@@ -260,6 +260,18 @@ unsigned int SetStTimer = 0;
 unsigned int StDelayTimer = 0;
 unsigned int StDelayTime = 0;
 
+// 임시 : LCD 로더에서 온값 저장할 변수들 
+bit bL_NightSetMode = FALSE;
+	// Current Set
+	unsigned int L_NightSetValue = 0;
+	unsigned int L_MAX_Current_Day = 0;
+	unsigned int L_MAX_Current_Evening = 0;
+	unsigned int L_MAX_Current_Night = 0;
+	//Flashing Set
+	unsigned char L_Duty_Cnt = 0;
+	unsigned char L_Duty_Rate = 0;
+
+
 
 
 extern  void  Initial(void);

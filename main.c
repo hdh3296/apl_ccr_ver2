@@ -1199,8 +1199,8 @@ void main(void)
 // 로더를 통해 셋팅하고자 하는 값을 가져온다. 
  		Loader_Func(); // 
 		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
-		//stApl[SW_NIGHT].bSetSwPushOK = bL_NightSetMode;
-		//stApl[SW_NIGHT].Setting_mV = L_NightSetValue;
+		stApl[SW_NIGHT].bSetSwPushOK = bL_NightSetMode; // 밤 셋팅 모드 
+		stApl[SW_NIGHT].Setting_mV = L_NightSetValue; // 밤 셋팅 값 
 
 		
 //		Chk232TxErr();	
