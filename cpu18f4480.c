@@ -2,7 +2,7 @@
 
 #include    <pic18.h>
  
-#include	"apl_ccr_10a_main.h"
+#include	"main.h"
 
 
 __CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF  & 0xffff));                   

@@ -3,7 +3,7 @@
 
 #include    "Com2_Port.h"
 #include    "serial.h"
-#include    "MyUtil.h"
+
 
 
 unsigned char	Com2TxBuffer[COM2_MAX_TX_BUF];

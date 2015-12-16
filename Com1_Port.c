@@ -2,187 +2,212 @@
 
 #include    <pic18.h>
 
-#include    "Com1_Port.h"
+#include    "com1_port.h"
 #include    "serial.h"
-#include    "MyUtil.h"
 
 
-unsigned char	Com1TxBuffer[nCOM1_MAX_TX_BUF];
-unsigned char	Com1RxBuffer[nCOM1_MAX_RX_BUF];
-unsigned char	Com1TxTotalCnt = 0;
-unsigned char	Com1TxCurCnt = 0;
-unsigned char   Com1RxStatus = 0;
-unsigned char	Com1RxCurCnt = 0;
-unsigned char	Com1SerialTime = 0x0;
-unsigned int	Com1BaudRate = 19200;
+///////////////////////
+#define     ASCTOHEX(x) ((x <= '9') ? (x - '0') : (x - '7')) 
+#define     L_SHIFT(x)  (x << 4)
 
 
 
-void    Com1_Init(void)
+unsigned char	Com1TxBuffer[COM1_MAX_TX_BUF];
+unsigned char	Com1RxBuffer[COM1_MAX_RX_BUF];
+unsigned char	Com1TxCnt=0;
+unsigned char	Com1TxThisPt=0;
+
+unsigned char   Com1RxTxStatus=0;
+
+unsigned char	Com1RxCnt=0;
+unsigned char	Com1SerialTime=0x0;
+unsigned int	Com1BaudRate=19200;
+
+unsigned    int  Crc;  
+unsigned    int  Chksum1;  
+
+
+void    Init_Com1(void)
 {
-    unsigned int tmpbaudrate;
+	unsigned int tmpbaudrate;
 
-    SPBRG1 = DIVIDER;
+	SPBRG = DIVIDER;     	
 
-    tmpbaudrate = ((int)(FOSC / (16UL * Com1BaudRate) - 1));
-    SPBRG1 = tmpbaudrate;
+	tmpbaudrate=((int)(FOSC/(16UL * Com1BaudRate) -1));
+	SPBRG = tmpbaudrate;     	
 
-    TXSTA1 = (SPEED | NINE_BITS | 0x20);
-    RCSTA1 = (NINE_BITS | 0x90);
-    TRISC6 = OUTPUT;
-    TRISC7 = INPUT;
+	TXSTA = (SPEED|NINE_BITS|0x20);
+	RCSTA = (NINE_BITS|0x90);
+	TRISC6=OUTPUT;
+	TRISC7=INPUT;
 
-    RC1IE = 1;	  // USART RX interrupt enable
-    TX1IE = 1;	  // USART TX interrupt enable
+    RCIE=1;	    // USART RX interrupt enable
+    TXIE=1;	    // USART TX interrupt enable
 
-    RC1IF = 0;	  // USART RX interrupt enable
-    TX1IF = 0;	  // USART TX interrupt enable
+    RCIF=0;	    // USART RX interrupt enable
+    TXIF=0;	    // USART TX interrupt enable
 
-    UART1MD = 0;
-
-////////////////////////////	UART2MD=1;  // ??????
+	UART1MD=0;
+	UART2MD=1;
 }
 
 
-	
+
+void    Crc_Calulate(unsigned int crcdata)
+{
+	register unsigned int    i;
+
+   Crc=Crc ^ (crcdata & 0x00ff);
+   for(i=0;i<=7;i++){
+      if( (Crc & 0x0001) == 0x0001)    Crc=(Crc >> 1) ^ 0xA001;
+      else Crc=Crc >> 1;
+   }
+}
+
+
+
+unsigned char	Chksum_Sum(void)
+{    
+    unsigned char	i;
+    unsigned char	temp;
+    
+    Chksum1=0;
+    for(i=0;Com1TxBuffer[i];i++){
+    Chksum1=Chksum1+Com1TxBuffer[i];
+    }
+    temp=(Chksum1 & 0xf0) >> 4;
+    if(temp < 0x0a) temp=temp+'0';
+    else            temp=temp+'7';
+    Com1TxBuffer[i]=temp;
+    
+    temp=(Chksum1 & 0x0f);
+    if(temp<0x0a)   temp=temp+'0';        
+    else            temp=temp+'7';
+    Com1TxBuffer[i+1]=temp;
+    Com1TxBuffer[i+2]=0;
+
+	return(0);
+}
+
+
+
 void    Com1TxStart(void)
 {
-    Com1RxStatus = TX_SET;
-    TXREG1 = Com1TxBuffer[Com1TxCurCnt];
-    Com1TxCurCnt++;
-    TX1IE = 1;
-}
 
-
-void Com1_Tx(void)
-{
-    if ((Com1TxCurCnt < Com1TxTotalCnt))
-    {
-
-        if (Com1TxCurCnt < nCOM1_MAX_TX_BUF)
-        {
-            TXREG1 = Com1TxBuffer[Com1TxCurCnt];
-            Com1TxCurCnt++;
-            Com1SerialTime = 0;
-            Com1RxStatus = TX_SET;
-        }
-        else
-        {			
-            Com1SerialTime = 0;
-            Com1TxCurCnt = 0;
-            Com1TxTotalCnt = 0;
-            TX1IE = 0;
-        }
-    }	
-    else 
-    {
-        Com1SerialTime = 0;
-        Com1TxCurCnt = 0;
-        Com1TxTotalCnt = 0;
-        TX1IE = 0;
-    }
+   	Com1RxTxStatus=TX_SET;   
+    TXREG=Com1TxBuffer[Com1TxThisPt];
+	Com1TxThisPt++;
+	TXIE=1;
 }
 
 
 
+void USART1_TXC(void)
+{					
+	if((Com1TxThisPt >= Com1TxCnt)){
+		Com1SerialTime=0;
+		Com1TxThisPt=0;
+ 		Com1TxCnt=0;	
+		TXIE=0;
+		Com1RxTxStatus = STX_CHK;
+	}
+	else{
+		
+		if(Com1TxThisPt >= COM1_MAX_TX_BUF){
+			Com1SerialTime=0;
+			Com1TxThisPt=0;
+	 		Com1TxCnt=0;	
+			TXIE=0;
+			Com1RxTxStatus = STX_CHK;
+		}
+		else{
+			TXREG=Com1TxBuffer[Com1TxThisPt];
+			Com1TxThisPt++;
+			Com1SerialTime=0;
+			Com1RxTxStatus = TX_SET;
+		}
+	}
+}
 
-void Com1_Rx(void)
+
+
+
+
+void USART1_RXC(void)
 {
-    unsigned char   buf;
-    unsigned char   temp;
+   	unsigned char   buf=0;
+   	unsigned char   temp=0;
 
 
-    buf = RCREG1;
+   	buf=RCREG;
+    Com1SerialTime=0;
 
-    if (Com1RxStatus != TX_SET)
-    {
+	
+    if(Com1RxTxStatus != TX_SET){   
 
-        if (Com1SerialTime > 4)
-        {
-            Com1RxCurCnt = 0;
+        if(Com1RxCnt < (COM1_MAX_RX_BUF-1)){
+            Com1RxCnt++;
+        }
+        else{
+            Com1RxCnt=0;
         }
 
-        Com1SerialTime = 0;
+        Com1RxBuffer[Com1RxCnt]=buf;
 
-        Com1RxBuffer[Com1RxCurCnt] = buf;
+        switch(Com1RxTxStatus){
+            case    STX_CHK:
+                if((buf==ACK) || (buf==ENQ)){
+                    Com1RxTxStatus=ETX_CHK;
+                    Com1RxBuffer[0]=buf;
+                    Com1RxCnt=0;
+                    Chksum1=buf;
+                }
+                break;
+            case    ETX_CHK:
+                Chksum1=Chksum1+buf;
+                if((buf==ETX) || (buf == EOT)){
+                    Com1RxBuffer[Com1RxCnt]=0x0;
+                    Com1RxTxStatus=BCC1_CHK;                  
+                }
+                break;
+            case    BCC1_CHK:               
+                buf=ASCTOHEX(buf);
+                Com1RxBuffer[Com1RxCnt]=0x0;
+                temp=(Chksum1 & 0xf0) >> 4; 
+           
+                if(temp==buf){                 
+                    Com1RxTxStatus=BCC2_CHK;                                                                    
+                }
+                else    Com1RxTxStatus=STX_CHK;                  
+                break;
+            case    BCC2_CHK :
+                buf=ASCTOHEX(buf);
+                temp=(Chksum1 & 0x0f);
+                Com1RxBuffer[Com1RxCnt]=0x0;
+                Com1RxBuffer[COM1_MAX_RX_BUF-1]=0x0;
+                if(temp==buf){
+/*
+                    for(temp=0;((Com1RxBuffer[temp] > 0) && (temp < COM1_MAX_RX_BUF));temp++){                   
+                        RcvBuf2[temp]=Com1RxBuffer[temp];
+                    }
+*/
+                    Com1RxTxStatus=RX_GOOD;
+                }
 
-        if (Com1RxCurCnt < (nCOM1_MAX_RX_BUF - 1))
-        {
-            Com1RxCurCnt++;
-        }
-        else
-        {
-            Com1RxCurCnt = 0;
-            Com1RxBuffer[Com1RxCurCnt] = buf;
-        }
-
-        switch (Com1RxStatus)
-        {
-        case    STX_CHK:
-            if (Com1RxCurCnt == 1)
-            {
-                Com1RxBuffer[0] = buf;
-                Crc = 0xffff;
-                Crc_Calulate((unsigned int)buf);
-            }
-            else if (Com1RxCurCnt == 2)
-            {
-                Crc_Calulate((unsigned int)buf);
-            }
-            else if (Com1RxCurCnt == 3)
-            {
-                Com1RxStatus = DATA_CHK;
-                Crc_Calulate((unsigned int)buf);
-            }
-            else
-            {
-                Com1RxCurCnt = 1;
-                Com1RxBuffer[0] = buf;
-                Crc = 0xffff;
-                Crc_Calulate((unsigned int)buf);
-            }
-            break;
-        case    DATA_CHK:
-            if (Com1RxCurCnt == (Com1RxBuffer[3] + 4))
-            {
-                Com1RxStatus = CHKSUM_LOW_CHK;
-            }
-            Crc_Calulate((unsigned int)buf);
-            break;
-        case    CHKSUM_LOW_CHK:
-            temp = (unsigned char)(Crc & 0x00ff);
-            if (temp == buf)
-            {
-                Com1RxStatus = CHKSUM_HIGH_CHK;
-            }
-            else    Com1RxStatus = RX_ERROR;
-            break;
-        case    CHKSUM_HIGH_CHK:
-            Crc = ((Crc >> 8) & 0x00ff);
-            temp = (unsigned char)Crc;
-            if (buf == temp)
-            {
-                Com1RxStatus = RX_GOOD;
-            }
-            else    Com1RxStatus = RX_ERROR;
-            break;
-        case    RX_GOOD:
-            break;
-        case    RX_ERROR:
-            Com1RxStatus = STX_CHK;
-            Com1RxCurCnt = 0;
-            break;
-        default:
-            Com1RxStatus = STX_CHK;
-            Com1RxCurCnt = 0;
-            break;
+                else    Com1RxTxStatus=STX_CHK;                  
+                break;              
+            case    RX_ERROR:
+                Com1RxTxStatus=STX_CHK;
+                Com1RxCnt=0;
+                break;
+            default:
+                Com1RxTxStatus=STX_CHK;
+                Com1RxCnt=0;
+                break;
         }
     }
 
 }
-
-
-
 
 
 

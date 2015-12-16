@@ -265,7 +265,6 @@ unsigned int StDelayTime = 0;
 extern  void  Initial(void);
 extern  void  InitTimer0(void);
 extern void    InitPort(void);
-extern void    UserBaudRate(void);
 extern void  Serial2Check(void);
 extern void GpsPPS1Chk(void);
 extern void LedBlinkModeInit(void);

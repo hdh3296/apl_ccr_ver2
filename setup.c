@@ -2,126 +2,59 @@
 
 #include    <pic18.h>
 
-/*
-#include        "..\..\system_com\memory_map.h"
-#include        "setup.h"
-#include        "fontout.h"
-#include        "iodef.h"
-#include        "keysort.h"
-*/
+#include	"setup.h"
 
 
-volatile const unsigned char information[12]={200,135,0,0,0,0,0,0,0,0,0};	/*this is the variable in FLASH where the old text resides*/
-unsigned char new_value[]={0,0,0,0,0,0,0,0,0,0,0};	             		/*unlike the old_text this is not a CONST -> stored in data RAM */
-far unsigned char * source_ptr = (far unsigned char *)new_value;        /*pointers to data*/
+#define	MAX_FLASH_BLOCK_NM	3
+
+volatile const unsigned char information[]={
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+											   };
+												
+unsigned char new_value[64];
+												
+far unsigned char * source_ptr = (far unsigned char *)new_value;                    /*pointers to data*/
 far unsigned char * dest_ptr = (far unsigned char *)information;
-unsigned char size = 11;						
+unsigned int size = 64;						
 
 
-/*
-unsigned    char    SrcAddress;
-unsigned    char    LocalNumber=0;
-unsigned    char    offset_flr=0;
-unsigned    char    ButtonType=0;
-unsigned    char    CallOffset=0;
-
-bit   ChangeSetup=0;
-bit   UpKeyOn=0;
-bit   UpKeyLong=0;
-bit   UpKeyOneTouch=0;
-bit   DnKeyOn=0;
-bit   DnKeyLong=0;
-bit   DnKeyOneTouch=0;
-bit   CmpSetBit=0;
-bit   MaskSetBit=0;
-bit   bToggleOn=0;
-bit   bCurOpenKey=0;
-bit   bUserLamp4=0;
-bit   bHibHpiSel=0;
-bit   bMainSubDoor=0;
-*/
-
-unsigned    char	SetNightVolt=200;
-unsigned    char	SetNightDayVolt=135;
 
 
-void    ReadFlashSetup(void)
+unsigned int FlashBlockRd(unsigned int BlkNm)
 {
-    unsigned char i;
-
-    for(i=0;i<size;i++){
-        new_value[i]=information[i];
-    }
+    unsigned int i,j;
+	if(BlkNm <= MAX_FLASH_BLOCK_NM){	
+		j= (BlkNm * 64);		
+	    for(i=0;i<size;i++){
+	        new_value[i]=information[j+i];
+	    }
+		return(1);
+	}
+	return(0);
 }
 
 
-void    LoadSetupValue(void)
+unsigned int  FlashBlockWr(unsigned int BlkNm) 
 {
-	ReadFlashSetup();
-    SetNightVolt=information[0];
-    SetNightDayVolt=information[1];
-
-
-/*
-    LocalNumber=information[0];
-
-    offset_flr=information[3];
-    if(offset_flr > 2)   offset_flr = 0;     
-
-    ButtonType=information[4];
-
-    Company=information[5];
-
-
-	bToggleOn=0;
-    if(information[6] & 0x01)	bToggleOn=1;
-
-	bCurOpenKey=0;
-    if(information[6] & 0x02)	bCurOpenKey=1;
-
-	bUserLamp4=0;
-    if(information[6] & 0x04)	bUserLamp4=1;
-
-
-	bHibHpiSel=0;
-    if(information[6] & 0x08)	bHibHpiSel=1;
-
-	bMainSubDoor=0;
-    if(information[6] & 0x10)	bMainSubDoor=1;
-
-	CallOffset=information[7];
-*/
-
+    unsigned int j;
+	if(BlkNm <= MAX_FLASH_BLOCK_NM){	
+		j= (BlkNm * 64);		
+    	flash_write(source_ptr,size,dest_ptr);
+		FlashBlockRd(BlkNm);
+		return(1);
+	}
+	return(0);
 }
 
 
 
-/*
-void    Display(unsigned char i,unsigned char j,unsigned char k)
-{
-
-    if(MainTimer>5){
-        MainTimer=0;
-        FDsp=!FDsp;
-#if defined(__DSP_DOT)
-        SetupDisplay(i,j);
-#else     
-        SetupDisplayES15(i,k);
-#endif     
-    }         
-}
-*/
-
-
-void    CompanyWrite(void) 
-{
-    flash_write(source_ptr,size,dest_ptr);
-//   asm("reset");
-}
-
-
-
-/*
 void	SetClearBit(unsigned char *TargetBuf,unsigned char value,unsigned char bitnm)
 {
 	unsigned char bitvalue;
@@ -131,13 +64,11 @@ void	SetClearBit(unsigned char *TargetBuf,unsigned char value,unsigned char bitn
 	if( *TargetBuf & bitvalue){
 		if(value==1){
 			*TargetBuf=( *TargetBuf & ~bitvalue);	
-			ChangeSetup=1;
 		}				
 	}
 	else{
 		if(value>1){
 			*TargetBuf=( *TargetBuf | bitvalue);	
-			ChangeSetup=1;
 		}				
 	}
 }
@@ -151,13 +82,14 @@ void	SetClearByte(unsigned char *TargetBuf,unsigned char value)
 		value=(value - 1 );
 		if(value != *TargetBuf){
 			*TargetBuf=value;
-			ChangeSetup=1;
 		}
 	}
 
 }
 
 
+
+/*
 void	CmdSetupChk(unsigned char id)
 {		
 
@@ -193,5 +125,5 @@ void	CmdSetupChk(unsigned char id)
 		SetClearByte( &new_value[0],(id+1));
 	}
  }
-*/
 
+*/

@@ -2,7 +2,7 @@
 
 #include    <pic18.h>
 #include	"Analog.h"
-#include	"apl_ccr_10a_main.h"
+#include	"main.h"
 
 
 

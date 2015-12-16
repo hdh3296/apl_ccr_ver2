@@ -11,7 +11,8 @@
 #include   	"Pwm1.h"
 #include   	"analog.h"
 #include   	"setup.h"
-#include	"apl_ccr_10a_main.h"
+#include	"main.h"
+#include    "loader_45k80.h"
 
 
 
@@ -82,57 +83,10 @@ void    InitPort(void)
 }
 
 
-void    UserBaudRate(void)
-{
-    unsigned char val;
-    val = 0;
-
-    TRISE0 = 1;
-    TRISE1 = 1;
-    TRISE2 = 1;
-    if (!RE0)	val = (val | 0x01);
-    if (!RE1)	val = (val | 0x02);
-    if (!RE2)	val = (val | 0x04);
-    switch (val)
-    {
-    case	0:
-        Com1BaudRate = 9600;
-        break;
-    case	1:
-        Com1BaudRate = 19200;
-        break;
-    case	2:
-        Com1BaudRate = 38400;
-        break;
-    case	3:
-        Com1BaudRate = 57600;
-        break;
-    default:
-        Com1BaudRate = 57600;
-        break;
-    }
-}
 
 
-void  Serial2Check(void)
-{
-    unsigned char i;
 
-    if (Com1RxStatus == RX_GOOD)
-    {
-//		for(i=0;i<(Com1RxBuffer[3]+4);i++)	Can1TxBuf[i]=Com1RxBuffer[i];
-//		Can1TxDataTxPointer=2;
-//		Can1TxDataTotalCnt= (Com1RxBuffer[3]+4);
-        Com1RxStatus = STX_CHK;
-//		RXLED = !RXLED;
-    }
-}
 
-/*
-   			Com1TxCurCnt=0;
- 			Com1TxTotalCnt=(Com1TxTotalCnt+2);
-			Com1TxStart();
-*/
 
 
 // GPS 에서 수신된 펄스를 체크한다.
@@ -169,7 +123,7 @@ void LedBlinkModeInit(void)
 }
 
 
-
+/*
 unsigned int ReSettingDayNigntChk(void)
 {
     if (PIN_RB5_NoUse)
@@ -223,7 +177,7 @@ unsigned int ReSettingDayNigntChk(void)
 
     return(0);
 }
-
+*/
 
 
 /*
@@ -711,10 +665,6 @@ void GpsRx2DataProc(void)
     Com1TxBuffer[16] = (unsigned char)((i % 10) + 0x30);
 
     Com2RxBuffer[18] = 0x0;
-
-    Com1TxCurCnt = 0;
-    Com1TxTotalCnt = Com2RxCurCnt;
-    Com1TxStart();
 }
 
 
@@ -1134,6 +1084,7 @@ void ChangPwmCycleRegedit(tag_CurDay CurDayNight)
 	}
 }
 
+/*
 // Tx 에러일 경우 대비, Tx리셋 및 Disable
 void Chk232TxErr(void)
 {
@@ -1150,6 +1101,7 @@ void Chk232TxErr(void)
 	}
 
 }
+*/
 
 // 셋업 모드에서 셋업 스위치 누르고 뗐을 때 ! 현재 DutyCycle, SetA값 저장 !
 void WriteProc(void)
@@ -1212,7 +1164,7 @@ void main(void)
     InitAD();
     InitPwm1();
     //UserBaudRate();
-    Com1_Init();
+    Loader_Com_Init(); //
     Com2_Init();
 
     ei();
@@ -1237,7 +1189,7 @@ void main(void)
     MainTimer = 0;
     msec100 = 0;
     Com1SerialTime = 0;
-    Com1RxStatus = STX_CHK;
+//    Com1RxStatus = STX_CHK;
 	
 	stApl[0].bBlinkEnab = TRUE;	stApl[2].bBlinkEnab = TRUE;	
 	
@@ -1245,7 +1197,7 @@ void main(void)
     {
         CLRWDT();
  
-		Chk232TxErr();	
+//		Chk232TxErr();	
 		
 // BLink 기능	
 		// Gps 232Rx 데이타 수신
@@ -1435,13 +1387,13 @@ void interrupt isr(void)
     if ((RC1IE) && (RC1IF))
     {
         RC1IF = 0;
-        Com1_Rx();
+//        Com1_Rx();
     }
 
     if ((TX1IE) && (TX1IF))
     {
         TX1IF = 0;
-        Com1_Tx();
+//        Com1_Tx();
     }
 
 
