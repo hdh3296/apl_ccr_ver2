@@ -23,11 +23,6 @@
 
 
 
-#define     MSEC_H    0xfc
-#define     MSEC_L    0x18
-
-
-
 
 extern	unsigned int	Loader_Com_Init(void);
 extern	unsigned int	Loader_Func(void);

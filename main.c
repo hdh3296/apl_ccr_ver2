@@ -1163,10 +1163,9 @@ void main(void)
     InitTimer0();
     InitAD();
     InitPwm1();
-    //UserBaudRate();
-    Loader_Com_Init(); //
+    //UserBaudRate();    
     Com2_Init();
-
+	Loader_Com_Init(); // COM1 초기화 
     ei();
 
     DONE = 1;	// A/D Conversion Status bit
@@ -1196,7 +1195,8 @@ void main(void)
     while (1)
     {
         CLRWDT();
- 
+		
+ 		Loader_Func(); // 
 //		Chk232TxErr();	
 		
 // BLink 기능	
@@ -1314,6 +1314,8 @@ void interrupt isr(void)
         TMR0L = MSEC_L;
         TMR0H = MSEC_H;
 
+		Loader_Msec1_Interrpt(); //
+
         
 		if ((CurDayNight == DAY) && (stApl[SW_DAY].bBlinkEnab == FALSE))	bBlink_DutyOn = TRUE;
 		else if ((CurDayNight == NIGHT) && (stApl[SW_NIGHT].bBlinkEnab == FALSE))	bBlink_DutyOn = TRUE;
@@ -1419,6 +1421,8 @@ void interrupt isr(void)
         }
         DONE = 0;
     }
+
+	Loader_Com_Interrpt(); //
 
 }
 

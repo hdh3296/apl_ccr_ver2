@@ -36,10 +36,10 @@ void    UserBaudRate(void)
 	}			
 }
 
-
+// COM1 √ ±‚»≠ 
 unsigned int  Loader_Com_Init(void)
 {
-	UserBaudRate();
+	UserBaudRate(); 
     Init_Com1();
 
 	Com1SerialTime=0;		
