@@ -2893,7 +2893,7 @@ void  Group1(void)
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_DUTY_RATE;
-			ReadLongData(EditFlashAddr);
+			ReadByteData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;
@@ -2908,7 +2908,7 @@ void  Group1(void)
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);
 			
             EditFlashAddr=BLOCK_SETMODE_SEL;
-			ReadLongData(EditFlashAddr);
+			ReadByteData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;			
@@ -2918,12 +2918,12 @@ void  Group1(void)
             EditStart=3;
             EditShiftCnt=4;
             EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=5000;
+            EditDigitMaxValue=3300;
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_DAY;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;			
@@ -2933,12 +2933,12 @@ void  Group1(void)
             EditStart=3;
             EditShiftCnt=4;
             EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=5000;
+            EditDigitMaxValue=3300;
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_EVE;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;		
@@ -2948,12 +2948,12 @@ void  Group1(void)
             EditStart=3;
             EditShiftCnt=4;
             EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=5000;
+            EditDigitMaxValue=3300;
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_NIG;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;		
@@ -2968,7 +2968,7 @@ void  Group1(void)
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_DAY;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;			
@@ -2983,7 +2983,7 @@ void  Group1(void)
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_EVE;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;				
@@ -2998,7 +2998,7 @@ void  Group1(void)
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_NIG;
-			ReadLongData(EditFlashAddr);
+			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;				

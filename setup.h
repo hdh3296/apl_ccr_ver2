@@ -475,6 +475,6 @@ extern	unsigned char new_value[64];
 #define BLOCK_SET_VALUE_DAY		IntzData003	// 5, 6
 #define BLOCK_SET_VALUE_EVE		IntzData004	// 7, 8
 #define BLOCK_SET_VALUE_NIG		IntzData005	// 9, 10
-#define BLOCK_SET_DUTYCYCLE_DAY	IntzData006	// 9, 10
-#define BLOCK_SET_DUTYCYCLE_EVE	IntzData006	// 9, 10
-#define BLOCK_SET_DUTYCYCLE_NIG	IntzData006	// 9, 10
+#define BLOCK_SET_DUTYCYCLE_DAY	IntzData006	// 
+#define BLOCK_SET_DUTYCYCLE_EVE	IntzData007	// 
+#define BLOCK_SET_DUTYCYCLE_NIG	IntzData008	// 

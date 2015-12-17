@@ -1092,9 +1092,6 @@ void main(void)
 
 
 
-
-
-
 		
 //		Chk232TxErr();	
 	

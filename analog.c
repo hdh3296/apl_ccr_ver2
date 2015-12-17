@@ -121,9 +121,11 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 
 	        if (SumCnt >= 10)
 	        {
-				AdVal = (((SumAD * 1000) / 819) / SumCnt);
-				if (AdVal >= 10)	arInPut_mV[AdChSel] = (unsigned int)(AdVal - 10); // 12비트 AD 기준 최대 5V에서 AD 값을 mV로 환산 !!! 
-				else arInPut_mV[AdChSel] = 0;
+				AdVal = (((SumAD * 1000) / 1240) / SumCnt); // 12비트 3.3V 기준 
+				if (AdVal >= 10)	
+					arInPut_mV[AdChSel] = (unsigned int)(AdVal - 10); 
+				else 
+					arInPut_mV[AdChSel] = 0;
 				arIs_AdUpd[AdChSel] = TRUE;
 				
 	            SumAD = 0;
