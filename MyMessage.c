@@ -79,14 +79,14 @@ const unsigned char GroupLineMessage[][17]={
 ///////////////////////////////////////////////////////////                                                                                                           
                                     "USER:Version    ", // 1
                                     "USER:Duty Cnt   ", // 2
-                                    "USER:Passward   ", // 3 
-                                    "USER:UserLamp1  ", // 4
-                                    "USER:UserLamp2  ", // 5  
-                                    "USER:SerialNm   ", // 6  
-                                    "USER:Normal Dsp ", // 7  
-                                    "USER:DriveMethod", // 8 
-                                    "USER:Fhm Run    ", // 9 
-                                    "USER:SubMenu On ", // 10 
+                                    "USER:Duty Rate  ", // 3 
+                                    "USER:SETMODE SEL", // 4
+                                    "USER:SET VAL DAY", // 5  
+                                    "USER:SET VAL EVE", // 6  
+                                    "USER:SET VAL NIG", // 7  
+                                    "USER:SetDuty DAY", // 8 
+                                    "USER:SetDuty EVE", // 9 
+                                    "USER:SetDuty NIG", // 10 
                                     "USER:Engineer Nm", // 11 
                                     "USER:Tt Use Time", // 12 
                                     "USER:Init Data  ", // 13 

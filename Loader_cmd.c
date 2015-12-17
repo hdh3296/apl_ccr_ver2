@@ -52,10 +52,7 @@
 
 
 
-#define     BIT_TYPE		1
-#define     BYTE_TYPE		2
-#define     INT_TYPE		3
-#define     LONG_TYPE		4
+
 
 // 소수점 자리 수  
 #define     DIVIDE_1		0 // 소수점 자리 수 없음 
@@ -2900,22 +2897,7 @@ void  Group1(void)
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;
-		case	GROUP1_MENU04: // Night 셋팅 값 
-            EditCursor=0;
-            EditStatus=DIGIT_EDIT;
-            EditStart=3;
-            EditShiftCnt=4;
-            EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=5000;
-            EditDigitMinValue=0;
-			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
-			
-            EditFlashAddr=BLOCK_SET_VALUE_NIGHT;
-			ReadLongData(EditFlashAddr);
-            Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
-			break;			
-		case	GROUP1_MENU05: // 셋팅 모드 값 (0=disable, 1=낮, 2=저녘, 3=밤)
+		case	GROUP1_MENU04: // 셋팅 모드 값 (0=disable, 1=낮, 2=저녘, 3=밤)
             EditCursor=0;
             EditStatus=DIGIT_EDIT;
             EditStart=3;
@@ -2930,11 +2912,96 @@ void  Group1(void)
             Integer_Digit();
             EditShiftCnt=(EditShiftCnt + 1);
 			break;			
-		case	GROUP1_MENU06:
-		case	GROUP1_MENU07:
-		case	GROUP1_MENU08:
-		case	GROUP1_MENU09:
-		case	GROUP1_MENU10:
+		case	GROUP1_MENU05: // 낮 셋팅 값 
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=5000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_VALUE_DAY;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;			
+		case	GROUP1_MENU06: // 저녁 셋팅 값 
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=5000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_VALUE_EVE;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;		
+		case	GROUP1_MENU07: // 밤 셋팅 값 
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=5000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_VALUE_NIG;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;		
+		case	GROUP1_MENU08: // Set DutyCycle 낮 변수 저장 값 
+            EditCursor=0;
+            EditStatus=NO_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1023;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_DUTYCYCLE_DAY;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;			
+		case	GROUP1_MENU09: // Set DutyCycle 저녁 변수 저장 값 
+            EditCursor=0;
+            EditStatus=NO_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1023;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_DUTYCYCLE_EVE;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;				
+		case	GROUP1_MENU10: // Set DutyCycle 밤 변수 저장 값 
+            EditCursor=0;
+            EditStatus=NO_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1023;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_SET_DUTYCYCLE_NIG;
+			ReadLongData(EditFlashAddr);
+            Integer_Digit();
+            EditShiftCnt=(EditShiftCnt + 1);
+			break;				
 		case	GROUP1_MENU11:
 		case	GROUP1_MENU12:
 		case	GROUP1_MENU13:

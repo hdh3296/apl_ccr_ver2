@@ -6,8 +6,9 @@
 
 
 
-#define SW_DAY		0
-#define SW_NIGHT	2
+#define SW_DAY	0
+#define SW_EVE	1
+#define SW_NIG	2
 
 #define	A_SET_V_MAX 3300 // mV
 #define	A_SET_V_MIN 0
@@ -35,13 +36,13 @@ tag_CurDay	CurDayNight = 100, BefCurDayNight = 100;
 
 typedef struct 
 {
-	unsigned int 	Setting_mV; // 셋팅값 
+	unsigned int 	Set_mV; // 셋팅값 
 	unsigned int 	SwPushTimer;
 	unsigned char 	SwTouchCnt;
 	unsigned int 	SwTouchCntTimer;
 	unsigned char   SetSwCharterTimer;
 	unsigned long 	Set_Current; // 변환된 볼륨에의한 셋팅 전류 값
-	unsigned int	DutyCycle; 
+	unsigned int	Set_DutyCycle; 
 	
 	unsigned char 	bSetSwPushOK	: 1;
 	unsigned char 	bSetSw_UpEdge 	: 1;
@@ -58,9 +59,9 @@ tag_Apl		stApl[3] = {
 
 
 
-unsigned int CurA_IN_mV = 0;
-unsigned int CurV_IN = 0;
-bit bCurA_IN_mV_Upd = FALSE;
+unsigned int AD_A_IN_mV = 0;
+unsigned int AD_V_IN_mV = 0;
+bit bAD_A_IN_mV_Upd = FALSE;
 
 
 ULONG In_Current;  // 변환된 입력 피드백 전류 값
@@ -73,8 +74,8 @@ bit bSettingMode = FALSE;
 
 extern void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle);
 extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight);
-extern void OnSetAplLamp(tag_CurDay CurDayNight);
+extern void OnAplLampSet(tag_CurDay CurDayNight);
 extern void ChangPwmCycleRegedit(tag_CurDay CurDayNight);
-extern ULONG GetInCurrent(ULONG CurA_IN_mV);
+extern ULONG GetInCurrent(ULONG AD_A_IN_mV);
 
 #endif

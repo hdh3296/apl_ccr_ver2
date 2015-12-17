@@ -252,21 +252,31 @@ unsigned int StDelayTime = 0;
 
 // 임시 : LCD 로더에서 온값 저장할 변수들
 //Flashing Set
-volatile	unsigned char L_Duty_Cnt = 0;
-volatile	unsigned char L_Duty_Rate = 0;
+unsigned char L_Duty_Cnt = 0;
+unsigned char L_Duty_Rate = 0;
 
-unsigned int 		   L_NightSetValue = 0;
-volatile unsigned char L_SetModeSel = 0;
+
+unsigned char L_SetMode_Sel = 0;
+unsigned char Bef_L_SetMode_Sel = 0;
+
+unsigned int  L_DaySetValue = 0;
+unsigned int  L_EveSetValue = 0;
+unsigned int  L_NigSetValue = 0;
+
+
+
+
+
 // Current Set
 unsigned int L_MAX_Current_Day = 0;
 unsigned int L_MAX_Current_Evening = 0;
 unsigned int L_MAX_Current_Night = 0;
 
 // blink Duty 시간 변수들 
-UCHAR	tDUTY_CNT = 1;  // 1분당  LED ON 횟수
-UCHAR   tDUTY_RATE = 0;	// LED ON 듀티 비(%)
-UINT    LED_CYCLE_MSEC = 0;
-UINT	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
+UCHAR	DUTY_CNT = 0;  // 1분당  LED ON 횟수
+UCHAR   DUTY_RATE = 0;	// LED ON 듀티 비(%)
+ULONG   LED_CYCLE_MSEC = 0;
+ULONG	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
 
 
 

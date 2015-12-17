@@ -471,5 +471,10 @@ extern	unsigned char new_value[64];
 #define BLOCK_VERSION			ByteData001 // 1
 #define BLOCK_DUTY_CNT 			ByteData002	// 2	
 #define BLOCK_DUTY_RATE			ByteData003	// 3
-#define BLOCK_SET_VALUE_NIGHT	IntzData003	// 5, 6
-#define BLOCK_SETMODE_SEL		ByteData007	// 7
+#define BLOCK_SETMODE_SEL		ByteData004	// 4
+#define BLOCK_SET_VALUE_DAY		IntzData003	// 5, 6
+#define BLOCK_SET_VALUE_EVE		IntzData004	// 7, 8
+#define BLOCK_SET_VALUE_NIG		IntzData005	// 9, 10
+#define BLOCK_SET_DUTYCYCLE_DAY	IntzData006	// 9, 10
+#define BLOCK_SET_DUTYCYCLE_EVE	IntzData006	// 9, 10
+#define BLOCK_SET_DUTYCYCLE_NIG	IntzData006	// 9, 10

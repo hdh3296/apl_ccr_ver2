@@ -45,6 +45,12 @@
 
 
 
+// Temp
+#define     BIT_TYPE		1
+#define     BYTE_TYPE		2
+#define     INT_TYPE		3
+#define     LONG_TYPE		4
+
 extern void   			Ladder485Init(void);
 extern unsigned int     NewFlashData(void);
 //extern void     VirtualMoveCntReDsp(void);
@@ -57,8 +63,37 @@ extern	unsigned char	LadderBuf[17];
 extern	unsigned int   LadderTime;
 extern unsigned int  ReadByteData(unsigned int pt);
 
+// Temp
+//unsigned int   DigitData;
+//unsigned int   DigitMaxValue;
+//unsigned int   DigitMinValue;
+extern unsigned int   OrgNcNo;
+
+extern unsigned int   LadderKeyTime;
+extern unsigned int   LadderTime;
+
+extern unsigned int   BefDspMode;
+extern unsigned int   SaveVerify;
+
+extern unsigned long   EditDigitData;
+extern unsigned long   EditDigitMaxValue; // 최대 표시 값 
+extern unsigned long   EditDigitMinValue; // 최소 표시 값 
+
+extern unsigned int   EditDigitCursor;
+extern unsigned int   EditDigitShiftCnt;
+extern unsigned int   EditCursor;
+extern unsigned int   EditStatus;
+extern unsigned int   EditStart; // LCD상의 표시 위치 
+extern unsigned int   EditShiftCnt; // 자릿수 
+extern unsigned int   EditDivide; // 소수점 자리 수 저장 변수 
+extern unsigned int   EditDataType;
+extern unsigned int   EditFlashAddr; // Flash Block 영역 주소 저장 변수 
+
+extern unsigned int   MaxSubMenu;
+extern unsigned int   MemPointer;
 
 
+extern void  Group1_Save(void);
 /*
 	LadderBuf[C_CMD]=RcvBuf[RCV_CMD];               
    	LadderBuf[C_CMDTYPE]=RcvBuf[RCV_CMDTYPE];             

@@ -2,7 +2,6 @@
 
 #include    <pic18.h>
 
-
 #include	"Analog.h"
 #include	"main.h"
 #include	"Commom.h"
@@ -119,10 +118,8 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 		{	
 	        SumAD = SumAD + (unsigned long)ADBuf; // 12비트 AD 
 			SumCnt++;
-			if (bSettingMode) 	nSumCnt = 10;
-			else 				nSumCnt = 10;
 
-	        if (SumCnt >= nSumCnt)
+	        if (SumCnt >= 10)
 	        {
 				AdVal = (((SumAD * 1000) / 819) / SumCnt);
 				if (AdVal >= 10)	arInPut_mV[AdChSel] = (unsigned int)(AdVal - 10); // 12비트 AD 기준 최대 5V에서 AD 값을 mV로 환산 !!! 
@@ -154,11 +151,11 @@ void GetMyAD(void)
 			switch (ch)
 			{
 			case 0:
-				CurA_IN_mV = arInPut_mV[ch];
-				bCurA_IN_mV_Upd = TRUE;
+				AD_A_IN_mV = arInPut_mV[ch];
+				bAD_A_IN_mV_Upd = TRUE;
 				break;
 			case 1:
-				CurV_IN = arInPut_mV[ch];
+				AD_V_IN_mV = arInPut_mV[ch];
 				break;
 			default:
 				break;
