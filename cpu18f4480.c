@@ -1,8 +1,11 @@
 
 
 #include    <pic18.h>
- 
+#include	"AllCommom.h"
+
 #include	"main.h"
+#include	"Commom.h"
+
 
 
 __CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF  & 0xffff));                   

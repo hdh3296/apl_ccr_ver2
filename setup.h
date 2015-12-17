@@ -1,4 +1,5 @@
 
+#include	"AllCommom.h"
 
 extern	unsigned int FlashBlockRd(unsigned int BlkNm);
 extern	unsigned int FlashBlockWr(unsigned int BlkNm); 
@@ -8,7 +9,7 @@ extern	volatile const unsigned char information[];
 extern	unsigned char new_value[64];
 
 
-
+// Flash Block 영역 주소 
 #define	ByteData001	0
 #define	ByteData002	1
 #define	ByteData003	2
@@ -465,3 +466,10 @@ extern	unsigned char new_value[64];
 #define	longData062		ByteData245
 #define	longData063		ByteData249
 #define	longData064		ByteData253
+
+// my 
+#define BLOCK_VERSION			ByteData001 // 1
+#define BLOCK_DUTY_CNT 			ByteData002	// 2	
+#define BLOCK_DUTY_RATE			ByteData003	// 3
+#define BLOCK_SET_VALUE_NIGHT	IntzData003	// 5, 6
+#define BLOCK_SETMODE_SEL		ByteData007	// 7

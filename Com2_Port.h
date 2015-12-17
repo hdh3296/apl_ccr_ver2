@@ -1,4 +1,7 @@
 
+#include	"AllCommom.h"
+
+
 extern	void    Com2_Init(void);
 extern	void    Com2_Tx(void);
 extern	void    Com2_Rx(void);

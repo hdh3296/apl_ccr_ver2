@@ -1,4 +1,5 @@
 
+#include	"AllCommom.h"
 
 #define  ADR_NO_SET         'N'   
 #define  ADR_SET_SEND       'S'   
@@ -54,7 +55,7 @@ extern	unsigned char	New485Ladder[MAX_LADDER_BUF];
 extern	unsigned char	LadderBuf[17];
 
 extern	unsigned int   LadderTime;
-
+extern unsigned int  ReadByteData(unsigned int pt);
 
 
 

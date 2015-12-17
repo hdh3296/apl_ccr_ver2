@@ -1,4 +1,8 @@
 
+#include	"AllCommom.h"
+
+
+
 
 extern	void    		Init_Com1(void);
 extern  void 			USART1_TXC(void);

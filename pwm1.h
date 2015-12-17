@@ -1,4 +1,6 @@
 
+#include	"AllCommom.h"
+
 
 #define DUTI_MAX 0x3ff // 1023
 

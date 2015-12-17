@@ -1,11 +1,6 @@
 
+#include	"AllCommom.h"
 
-#ifndef	TRUE
-#define	TRUE	1
-#endif
-#ifndef FALSE
-#define	FALSE	0
-#endif
 
 extern volatile bit RB0x                @ ((unsigned)&PORTB*8)+0;
 extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
@@ -91,56 +86,56 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 
 
 // AD 입력 
-#define _A_IN		PIN_A_IN // AN0		
-#define _V_IN		PIN_V_IN // AN1
+#define _A_IN			PIN_A_IN // AN0		
+#define _V_IN			PIN_V_IN // AN1
 // APL LAMP 출력 제어 
-#define _LAMP_ON	PIN_LED_ON // APL Lamp On/Off  			
-#define _PWM		PIN_PWM 
+#define _LAMP_ON		PIN_LED_ON // APL Lamp On/Off  			
+#define _PWM			PIN_PWM 
 // CDS
-#define _IN_DAY		PIN_IN_DAY 				
-#define _IN_NIGHT	PIN_IN_NIGHT
+#define _IN_DAY			PIN_IN_DAY 				
+#define _IN_NIGHT		PIN_IN_NIGHT
 // 깜빡임 외부에서 제어 
-#define _IN_BLINK	PIN_IN_BLINK 				
+#define _IN_BLINK		PIN_IN_BLINK 				
 // 딥스위치 	
-#define _DIP_SW0	PIN_MODE_0 					
-#define _DIP_SW1	PIN_MODE_1 					
-#define _DIP_SW2	PIN_MODE_2 					
-#define _DIP_SW3	PIN_MODE_3 					
-#define _DIP_SW4	PIN_MODE_4	 				
+#define _DIP_SW0		PIN_MODE_0 					
+#define _DIP_SW1		PIN_MODE_1 					
+#define _DIP_SW2		PIN_MODE_2 					
+#define _DIP_SW3		PIN_MODE_3 					
+#define _DIP_SW4		PIN_MODE_4	 				
 // 232통신 			
-#define _TX_232		PIN_TX_232	 				// CCP3/CK1/TX1/CANTX	
-#define _RX_232		PIN_RX_232	 				// CANRX/RX1/DT1/CCP4
+#define _TX_232			PIN_TX_232	 				// CCP3/CK1/TX1/CANTX	
+#define _RX_232			PIN_RX_232	 				// CANRX/RX1/DT1/CCP4
 // CAN 통신 
-#define _CAN_TX		PIN_CAN_TX 					 	
-#define _CAN_RX		PIN_CAN_RX 
+#define _CAN_TX			PIN_CAN_TX 					 	
+#define _CAN_RX			PIN_CAN_RX 
 // LED
 #define _LED_CPU_RUN	PIN_LED_RUN0 // CPU RUN				
 #define _LED_NIGHT		PIN_LED_RUN1 // Night 상태 LED 				
-#define _LED_RUN2		PIN_LED_RUN2 	
+#define _LED_GPS_GOOD	PIN_LED_RUN2 	
 #define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
-#define _LED_GPS_GOOD	PIN_LED_RUN4 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 				
+#define _LED_TEST 		PIN_LED_RUN4 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 				
 // GPS
-#define _RX_GPS		PIN_TX_DP 					// 통신 RX2
-#define _PPS_GPS	PIN_1PPS 				
+#define _RX_GPS			PIN_TX_DP 					// 통신 RX2
+#define _PPS_GPS		PIN_1PPS 				
 // 기타 			
-#define _MCLR		PIN_MCLR	
-#define _PGC		PIN_PGC 				
-#define _PGD		PIN_PGD 
+#define _MCLR			PIN_MCLR	
+#define _PGC			PIN_PGC 				
+#define _PGD			PIN_PGD 
 // 미사용 
-#define _NoUse1		PIN_RA2_NoUse 				
-#define _NoUse2		PIN_RA3_NoUse 					
-#define _NoUse3		PIN_RA5_NoUse
-#define _NoUse4		PIN_RC5_NoUse	
-#define _NoUse5		PIN_RE1_NoUse 				
-#define _NoUse6		PIN_RE2_NoUse 
-#define _NoUse7		PIN_RB5_NoUse 
+#define _NoUse1			PIN_RA2_NoUse 				
+#define _NoUse2			PIN_RA3_NoUse 					
+#define _NoUse3			PIN_RA5_NoUse
+#define _NoUse4			PIN_RC5_NoUse	
+#define _NoUse5			PIN_RE1_NoUse 				
+#define _NoUse6			PIN_RE2_NoUse 
+#define _NoUse7			PIN_RB5_NoUse 
 
 
 // 미사용(이전) Q??추후 삭제 
-#define _SW_SET_HI				_NoUse1
-#define _SW_SET_LO				_NoUse2
-#define _VR1_SET_HI				_NoUse3
-#define _VR2_SET_LO				_NoUse4
+#define _SW_SET_HI		_NoUse1
+#define _SW_SET_LO		_NoUse2
+#define _VR1_SET_HI		_NoUse3
+#define _VR2_SET_LO		_NoUse4
 
 
 
@@ -150,12 +145,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define     MSEC_H    0xfc
 #define     MSEC_L    0x18
 
-// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
-#define		COUNT_MIN	40      	// 1분당  LED ON 횟수
-#define		LED_ON_DUTY_RATIO	50	// LED ON 듀티 비(%)
-#define		LED_CYCLE_MSEC		(60000 / (COUNT_MIN))
-// Lamp Blink에서의 On 주기 시간(ms) 
-#define		LED_ON_DUTY_MSEC	((ULONG)((ULONG)(((ULONG)LED_CYCLE_MSEC) * ((ULONG)LED_ON_DUTY_RATIO)) / 100))
+
 
 #define SETSW_PUSH		0 // 스위치 눌렀을 때가 0 값이다.
 
@@ -260,17 +250,23 @@ unsigned int SetStTimer = 0;
 unsigned int StDelayTimer = 0;
 unsigned int StDelayTime = 0;
 
-// 임시 : LCD 로더에서 온값 저장할 변수들 
-bit bL_NightSetMode = FALSE;
-	// Current Set
-	unsigned int L_NightSetValue = 0;
-	unsigned int L_MAX_Current_Day = 0;
-	unsigned int L_MAX_Current_Evening = 0;
-	unsigned int L_MAX_Current_Night = 0;
-	//Flashing Set
-	unsigned char L_Duty_Cnt = 0;
-	unsigned char L_Duty_Rate = 0;
+// 임시 : LCD 로더에서 온값 저장할 변수들
+//Flashing Set
+volatile	unsigned char L_Duty_Cnt = 0;
+volatile	unsigned char L_Duty_Rate = 0;
 
+unsigned int 		   L_NightSetValue = 0;
+volatile unsigned char L_SetModeSel = 0;
+// Current Set
+unsigned int L_MAX_Current_Day = 0;
+unsigned int L_MAX_Current_Evening = 0;
+unsigned int L_MAX_Current_Night = 0;
+
+// blink Duty 시간 변수들 
+UCHAR	tDUTY_CNT = 1;  // 1분당  LED ON 횟수
+UCHAR   tDUTY_RATE = 0;	// LED ON 듀티 비(%)
+UINT    LED_CYCLE_MSEC = 0;
+UINT	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
 
 
 

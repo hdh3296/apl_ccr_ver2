@@ -1,7 +1,10 @@
 
 
-#include <pic18.h>
-#include "Pwm1.h"
+#include 	<pic18.h>
+
+
+#include 	"Pwm1.h"
+#include	"Commom.h"
 
 
 // PIN_PWM Mode On

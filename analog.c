@@ -1,8 +1,12 @@
 
 
 #include    <pic18.h>
+
+
 #include	"Analog.h"
 #include	"main.h"
+#include	"Commom.h"
+
 
 
 
@@ -167,7 +171,7 @@ void GetMyAD(void)
 }
 
 
-UCHAR ChangeAdChSel(UCHAR AdSel, tag_CurDay ch)
+UCHAR ChangeAdChSel(UCHAR AdSel, UCHAR ch)
 {	
 	static unsigned char cnt = 0;
 	

@@ -5,18 +5,17 @@
 
 #include    <pic18.h>
 
+
+#include	"main.h"
+#include	"Commom.h"
+#include   	"analog.h"
 #include	"serial.h"
 #include   	"Com1_Port.h"
 #include   	"Com2_Port.h"
 #include   	"Pwm1.h"
-#include   	"analog.h"
 #include   	"setup.h"
-#include	"main.h"
 #include    "loader_45k80.h"
-
-
-
-
+#include	"Loader_cmd.h"
 
 
 void    InitPort(void)
@@ -77,7 +76,7 @@ void    InitPort(void)
 	// LED : 1 = Led Off
 	_LED_CPU_RUN  = 1; // CPU RUN				
 	_LED_NIGHT = 1; // Night 상태 LED 				
-	_LED_RUN2 = 1;	
+	_LED_TEST = 1;	
 	_LED_LAMP_ON = 1;// APL Lamp On 듀티 LED			
 	_LED_GPS_GOOD = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED 					
 }
@@ -929,7 +928,6 @@ void OnOffAplLamp(tag_CurDay CurDayNig)
 {
 	if (bBlink_DutyOn && (CurDayNig != NONE)) // Blink Led 가 On 일 때
 	{	
-		_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
 		_LAMP_ON = TRUE; // LAMP ON
 		if (bStEnab)
 		{
@@ -967,7 +965,6 @@ void OnOffAplLamp(tag_CurDay CurDayNig)
 	}
 	else // Blink Led 가 Off 일 때
 	{
-		_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
 		_LAMP_ON = FALSE; // LAMP OFF 
 		
 		DutyCycle = ((stApl[CurDayNig].DutyCycle * 6) / 100);
@@ -1149,7 +1146,7 @@ ULONG GetInCurrent(ULONG CurA_IN_mV)
 }
 
 ///////////////////////////
-//   메인 함수 				//
+//   메인 함수 			  //
 ///////////////////////////
 
 void main(void)
@@ -1172,25 +1169,29 @@ void main(void)
     TMR0IE = 1;
     SWDTEN = 1;  // Software Controlled Watchdog Timer Enable bit / 1 = Watchdog Timer is on
 
+// 저장된 값 Read 
 	// 낮,밤의 저장된 셍팅전압,전류,듀티값을 얻어온다. 
+	//LoadSetupValue();
 	for (i=0; i<3; i++)
 	{
 		ReadVal((arSavedBuf + (i*4)), &stApl[i].Setting_mV, &stApl[i].DutyCycle);
 		stApl[i].Set_Current = GetSetCurrent(stApl[i].Setting_mV, i);
 	}
     PwOnAplLamp();
-    
 
-    //LoadSetupValue();
-    modesw = 0xff;
-    LedBlinkModeInit();
 
     MainTimer = 0;
     msec100 = 0;
-    Com1SerialTime = 0;
-//    Com1RxStatus = STX_CHK;
-	
-	stApl[0].bBlinkEnab = TRUE;	stApl[2].bBlinkEnab = TRUE;	
+	// 깜빡임 기능을 사용할지 여부 
+	stApl[0].bBlinkEnab = TRUE;	// TRUE = 깜빡임 ON
+	stApl[2].bBlinkEnab = TRUE;	
+
+
+// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
+LED_CYCLE_MSEC = (60000 / (tDUTY_CNT));
+// Lamp Blink에서의 On 주기 시간(ms) 
+LED_ON_DUTY_MSEC = 
+	((ULONG)((ULONG)(((ULONG)LED_CYCLE_MSEC) * ((ULONG)tDUTY_RATE)) / 100));
 	
     while (1)
     {
@@ -1199,8 +1200,10 @@ void main(void)
 // 로더를 통해 셋팅하고자 하는 값을 가져온다. 
  		Loader_Func(); // 
 		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
-		stApl[SW_NIGHT].bSetSwPushOK = bL_NightSetMode; // 밤 셋팅 모드 
+		stApl[SW_NIGHT].bSetSwPushOK = L_SetModeSel; // 밤 셋팅 모드 
 		stApl[SW_NIGHT].Setting_mV = L_NightSetValue; // 밤 셋팅 값 
+
+		L_Duty_Cnt = (unsigned char)(unsigned long)(information[BLOCK_DUTY_CNT]);  //ReadByteData(BLOCK_DUTY_CNT);
 
 		
 //		Chk232TxErr();	
@@ -1314,10 +1317,16 @@ void interrupt isr(void)
 
 		Loader_Msec1_Interrpt(); //
 
-        
-		if ((CurDayNight == DAY) && (stApl[SW_DAY].bBlinkEnab == FALSE))	bBlink_DutyOn = TRUE;
-		else if ((CurDayNight == NIGHT) && (stApl[SW_NIGHT].bBlinkEnab == FALSE))	bBlink_DutyOn = TRUE;
-		else bBlink_DutyOn = IsBlink_On();
+        // Blink 처리 
+		if ((CurDayNight == DAY) && (stApl[SW_DAY].bBlinkEnab == FALSE))	
+			bBlink_DutyOn = TRUE; // 깜빡임 없음 
+		else if ((CurDayNight == NIGHT) && (stApl[SW_NIGHT].bBlinkEnab == FALSE))	
+			bBlink_DutyOn = TRUE; // 깜빡임 없음 
+		else 
+			bBlink_DutyOn = IsBlink_On();
+
+		if(bBlink_DutyOn) 	_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
+		else 				_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
 
         Com1SerialTime++;
         Com2SerialTime++;

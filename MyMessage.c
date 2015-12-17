@@ -1,4 +1,6 @@
 
+#include 	"MyMessage.h"
+
 
 const unsigned char blinkx[]        	={"                "};  
 
@@ -73,40 +75,40 @@ const unsigned char StatusMessage[][17]	={
 
 
 const unsigned char GroupLineMessage[][17]={
-                                    "FL:00           ",//0
+                                    "FL:00           ", // 0
 ///////////////////////////////////////////////////////////                                                                                                           
-                                    "USER:Version    ",//1  
-                                    "USER:BoardId    ",//2 
-                                    "USER:Passward   ",//3  
-                                    "USER:UserLamp1  ",//4  
-                                    "USER:UserLamp2  ",//5  
-                                    "USER:SerialNm   ",//6  
-                                    "USER:Normal Dsp ",//7  
-                                    "USER:DriveMethod",//8 
-                                    "USER:Fhm Run    ",//9 
-                                    "USER:SubMenu On ",//10 
-                                    "USER:Engineer Nm",//11 
-                                    "USER:Tt Use Time",//12 
-                                    "USER:Init Data  ",//13 
-                                    "USER:Group Nm   ",//14 
-                                    "USER:Local Nm   ",//15 
-                                    "USER:Inv InBd Tp",//16
-                                    "USER:Call(c-f-f)",//17
-                                    "USER:hh-mm-ss   ",//18 
-                                    "USER:yy-mm-dd   ",//19
-                                    "USER:ErrStCnt   ",//20  
-                                    "USER:Company    ",//21									  
-                                    "USER:OutDate    ",//22  
-                                    "USER:UserLamp3  ",//23  
-                                    "USER:UserLamp4  ",//24  
-                                    "USER:C-K-H-O-B-R",//25 
-                                    "USER:User4      ",//26 
-                                    "USER:User5      ",//27 
-                                    "USER:User6      ",//28 
-                                    "USER:F-Error(00)",//29 
-                                    "USER:SenPosi(00)",//30 
-                                    "USER:System Mode",//31  
-                                    "USER: Stop Pulse",//32 
+                                    "USER:Version    ", // 1
+                                    "USER:Duty Cnt   ", // 2
+                                    "USER:Passward   ", // 3 
+                                    "USER:UserLamp1  ", // 4
+                                    "USER:UserLamp2  ", // 5  
+                                    "USER:SerialNm   ", // 6  
+                                    "USER:Normal Dsp ", // 7  
+                                    "USER:DriveMethod", // 8 
+                                    "USER:Fhm Run    ", // 9 
+                                    "USER:SubMenu On ", // 10 
+                                    "USER:Engineer Nm", // 11 
+                                    "USER:Tt Use Time", // 12 
+                                    "USER:Init Data  ", // 13 
+                                    "USER:Group Nm   ", // 14 
+                                    "USER:Local Nm   ", // 15 
+                                    "USER:Inv InBd Tp", // 16
+                                    "USER:Call(c-f-f)", // 17
+                                    "USER:hh-mm-ss   ", // 18 
+                                    "USER:yy-mm-dd   ", // 19
+                                    "USER:ErrStCnt   ", // 20  
+                                    "USER:Company    ", // 21									  
+                                    "USER:OutDate    ", // 22  
+                                    "USER:UserLamp3  ", // 23  
+                                    "USER:UserLamp4  ", // 24  
+                                    "USER:C-K-H-O-B-R", // 25 
+                                    "USER:User4      ", // 26 
+                                    "USER:User5      ", // 27 
+                                    "USER:User6      ", // 28 
+                                    "USER:F-Error(00)", // 29 
+                                    "USER:SenPosi(00)", // 30 
+                                    "USER:System Mode", // 31  
+                                    "USER: Stop Pulse", // 32 
 ///////////////////////////////////////////////////////////                                    
 ///////////////////////////////////////////////////////////   
                                                                     

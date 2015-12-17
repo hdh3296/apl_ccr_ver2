@@ -5,10 +5,12 @@
 
 #include    <pic18.h>
 
-#include        "loader_45k80.h"
-#include        "com1_port.h"
-#include        "ladder_cmd.h"
-#include    	"serial.h"
+
+#include    "loader_45k80.h"
+#include	"Commom.h"
+#include    "com1_port.h"
+#include    "Loader_cmd.h"
+#include    "serial.h"
 
 
 

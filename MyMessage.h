@@ -1,4 +1,7 @@
 
+#include	"AllCommom.h"
+
+
 extern	const unsigned char GroupLineMessage[][17];
 extern	const unsigned char StatusMessage[][17];
 extern	const unsigned char blinkx[];

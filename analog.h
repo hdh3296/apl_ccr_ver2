@@ -1,19 +1,11 @@
-#include	"Commom.h"
+
+#include	"AllCommom.h"
 
 
-extern	void			InitAD(void);
-extern	bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel);
 
 
 #define	AD_SUMCNT		10
 #define	nAD_MAX_CHANEL	7
-
-#ifndef	TRUE
-#define	TRUE	1
-#endif
-#ifndef FALSE
-#define	FALSE	0
-#endif
 
 
 bit	bAn0_Updated = 0;
@@ -48,9 +40,11 @@ UCHAR arIs_AdUpd[ADCH_MAX] = {0,};
 
 
 extern void GetMyAD(void);
-extern UCHAR ChangeAdChSel(UCHAR AdSel, tag_CurDay ch);
+extern UCHAR ChangeAdChSel(UCHAR AdSel, UCHAR ch);
 extern void Set_AdCh(UCHAR AdSel);
 
+extern	void	InitAD(void);
+extern	bit		IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel);
 
 
 

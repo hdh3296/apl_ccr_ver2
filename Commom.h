@@ -1,14 +1,10 @@
 
-typedef	unsigned char	UCHAR;
-typedef unsigned int	UINT;
-typedef unsigned long 	ULONG;
+#include	"AllCommom.h"
 
-#ifndef	TRUE
-#define	TRUE	1
-#endif
-#ifndef FALSE
-#define	FALSE	0
-#endif
+#ifndef _COMMOM_H_
+#define _COMMOM_H_
+
+
 
 #define SW_DAY		0
 #define SW_NIGHT	2
@@ -80,3 +76,5 @@ extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight);
 extern void OnSetAplLamp(tag_CurDay CurDayNight);
 extern void ChangPwmCycleRegedit(tag_CurDay CurDayNight);
 extern ULONG GetInCurrent(ULONG CurA_IN_mV);
+
+#endif
