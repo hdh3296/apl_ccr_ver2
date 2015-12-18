@@ -69,8 +69,8 @@ void    InitPort(void)
 	_LAMP_ON = 0;  			
 	_PWM = 0; 
 	// LED : 1 = Led Off
-	_LED_CPU_RUN  = 1; // CPU RUN				
-	_LED_NIGHT = 1; // Night 상태 LED 				
+	_LED_CDS_DAY  = 1; // CPU RUN				
+	_LED_CDS_NIGHT = 1; // Night 상태 LED 				
 	_LED_TEST = 1;	
 	_LED_LAMP_ON = 1;// APL Lamp On 듀티 LED			
 	_LED_GPS_GOOD = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED 					
@@ -127,7 +127,7 @@ unsigned int ReSettingDayNigntChk(void)
         bNightDay = 0;
         NightSetTime = 0;
         bNight = 0;
-        _LED_NIGHT = 1;
+        _LED_CDS_NIGHT = 1;
         return(0);
     }
 
@@ -141,7 +141,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNight)	_LED_NIGHT = 0;
+        if (bNight)	_LED_CDS_NIGHT = 0;
     }
     else if (!PIN_MODE_0 && PIN_MODE_1)
     {
@@ -152,7 +152,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNightDay)	_LED_NIGHT = 0;
+        if (bNightDay)	_LED_CDS_NIGHT = 0;
     }
     else
     {
@@ -164,7 +164,7 @@ unsigned int ReSettingDayNigntChk(void)
 
         if (SettingReadyTime > 4)
         {
-            _LED_NIGHT = !_LED_NIGHT;
+            _LED_CDS_NIGHT = !_LED_CDS_NIGHT;
             SettingReadyTime = 0;
         }
     }
@@ -475,7 +475,7 @@ void ApaLampOnOff(void)
 			MainTimer=0;
 			WakeupTime=0;
 			_LED_GPS_GOOD=1;
-			_LED_NIGHT=1;
+			_LED_CDS_NIGHT=1;
 
 			SLEEP();
 		}
@@ -664,7 +664,7 @@ void GpsRx2DataProc(void)
 
 
 // Blink Led On, Off 판별
-bit IsInLED_ON(unsigned char bLedState, unsigned char* Timer)
+bit IsInput_ON(unsigned char bLedState, unsigned char* Timer)
 {
     static bit bBlkLedOn;
 
@@ -686,15 +686,25 @@ bit IsInLED_ON(unsigned char bLedState, unsigned char* Timer)
 
 unsigned char GetDayEveningNight(void)
 {
-    static bit bDayLed, bNightLed;
+    static bit bCDS_Day, bCDS_Night;
     unsigned char ret;
 
-    bNightLed = IsInLED_ON(_IN_NIGHT, &InDayTimer);
+    bCDS_Day = IsInput_ON(_CDS_DAY, &CDS_DayTimer);
+	bCDS_Night = IsInput_ON(_CDS_NIGHT, &CDS_NightTimer);
 
-    if (bNightLed)
-        ret = NIGHT;	// 밤
-    else
-        ret = DAY;		// 낮
+    if (bCDS_Day)		_LED_CDS_DAY = LED_CDS_ON;
+	else				_LED_CDS_DAY = LED_CDS_OFF;
+    if (bCDS_Night) 	_LED_CDS_NIGHT = LED_CDS_ON;
+	else				_LED_CDS_NIGHT = LED_CDS_OFF;	
+
+	if ((bCDS_Day) && (bCDS_Night))
+		ret = EVENING;	
+    else if (bCDS_Day)
+        ret = DAY;	
+    else if (bCDS_Night)
+        ret = NIGHT;	
+	else 
+		ret = DAY;	
 
     return ret;
 
@@ -780,16 +790,13 @@ unsigned int GetDutyByCompareCurrent(unsigned int duty, unsigned int setVolt,
     return duty;
 }
 
-
-void PwOnAplLamp(void)
+// 최초 전원 껐다 켰을 떄 
+void PwOffOnLampOut(void)
 {
     do
     {
         BefCurDayNight = CurDayNight = GetDayEveningNight(); // NONE, DAY , EVENING , NIGHT 값 저장
-        if (CurDayNight == NONE)
-            DutyCycle = 0x0;
-		else
-			DutyCycle = stApl[CurDayNight].Set_DutyCycle; 
+		DutyCycle = stApl[CurDayNight].Set_DutyCycle; 
 		_LAMP_ON = TRUE;
 		ChangPwmCycleRegedit(CurDayNight);
         PwmOut(DutyCycle);
@@ -871,7 +878,7 @@ void OnAplLampSet(tag_CurDay Sw_DayNig)
 // 현재(실제) APL LAPM On, Off 처리 
 void OnOffAplLamp(tag_CurDay CurDayNig)
 {
-	if (bBlink_DutyOn && (CurDayNig != NONE)) // Blink Led 가 On 일 때
+	if (bBlink_DutyOn) // Blink Led 가 On 일 때
 	{	
 		_LAMP_ON = TRUE; // LAMP ON
 		if (bStEnab)
@@ -1040,7 +1047,7 @@ void main(void)
 	{	
 		stApl[i].Set_Current = GetSetCurrent(stApl[i].Set_mV, i);
 	}
-    PwOnAplLamp();
+    PwOffOnLampOut();
 
 
     MainTimer = 0;
@@ -1059,21 +1066,18 @@ void main(void)
 
 		// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
 		// Lamp Blink에서의 On 주기 시간(msec)
-		DUTY_CNT = (UCHAR)(ULONG)(information[BLOCK_DUTY_CNT]);
-		DUTY_RATE = (UCHAR)(ULONG)(information[BLOCK_DUTY_RATE]);		
+		DUTY_CNT = MyReadByteData(BLOCK_DUTY_CNT);		
+		DUTY_RATE = MyReadByteData(BLOCK_DUTY_RATE);		
 		if(DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT)); 
 		LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
 
 		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
 		// 셋팅 모드 선택 
-		L_SetMode_Sel = (UCHAR)(ULONG)(information[BLOCK_SETMODE_SEL]); 
+		L_SetMode_Sel = MyReadByteData(BLOCK_SETMODE_SEL);
 		// 각 V_IN 셋팅 값 
-		L_DaySetValue = (UINT)(ULONG)(information[BLOCK_SET_VALUE_DAY]); 
-		stApl[SW_DAY].Set_mV = L_DaySetValue; // 밤 셋팅 값 
-		L_EveSetValue = (UINT)(ULONG)(information[BLOCK_SET_VALUE_EVE]); 
-		stApl[SW_EVE].Set_mV = L_EveSetValue; // 밤 셋팅 값
-		L_NigSetValue = (UINT)(ULONG)(information[BLOCK_SET_VALUE_NIG]); 
-		stApl[SW_NIG].Set_mV = L_NigSetValue; // 밤 셋팅 값
+		stApl[SW_DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY); // 낮 셋팅 값 
+		stApl[SW_EVE].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE); // 저녁 셋팅 값
+		stApl[SW_NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG); // 밤 셋팅 값
 
 		// Set_DutyCycle 값 Write
 		if (L_SetMode_Sel != Bef_L_SetMode_Sel)
@@ -1108,8 +1112,6 @@ void main(void)
 		// 낮, 밤 체크 
 		// 밤 일때 NIG LED ON
         CurDayNight = GetDayEveningNight(); // NONE, DAY , EVENING , NIGHT 값 가져온다. 
-        if(CurDayNight == NIGHT) 	_LED_NIGHT = LED_NIG_ON;
-		else						_LED_NIGHT = LED_NIG_OFF;
 		// 낮, 밤이 바뀔 때 처리 
 		if (CurDayNight != BefCurDayNight)
 		{
@@ -1223,8 +1225,11 @@ void interrupt isr(void)
         if (AnalogValidTime < 200)
             AnalogValidTime++;
 
-        if (InDayTimer < 0xff)
-            InDayTimer++;
+        if (CDS_DayTimer < 0xff)
+            CDS_DayTimer++;
+		if (CDS_NightTimer < 0xff)
+            CDS_NightTimer++;
+				
 		if (SetStTimer < 0xffff)
             SetStTimer++;
 		if (StDelayTimer < 0xffff)

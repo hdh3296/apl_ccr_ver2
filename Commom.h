@@ -12,15 +12,15 @@
 
 #define	A_SET_V_MAX 3300 // mV
 #define	A_SET_V_MIN 0
-#define A_SET_A_MAX1 6000 // mA
+#define A_SET_A_MAX1 5000 // mA
 #define A_SET_A_MIN1 0
 #define SET_AMP_PER_VOLT1	(((ULONG)(A_SET_A_MAX1 - A_SET_A_MIN1) * (ULONG)1000) \
 								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4
-#define A_SET_A_MAX2 6000 // mA
+#define A_SET_A_MAX2 5000 // mA
 #define A_SET_A_MIN2 0
 #define SET_AMP_PER_VOLT2	(((ULONG)(A_SET_A_MAX2 - A_SET_A_MIN2) * (ULONG)1000) \
 								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4
-#define A_SET_A_MAX3 6000 // mA
+#define A_SET_A_MAX3 5000 // mA
 #define A_SET_A_MIN3 0
 #define SET_AMP_PER_VOLT3	(((ULONG)(A_SET_A_MAX3 - A_SET_A_MIN3) * (ULONG)1000) \
 								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4

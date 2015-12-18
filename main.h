@@ -92,8 +92,8 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _LAMP_ON		PIN_LED_ON // APL Lamp On/Off  			
 #define _PWM			PIN_PWM 
 // CDS
-#define _IN_DAY			PIN_IN_DAY 				
-#define _IN_NIGHT		PIN_IN_NIGHT
+#define _CDS_DAY			PIN_IN_DAY 				
+#define _CDS_NIGHT		PIN_IN_NIGHT
 // 깜빡임 외부에서 제어 
 #define _IN_BLINK		PIN_IN_BLINK 				
 // 딥스위치 	
@@ -109,8 +109,8 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CAN_TX			PIN_CAN_TX 					 	
 #define _CAN_RX			PIN_CAN_RX 
 // LED
-#define _LED_CPU_RUN	PIN_LED_RUN0 // CPU RUN				
-#define _LED_NIGHT		PIN_LED_RUN1 // Night 상태 LED 				
+#define _LED_CDS_DAY	PIN_LED_RUN0 // CPU RUN				
+#define _LED_CDS_NIGHT		PIN_LED_RUN1 // Night 상태 LED 				
 #define _LED_GPS_GOOD	PIN_LED_RUN2 	
 #define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
 #define _LED_TEST 		PIN_LED_RUN4 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 				
@@ -155,8 +155,8 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define	chVR2	4
 
 
-#define LED_NIG_ON	0
-#define LED_NIG_OFF	1
+#define LED_CDS_ON	0
+#define LED_CDS_OFF	1
 
 
 #ifndef	ON_lamp
@@ -225,7 +225,9 @@ bit		bBlink_DutyOn = 0;
 
 
 unsigned int BeginTimer = 0;
-unsigned char InDayTimer = 0;
+unsigned char CDS_DayTimer = 0;
+unsigned char CDS_NightTimer = 0;
+
 
 
 
@@ -258,11 +260,6 @@ unsigned char L_Duty_Rate = 0;
 
 unsigned char L_SetMode_Sel = 0;
 unsigned char Bef_L_SetMode_Sel = 0;
-
-unsigned int  L_DaySetValue = 0;
-unsigned int  L_EveSetValue = 0;
-unsigned int  L_NigSetValue = 0;
-
 
 
 
@@ -297,10 +294,10 @@ extern void GetAdValue(void);
 extern unsigned int GetDutyByCompareCurrent(unsigned int duty, unsigned int setVolt, 
 												  unsigned int inVolt, unsigned char CurDayNight);
 extern void SetApaLamp(void);
-extern void PwOnAplLamp(void);
+extern void PwOffOnLampOut(void);
 
 
-extern bit IsInLED_ON(unsigned char bLedState, unsigned char* Timer);
+extern bit IsInput_ON(unsigned char bLedState, unsigned char* Timer);
 
 extern unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
                                  unsigned char DayNig, unsigned int Offset);

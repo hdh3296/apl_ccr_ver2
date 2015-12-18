@@ -2838,12 +2838,32 @@ unsigned int  ReadIntegerData(unsigned int pt)
 	return(0);
 }
 
+unsigned int  MyReadIntegerData(unsigned int pt)
+{
+	unsigned long a, b, Vlue;
+
+    a=(unsigned long)information[pt+0];
+    b=(unsigned long)information[pt+1];
+	Vlue=(a | (b << 8));	
+	return(Vlue);
+}
+
+
 unsigned int  ReadByteData(unsigned int pt)
 {
     EditDigitData=(unsigned long)(information[pt]);
     EditDataType=BYTE_TYPE;
 	return(0);
 }
+
+unsigned char  MyReadByteData(unsigned int pt)
+{
+	unsigned char ret;
+	
+    ret=(unsigned long)(information[pt]);
+	return(ret);
+}
+
 
 
 
@@ -2895,13 +2915,12 @@ void  Group1(void)
             EditFlashAddr=BLOCK_DUTY_RATE;
 			ReadByteData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;
 		case	GROUP1_MENU04: // ¼ÂÆÃ ¸ðµå °ª (0=disable, 1=³·, 2=Àú³è, 3=¹ã)
             EditCursor=0;
             EditStatus=DIGIT_EDIT;
             EditStart=3;
-            EditShiftCnt=3;
+            EditShiftCnt=1;
             EditDivide=DIVIDE_1;				
             EditDigitMaxValue=3;
             EditDigitMinValue=0;
@@ -2910,7 +2929,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SETMODE_SEL;
 			ReadByteData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;			
 		case	GROUP1_MENU05: // ³· ¼ÂÆÃ °ª 
             EditCursor=0;
@@ -2925,7 +2943,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_VALUE_DAY;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;			
 		case	GROUP1_MENU06: // Àú³á ¼ÂÆÃ °ª 
             EditCursor=0;
@@ -2940,7 +2957,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_VALUE_EVE;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;		
 		case	GROUP1_MENU07: // ¹ã ¼ÂÆÃ °ª 
             EditCursor=0;
@@ -2955,7 +2971,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_VALUE_NIG;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;		
 		case	GROUP1_MENU08: // Set DutyCycle ³· º¯¼ö ÀúÀå °ª 
             EditCursor=0;
@@ -2970,7 +2985,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_DAY;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;			
 		case	GROUP1_MENU09: // Set DutyCycle Àú³á º¯¼ö ÀúÀå °ª 
             EditCursor=0;
@@ -2985,7 +2999,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_EVE;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;				
 		case	GROUP1_MENU10: // Set DutyCycle ¹ã º¯¼ö ÀúÀå °ª 
             EditCursor=0;
@@ -3000,7 +3013,6 @@ void  Group1(void)
             EditFlashAddr=BLOCK_SET_DUTYCYCLE_NIG;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
-            EditShiftCnt=(EditShiftCnt + 1);
 			break;				
 		case	GROUP1_MENU11:
 		case	GROUP1_MENU12:

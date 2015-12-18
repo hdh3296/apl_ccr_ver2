@@ -94,6 +94,8 @@ extern unsigned int   MemPointer;
 
 
 extern void  Group1_Save(void);
+extern unsigned int  MyReadIntegerData(unsigned int pt);
+extern unsigned char  MyReadByteData(unsigned int pt);
 /*
 	LadderBuf[C_CMD]=RcvBuf[RCV_CMD];               
    	LadderBuf[C_CMDTYPE]=RcvBuf[RCV_CMDTYPE];             
