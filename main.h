@@ -246,7 +246,7 @@ unsigned int AnalogValidTime = 0;
 #define WRSIZE	12
 volatile const unsigned char  arSavedBuf[WRSIZE] = {0, };
 
-unsigned int SetStTimer = 0;
+unsigned int SetModeReadyTimer = 0;
 unsigned int StDelayTimer = 0;
 unsigned int StDelayTime = 0;
 
@@ -272,6 +272,7 @@ UCHAR   DUTY_RATE = 0;	// LED ON 듀티 비(%)
 ULONG   LED_CYCLE_MSEC = 0;
 ULONG	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
 
+ULONG 	Multip[3] = {0,};	
 
 
 extern  void  Initial(void);

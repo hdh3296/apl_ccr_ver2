@@ -1,6 +1,8 @@
 
 #include	"AllCommom.h"
 
+#define 	FW_VERSION	1
+
 extern	unsigned int FlashBlockRd(unsigned int BlkNm);
 extern	unsigned int FlashBlockWr(unsigned int BlkNm); 
 
@@ -478,3 +480,7 @@ extern	unsigned char new_value[64];
 #define BLOCK_SET_DUTYCYCLE_DAY	IntzData006	// 
 #define BLOCK_SET_DUTYCYCLE_EVE	IntzData007	// 
 #define BLOCK_SET_DUTYCYCLE_NIG	IntzData008	// 
+
+#define BLOCK_MaxSetADay	IntzData009	// 
+#define BLOCK_MaxSetAEve	IntzData010	// 
+#define BLOCK_MaxSetANig	IntzData011	// 

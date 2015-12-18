@@ -87,9 +87,9 @@ const unsigned char GroupLineMessage[][17]={
                                     "USER:SetDuty DAY", // 8 
                                     "USER:SetDuty EVE", // 9 
                                     "USER:SetDuty NIG", // 10 
-                                    "USER:Engineer Nm", // 11 
-                                    "USER:Tt Use Time", // 12 
-                                    "USER:Init Data  ", // 13 
+                                    "USER:MaxSetA Day", // 11 
+                                    "USER:MaxSetA Eve", // 12 
+                                    "USER:MaxSetA Nig", // 13 
                                     "USER:Group Nm   ", // 14 
                                     "USER:Local Nm   ", // 15 
                                     "USER:Inv InBd Tp", // 16

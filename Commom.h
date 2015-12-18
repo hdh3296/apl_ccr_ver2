@@ -11,27 +11,9 @@
 #define SW_NIG	2
 
 #define	A_SET_V_MAX 3300 // mV
-#define	A_SET_V_MIN 0
-#define A_SET_A_MAX1 5000 // mA
-#define A_SET_A_MIN1 0
-#define SET_AMP_PER_VOLT1	(((ULONG)(A_SET_A_MAX1 - A_SET_A_MIN1) * (ULONG)1000) \
-								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4
-#define A_SET_A_MAX2 5000 // mA
-#define A_SET_A_MIN2 0
-#define SET_AMP_PER_VOLT2	(((ULONG)(A_SET_A_MAX2 - A_SET_A_MIN2) * (ULONG)1000) \
-								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4
-#define A_SET_A_MAX3 5000 // mA
-#define A_SET_A_MIN3 0
-#define SET_AMP_PER_VOLT3	(((ULONG)(A_SET_A_MAX3 - A_SET_A_MIN3) * (ULONG)1000) \
-								/ (ULONG)(A_SET_V_MAX - A_SET_V_MIN)) // 4
-ULONG Multip[] = {(SET_AMP_PER_VOLT1), (SET_AMP_PER_VOLT2), (SET_AMP_PER_VOLT3)}; 
-
-
 
 typedef enum{DAY = 0, EVE = 1, NIG = 2, NONE = 100} tag_CurDay;
 tag_CurDay	CurDayNight = 100, BefCurDayNight = 100;
-
-
 
 
 typedef struct 
@@ -67,8 +49,8 @@ bit bAD_A_IN_mV_Upd = FALSE;
 ULONG In_Current;  // 변환된 입력 피드백 전류 값
 
 
-bit bSetSt= FALSE;
-bit bStEnab = FALSE;
+bit bSetModeReady= FALSE;
+bit bLampOnReady = FALSE;
 bit bStTwoEnab = FALSE;
 bit bSettingMode = FALSE;
 

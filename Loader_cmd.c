@@ -2877,7 +2877,7 @@ void  Group1(void)
     switch(LadderGroupSub){
         case    GROUP1_MENU01:	// ¹öÀü 
             EditCursor=0;
-            EditStatus=DIGIT_EDIT; 
+            EditStatus=NO_EDIT; 
             EditStart=3; 
             EditShiftCnt=3; 
             EditDivide=DIVIDE_1;			
@@ -3014,9 +3014,48 @@ void  Group1(void)
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;				
-		case	GROUP1_MENU11:
-		case	GROUP1_MENU12:
-		case	GROUP1_MENU13:
+		case	GROUP1_MENU11: // MaxSetADay
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=5;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=60000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_MaxSetADay;
+			ReadIntegerData(EditFlashAddr);
+            Integer_Digit();
+			break;			
+		case	GROUP1_MENU12: // MaxSetAEve
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=5;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=60000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_MaxSetAEve;
+			ReadIntegerData(EditFlashAddr);
+            Integer_Digit();
+			break;			
+		case	GROUP1_MENU13: // MaxSetANig 
+            EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=5;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=60000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+			
+            EditFlashAddr=BLOCK_MaxSetANig;
+			ReadIntegerData(EditFlashAddr);
+            Integer_Digit();
+			break;			
 		case	GROUP1_MENU14:
 		case	GROUP1_MENU15:
 		case	GROUP1_MENU16:
