@@ -246,8 +246,6 @@ unsigned int AnalogValidTime = 0;
 #define WRSIZE	12
 volatile const unsigned char  arSavedBuf[WRSIZE] = {0, };
 
-
-
 unsigned int SetStTimer = 0;
 unsigned int StDelayTimer = 0;
 unsigned int StDelayTime = 0;
@@ -260,14 +258,6 @@ unsigned char L_Duty_Rate = 0;
 
 typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_EVE = 2, SETMODE_NIG = 3} tag_SETMODE;
 tag_SETMODE		eSETMODE = 0, eBefSETMODE = 0;
-
-
-#define SETMODE_NONE	0
-#define SETMODE_DAY		1
-#define SETMODE_EVE		2
-#define SETMODE_NIG		3
-
-
 
 
 

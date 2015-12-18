@@ -1035,20 +1035,20 @@ void main(void)
     TMR0IE = 1;
     SWDTEN = 1;  // Software Controlled Watchdog Timer Enable bit / 1 = Watchdog Timer is on
 
-// 저장된 값 Read(Load)
+// 저장된 값 Read(Load) /////////////////////////////////////
 	// 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다. 
 	stApl[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
-	stApl[1].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE);
-	stApl[2].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
-	stApl[0].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
-	stApl[1].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_EVE);
-	stApl[2].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
+	stApl[EVE].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE);
+	stApl[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
+	stApl[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
+	stApl[EVE].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_EVE);
+	stApl[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
 	for (i=0; i<3; i++)
 	{	
 		stApl[i].Set_Current = GetSetCurrent(stApl[i].Set_mV, i);
 	}
     PwOffOnLampOut();
-
+////////////////////////////////////////////////////////////////
 
     MainTimer = 0;
     msec100 = 0;
@@ -1057,11 +1057,14 @@ void main(void)
 	stApl[2].bBlinkEnab = TRUE;	
 
 
+	//////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////
+
     while (1)
     {
         CLRWDT();
 
-// 로더를 통해 셋팅하고자 하는 값을 가져온다. 
+// 로더를 통해 셋팅하고자 하는 값을 가져온다. ///////////////////////////////
  		Loader_Func(); // 
 
 		// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
@@ -1099,7 +1102,7 @@ void main(void)
 		
 //		Chk232TxErr();	
 	
-// BLink 기능 	
+// BLink 기능 	////////////////////////////////////////////////
 		// Gps : com2 232Rx 데이타 수신
         if (Com2RxStatus == RX_GOOD) // GPS RX2 통신 GOOD !
         {
@@ -1108,7 +1111,7 @@ void main(void)
         }
 		GpsPPS1Chk(); // GPS Puls 체크
 
-// CDS 낮, 저녁, 밤 체크 기능 
+// CDS 낮, 저녁, 밤 체크 기능 ///////////////////////////////////////
 		// CDS 값을 읽어셔 표현 
         CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 가져온다. 
 		// 낮, 밤이 바뀔 때 처리 
@@ -1119,7 +1122,7 @@ void main(void)
 		}		
 
 
-// AD 처리 
+// AD 처리 ///////////////////////////////////////////////////////
 		bUdtAd = IsUdtAd(arInPut_mV, arIs_AdUpd, AdChSel);
         if (bUdtAd) // input AD 값 얻음.
         {			
@@ -1140,7 +1143,7 @@ void main(void)
 			DONE = 1;
         }
 
-// CCR 기능 (APL LAMP 출력 제어) 
+// CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
 		// 셋팅 모드 !!!
 		// 셋팅모드에서 ALP Lamp 셋업값 얻어온다.
 		if (eSETMODE) 
@@ -1155,24 +1158,9 @@ void main(void)
 			}
 			else if(SetStTimer > 1000)
 			{				
-				if(eSETMODE == SETMODE_DAY) // 낮 
-				{
-					stApl[SW_DAY].Set_Current 
-						= GetSetCurrent(stApl[DAY].Set_mV, SW_DAY);
-					OnAplLampSet(SW_DAY);
-				}
-				else if(eSETMODE == SETMODE_EVE) // 저녁 
-				{
-					stApl[SW_EVE].Set_Current 
-						= GetSetCurrent(stApl[EVE].Set_mV, SW_EVE);
-					OnAplLampSet(SW_EVE);
-				}				
-				else if(eSETMODE == SETMODE_NIG) // 밤 
-				{
-					stApl[SW_NIG].Set_Current 
-						= GetSetCurrent(stApl[NIG].Set_mV, SW_NIG);
-					OnAplLampSet(SW_NIG);
-				}
+				stApl[eSETMODE-1].Set_Current 
+					= GetSetCurrent(stApl[eSETMODE-1].Set_mV, (eSETMODE-1));
+				OnAplLampSet(eSETMODE-1);
 			}
 			bStEnab = TRUE;
 		}
