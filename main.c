@@ -698,11 +698,11 @@ unsigned char GetDayEveningNight(void)
 	else				_LED_CDS_NIGHT = LED_CDS_OFF;	
 
 	if ((bCDS_Day) && (bCDS_Night))
-		ret = EVENING;	
+		ret = EVE;	
     else if (bCDS_Day)
         ret = DAY;	
     else if (bCDS_Night)
-        ret = NIGHT;	
+        ret = NIG;	
 	else 
 		ret = DAY;	
 
@@ -795,7 +795,7 @@ void PwOffOnLampOut(void)
 {
     do
     {
-        BefCurDayNight = CurDayNight = GetDayEveningNight(); // NONE, DAY , EVENING , NIGHT 값 저장
+        BefCurDayNight = CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 저장
 		DutyCycle = stApl[CurDayNight].Set_DutyCycle; 
 		_LAMP_ON = TRUE;
 		ChangPwmCycleRegedit(CurDayNight);
@@ -1037,12 +1037,12 @@ void main(void)
 
 // 저장된 값 Read(Load)
 	// 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다. 
-	stApl[0].Set_mV = (UINT)(ULONG)(information[BLOCK_SET_VALUE_DAY]);
-	stApl[1].Set_mV = (UINT)(ULONG)(information[BLOCK_SET_VALUE_EVE]);
-	stApl[2].Set_mV = (UINT)(ULONG)(information[BLOCK_SET_VALUE_NIG]);
-	stApl[0].Set_DutyCycle = (UINT)(ULONG)(information[BLOCK_SET_DUTYCYCLE_DAY]);
-	stApl[1].Set_DutyCycle = (UINT)(ULONG)(information[BLOCK_SET_DUTYCYCLE_EVE]);
-	stApl[2].Set_DutyCycle = (UINT)(ULONG)(information[BLOCK_SET_DUTYCYCLE_NIG]);
+	stApl[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
+	stApl[1].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE);
+	stApl[2].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
+	stApl[0].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
+	stApl[1].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_EVE);
+	stApl[2].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
 	for (i=0; i<3; i++)
 	{	
 		stApl[i].Set_Current = GetSetCurrent(stApl[i].Set_mV, i);
@@ -1073,25 +1073,25 @@ void main(void)
 
 		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
 		// 셋팅 모드 선택 
-		L_SetMode_Sel = MyReadByteData(BLOCK_SETMODE_SEL);
+		eSETMODE = MyReadByteData(BLOCK_SETMODE_SEL);
 		// 각 V_IN 셋팅 값 
 		stApl[SW_DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY); // 낮 셋팅 값 
 		stApl[SW_EVE].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE); // 저녁 셋팅 값
 		stApl[SW_NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG); // 밤 셋팅 값
 
 		// Set_DutyCycle 값 Write
-		if (L_SetMode_Sel != Bef_L_SetMode_Sel)
+		if (eSETMODE != eBefSETMODE)
 		{	
-			if (Bef_L_SetMode_Sel >= 1)
+			if (eBefSETMODE >= 1)
 			{
 				EditDataType = INT_TYPE;
-				if (Bef_L_SetMode_Sel == 1) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
-				else if (Bef_L_SetMode_Sel == 2) EditFlashAddr = BLOCK_SET_DUTYCYCLE_EVE;
-				else if (Bef_L_SetMode_Sel == 3) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
-				EditDigitData = stApl[Bef_L_SetMode_Sel - 1].Set_DutyCycle;
+				if (eBefSETMODE == SETMODE_DAY) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
+				else if (eBefSETMODE == SETMODE_EVE) EditFlashAddr = BLOCK_SET_DUTYCYCLE_EVE;
+				else if (eBefSETMODE == SETMODE_NIG) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
+				EditDigitData = stApl[eBefSETMODE - 1].Set_DutyCycle;
 				Group1_Save();	
 			}
-			Bef_L_SetMode_Sel = L_SetMode_Sel;
+			eBefSETMODE = eSETMODE;
 		}
 
 
@@ -1108,10 +1108,9 @@ void main(void)
         }
 		GpsPPS1Chk(); // GPS Puls 체크
 
-// CDS 낮, 밤 체크 기능 
-		// 낮, 밤 체크 
-		// 밤 일때 NIG LED ON
-        CurDayNight = GetDayEveningNight(); // NONE, DAY , EVENING , NIGHT 값 가져온다. 
+// CDS 낮, 저녁, 밤 체크 기능 
+		// CDS 값을 읽어셔 표현 
+        CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 가져온다. 
 		// 낮, 밤이 바뀔 때 처리 
 		if (CurDayNight != BefCurDayNight)
 		{
@@ -1122,7 +1121,7 @@ void main(void)
 
 // AD 처리 
 		bUdtAd = IsUdtAd(arInPut_mV, arIs_AdUpd, AdChSel);
-        if(bUdtAd) // input AD 값 얻음.
+        if (bUdtAd) // input AD 값 얻음.
         {			
 			GetMyAD(); // 각 AD 값이 Updated 이면, 각 관련 변수에 저장 한다. 		
 			AdChSel = ChangeAdChSel(AdChSel, 1); // 채널 변경 	
@@ -1144,7 +1143,7 @@ void main(void)
 // CCR 기능 (APL LAMP 출력 제어) 
 		// 셋팅 모드 !!!
 		// 셋팅모드에서 ALP Lamp 셋업값 얻어온다.
-		if (L_SetMode_Sel) 
+		if (eSETMODE) 
 		{			
 			if (bSetSt)
 			{
@@ -1156,22 +1155,22 @@ void main(void)
 			}
 			else if(SetStTimer > 1000)
 			{				
-				if(L_SetMode_Sel == 1) // 낮 
+				if(eSETMODE == SETMODE_DAY) // 낮 
 				{
 					stApl[SW_DAY].Set_Current 
-						= GetSetCurrent(stApl[SW_DAY].Set_mV, SW_DAY);
+						= GetSetCurrent(stApl[DAY].Set_mV, SW_DAY);
 					OnAplLampSet(SW_DAY);
 				}
-				else if(L_SetMode_Sel == 2) // 저녁 
+				else if(eSETMODE == SETMODE_EVE) // 저녁 
 				{
 					stApl[SW_EVE].Set_Current 
-						= GetSetCurrent(stApl[SW_EVE].Set_mV, SW_EVE);
+						= GetSetCurrent(stApl[EVE].Set_mV, SW_EVE);
 					OnAplLampSet(SW_EVE);
 				}				
-				else if(L_SetMode_Sel == 3) // 밤 
+				else if(eSETMODE == SETMODE_NIG) // 밤 
 				{
 					stApl[SW_NIG].Set_Current 
-						= GetSetCurrent(stApl[SW_NIG].Set_mV, SW_NIG);
+						= GetSetCurrent(stApl[NIG].Set_mV, SW_NIG);
 					OnAplLampSet(SW_NIG);
 				}
 			}
@@ -1203,7 +1202,7 @@ void interrupt isr(void)
         // Blink 처리 
 		if ((CurDayNight == DAY) && (stApl[SW_DAY].bBlinkEnab == FALSE))	
 			bBlink_DutyOn = TRUE; // 깜빡임 없음 
-		else if ((CurDayNight == NIGHT) && (stApl[SW_NIG].bBlinkEnab == FALSE))	
+		else if ((CurDayNight == NIG) && (stApl[SW_NIG].bBlinkEnab == FALSE))	
 			bBlink_DutyOn = TRUE; // 깜빡임 없음 
 		else 
 			bBlink_DutyOn = IsBlink_On();

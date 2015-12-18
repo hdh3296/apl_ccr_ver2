@@ -28,7 +28,7 @@ ULONG Multip[] = {(SET_AMP_PER_VOLT1), (SET_AMP_PER_VOLT2), (SET_AMP_PER_VOLT3)}
 
 
 
-typedef enum{DAY = 0, EVENING = 1, NIGHT = 2, NONE = 100} tag_CurDay;
+typedef enum{DAY = 0, EVE = 1, NIG = 2, NONE = 100} tag_CurDay;
 tag_CurDay	CurDayNight = 100, BefCurDayNight = 100;
 
 
