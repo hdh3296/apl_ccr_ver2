@@ -695,16 +695,28 @@ unsigned char GetDayEveningNight(void)
     if (bCDS_Day)		_LED_CDS_DAY = LED_CDS_ON;
 	else				_LED_CDS_DAY = LED_CDS_OFF;
     if (bCDS_Night) 	_LED_CDS_NIGHT = LED_CDS_ON;
-	else				_LED_CDS_NIGHT = LED_CDS_OFF;	
+	else				_LED_CDS_NIGHT = LED_CDS_OFF;
 
-	if ((bCDS_Day) && (bCDS_Night))
-		ret = EVE;	
-    else if (bCDS_Day)
-        ret = DAY;	
-    else if (bCDS_Night)
-        ret = NIG;	
-	else 
-		ret = DAY;	
+	// °í±¤µµ¿ë (³· / Àú³á / ¹ã)
+	if (_DIP_SW1 == DIPSW_ON)
+	{
+		if ((bCDS_Day) && (bCDS_Night))
+			ret = EVE;	
+		else if (bCDS_Day)
+			ret = DAY;	
+		else if (bCDS_Night)
+			ret = NIG;	
+		else 
+			ret = DAY;
+	}
+	// Áß±¤µµ¿ë (³· / ¹ã)
+	else
+	{
+		if (bCDS_Night)
+			ret = NIG;
+		else
+			ret = DAY;
+	}
 
     return ret;
 
