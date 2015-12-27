@@ -97,11 +97,11 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 // 깜빡임 외부에서 제어 
 #define _IN_BLINK		PIN_IN_BLINK // FU			
 // 딥스위치 On이면 0값이다.  	
-#define _DIP_SW0		PIN_MODE_0 // 고광도용(20만,2만,2천) / 중광도용(주간2만, 야간2천) 					
-#define _DIP_SW1		PIN_MODE_1 // CDS-A(주간,저녁,야간) / CDS-B(야간)					
-#define _DIP_SW2		PIN_MODE_2 // Int_GPS 사용 (FU 미사용) / Int_GPS 미사용 (FU 미사용)					
-#define _DIP_SW3		PIN_MODE_3 // Ext_GPS 사용 / Ext_GPS 미사용  					
-#define _DIP_SW4		PIN_MODE_4 // 예비  				
+#define _DIP_SW1		PIN_MODE_0 // 고광도용(20만,2만,2천) / 중광도용(주간2만, 야간2천) 					
+#define _DIP_SW2		PIN_MODE_1 // CDS-A(주간,저녁,야간) / CDS-B(야간)					
+#define _DIP_SW3		PIN_MODE_2 // Int_GPS 사용 (FU 미사용) / Int_GPS 미사용 (FU 미사용)					
+#define _DIP_SW4		PIN_MODE_3 // Ext_GPS 사용 / Ext_GPS 미사용  					
+#define _DIP_SW5		PIN_MODE_4 // 예비  				
 // 232통신 			
 #define _TX_232			PIN_TX_232 // CCP3/CK1/TX1/CANTX	
 #define _RX_232			PIN_RX_232 // CANRX/RX1/DT1/CCP4
@@ -109,11 +109,11 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CAN_TX			PIN_CAN_TX 					 	
 #define _CAN_RX			PIN_CAN_RX 
 // LED
-#define _LED_CDS_DAY	PIN_LED_RUN0 // CPU RUN				
-#define _LED_CDS_NIGHT	PIN_LED_RUN1 // Night 상태 LED 				
-#define _LED_GPS_GOOD	PIN_LED_RUN2 	
+#define _LED_CDS_IN_DAY	PIN_LED_RUN0 // CDS DAY 입력 상태 LED 		
+#define _LED_CDS_IN_NIG	PIN_LED_RUN1 // CDS NIG 입력 상태 LED 				
+#define _LED_GPS_GOOD	PIN_LED_RUN2 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 			
 #define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
-#define _LED_TEST 		PIN_LED_RUN4 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 				
+#define _LED_TEST 		PIN_LED_RUN4 		
 // GPS
 #define _RX_GPS			PIN_TX_DP // 통신 RX2
 #define _PPS_GPS		PIN_1PPS 				

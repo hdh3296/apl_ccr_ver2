@@ -69,8 +69,8 @@ void    InitPort(void)
 	_LAMP_ON = 0;  			
 	_PWM = 0; 
 	// LED : 1 = Led Off
-	_LED_CDS_DAY  = 1; // CPU RUN				
-	_LED_CDS_NIGHT = 1; // Night 상태 LED 				
+	_LED_CDS_IN_DAY  = 1; // CPU RUN				
+	_LED_CDS_IN_NIG = 1; // Night 상태 LED 				
 	_LED_TEST = 1;	
 	_LED_LAMP_ON = 1;// APL Lamp On 듀티 LED			
 	_LED_GPS_GOOD = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED 					
@@ -127,7 +127,7 @@ unsigned int ReSettingDayNigntChk(void)
         bNightDay = 0;
         NightSetTime = 0;
         bNight = 0;
-        _LED_CDS_NIGHT = 1;
+        _LED_CDS_IN_NIG = 1;
         return(0);
     }
 
@@ -141,7 +141,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNight)	_LED_CDS_NIGHT = 0;
+        if (bNight)	_LED_CDS_IN_NIG = 0;
     }
     else if (!PIN_MODE_0 && PIN_MODE_1)
     {
@@ -152,7 +152,7 @@ unsigned int ReSettingDayNigntChk(void)
             CompanyWrite();
             LoadSetupValue();
         }
-        if (bNightDay)	_LED_CDS_NIGHT = 0;
+        if (bNightDay)	_LED_CDS_IN_NIG = 0;
     }
     else
     {
@@ -164,7 +164,7 @@ unsigned int ReSettingDayNigntChk(void)
 
         if (SettingReadyTime > 4)
         {
-            _LED_CDS_NIGHT = !_LED_CDS_NIGHT;
+            _LED_CDS_IN_NIG = !_LED_CDS_IN_NIG;
             SettingReadyTime = 0;
         }
     }
@@ -475,7 +475,7 @@ void ApaLampOnOff(void)
 			MainTimer=0;
 			WakeupTime=0;
 			_LED_GPS_GOOD=1;
-			_LED_CDS_NIGHT=1;
+			_LED_CDS_IN_NIG=1;
 
 			SLEEP();
 		}
@@ -692,13 +692,13 @@ unsigned char GetDayEveningNight(void)
     bCDS_Day = IsInput_ON(_CDS_DAY, &CDS_DayTimer);
 	bCDS_Night = IsInput_ON(_CDS_NIGHT, &CDS_NightTimer);
 
-    if (bCDS_Day)		_LED_CDS_DAY = LED_CDS_ON;
-	else				_LED_CDS_DAY = LED_CDS_OFF;
-    if (bCDS_Night) 	_LED_CDS_NIGHT = LED_CDS_ON;
-	else				_LED_CDS_NIGHT = LED_CDS_OFF;
+    if (bCDS_Day)		_LED_CDS_IN_DAY = LED_CDS_ON;
+	else				_LED_CDS_IN_DAY = LED_CDS_OFF;
+    if (bCDS_Night) 	_LED_CDS_IN_NIG = LED_CDS_ON;
+	else				_LED_CDS_IN_NIG = LED_CDS_OFF;
 
 	// 고광도용 (낮 / 저녁 / 밤)
-	if (_DIP_SW1 == DIPSW_ON)
+	if (_DIP_SW2 == DIPSW_ON)
 	{
 		if ((bCDS_Day) && (bCDS_Night))
 			ret = EVE;	
@@ -1079,7 +1079,7 @@ void main(void)
 		
 	
 // BLink 기능 	////////////////////////////////////////////////
-		// Gps : com2 232Rx 데이타 수신
+		// Int_Gps : com2 232Rx 데이타 수신
         if (Com2RxStatus == RX_GOOD) // GPS RX2 통신 GOOD !
         {
             Com2RxStatus = STX_CHK;
@@ -1091,7 +1091,7 @@ void main(void)
 		bFU_BlkOn = IsInput_ON(_IN_BLINK, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 
 		
 		// 딥스위치 2번에 따라 Blink를 GPS에 의해 할자 FU에 의해 할지 결정된다.  
-		if (_DIP_SW2 == DIPSW_ON) // GPS
+		if (_DIP_SW3 == DIPSW_ON) // GPS
 		{
 			bBlink_DutyOn = bGPS_Blk_ON;
 		}
@@ -1180,10 +1180,10 @@ void interrupt isr(void)
         TMR0H = MSEC_H;
 
 
-		Loader_Msec1_Interrpt(); //
+		Loader_Msec1_Interrpt(); // 로더 시간 
 
 
-        // Gps Timer에 의한 Blink 처리 
+        // Int_Gps Timer에 의한 Blink 처리 
 		bGPS_Blk_ON = IsBlink_On(); // GPS에 의한 Blimk 이다. 
 
 
