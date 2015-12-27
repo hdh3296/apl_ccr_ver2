@@ -1087,6 +1087,23 @@ void main(void)
         }
 		GpsPPS1Chk(); // GPS Puls 체크
 
+		// FU에 의한 Blink 처리 
+		bFU_BlkOn = IsInput_ON(_IN_BLINK, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 
+		
+		// 딥스위치 2번에 따라 Blink를 GPS에 의해 할자 FU에 의해 할지 결정된다.  
+		if (_DIP_SW2 == DIPSW_ON) // GPS
+		{
+			bBlink_DutyOn = bGPS_Blk_ON;
+		}
+		else // FU : _IN_BLINK 입력 상태 확인 
+		{
+			bBlink_DutyOn = bFU_BlkOn;
+		}
+		
+		// Blink 에 따른 LED 상태 
+		if(bBlink_DutyOn) 	_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
+		else 				_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
+
 // CDS 낮, 저녁, 밤 체크 기능 ///////////////////////////////////////
 		// CDS 값을 읽어셔 표현 
         CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 가져온다. 
@@ -1162,18 +1179,13 @@ void interrupt isr(void)
         TMR0L = MSEC_L;
         TMR0H = MSEC_H;
 
+
 		Loader_Msec1_Interrpt(); //
 
-        // Blink 처리 
-		if ((CurDayNight == DAY) && (stApl[SW_DAY].bBlinkEnab == FALSE))	
-			bBlink_DutyOn = TRUE; // 깜빡임 없음 
-		else if ((CurDayNight == NIG) && (stApl[SW_NIG].bBlinkEnab == FALSE))	
-			bBlink_DutyOn = TRUE; // 깜빡임 없음 
-		else 
-			bBlink_DutyOn = IsBlink_On();
 
-		if(bBlink_DutyOn) 	_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
-		else 				_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
+        // Gps Timer에 의한 Blink 처리 
+		bGPS_Blk_ON = IsBlink_On(); // GPS에 의한 Blimk 이다. 
+
 
         Com1SerialTime++;
         Com2SerialTime++;
@@ -1188,11 +1200,15 @@ void interrupt isr(void)
 
         if (AnalogValidTime < 200)
             AnalogValidTime++;
+		
 
         if (CDS_DayTimer < 0xff)
             CDS_DayTimer++;
 		if (CDS_NightTimer < 0xff)
             CDS_NightTimer++;
+		if (IN_BLK_Timer < 0xff)
+            IN_BLK_Timer++;
+		
 				
 		if (SetModeReadyTimer < 0xffff)
             SetModeReadyTimer++;

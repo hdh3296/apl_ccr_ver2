@@ -95,7 +95,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CDS_DAY		PIN_IN_DAY 				
 #define _CDS_NIGHT		PIN_IN_NIGHT
 // 깜빡임 외부에서 제어 
-#define _IN_BLINK		PIN_IN_BLINK 				
+#define _IN_BLINK		PIN_IN_BLINK // FU			
 // 딥스위치 On이면 0값이다.  	
 #define _DIP_SW0		PIN_MODE_0 // 고광도용(20만,2만,2천) / 중광도용(주간2만, 야간2천) 					
 #define _DIP_SW1		PIN_MODE_1 // CDS-A(주간,저녁,야간) / CDS-B(야간)					
@@ -235,7 +235,11 @@ bit		bBlink_DutyOn = 0;
 unsigned int BeginTimer = 0;
 unsigned char CDS_DayTimer = 0;
 unsigned char CDS_NightTimer = 0;
+unsigned char IN_BLK_Timer = 0;
 
+
+bit bFU_BlkOn = 0;
+bit bGPS_Blk_ON = 0;
 
 
 

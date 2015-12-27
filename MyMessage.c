@@ -84,12 +84,12 @@ const unsigned char GroupLineMessage[][17]={
                                     "USER:SET VAL DAY", // 5  
                                     "USER:SET VAL EVE", // 6  
                                     "USER:SET VAL NIG", // 7  
-                                    "USER:SetDuty DAY", // 8 
-                                    "USER:SetDuty EVE", // 9 
-                                    "USER:SetDuty NIG", // 10 
-                                    "USER:MaxSetA Day", // 11 
-                                    "USER:MaxSetA Eve", // 12 
-                                    "USER:MaxSetA Nig", // 13 
+                                    "USER:MaxSetA Day", // 8 
+                                    "USER:MaxSetA Eve", // 9 
+                                    "USER:MaxSetA Nig", // 10 
+                                    "USER:           ", // 11 
+                                    "USER:			 ", // 12 
+                                    "USER:			 ", // 13 
                                     "USER:Group Nm   ", // 14 
                                     "USER:Local Nm   ", // 15 
                                     "USER:Inv InBd Tp", // 16
@@ -112,9 +112,9 @@ const unsigned char GroupLineMessage[][17]={
 ///////////////////////////////////////////////////////////                                    
 ///////////////////////////////////////////////////////////   
                                                                     
-                                    "TMR:Op Wait Time",// 1
-                                    "TMR:Op Total Tm ",// 2
-                                    "TMR:No Use Time ",// 3
+                                    "TMR:SetDuty DAY ",// 1
+                                    "TMR:SetDuty EVE ",// 2
+                                    "TMR:SetDuty NIG ",// 3
                                     "TMR:NextFlr Time",// 4
                                     "TMR:LuLdOff Time",// 5
                                     "TMR:Fan Off Time",// 6

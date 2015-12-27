@@ -7,7 +7,7 @@
 #define	MAX_FLASH_BLOCK_NM	3
 
 volatile const unsigned char information[]={
-												FW_VERSION,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+												dFW_VERSION,dDuty_Cnt,dDuty_Rate,dSETMODE_SEL,dSET_VAL_DAY_L,dSET_VAL_DAY_H,dSET_VAL_EVE_L,dSET_VAL_EVE_H,dSET_VAL_NIG_L,dSET_VAL_NIG_H,dMaxSetA_Day_L,dMaxSetA_Day_H,dMaxSetA_Eve_L,dMaxSetA_Eve_H,dMaxSetA_Nig_L,dMaxSetA_Nig_H,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 												0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
