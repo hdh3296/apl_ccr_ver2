@@ -1,6 +1,10 @@
 
 #include	"AllCommom.h"
 
+#ifndef	_MAIN_H_
+#define	_MAIN_H_
+
+
 
 extern volatile bit RB0x                @ ((unsigned)&PORTB*8)+0;
 extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
@@ -316,3 +320,4 @@ extern void Chk232TxErr(void);
 extern void WriteProc(void);
 
 
+#endif

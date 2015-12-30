@@ -8,6 +8,7 @@
 #include    "MyMessage.h"
 #include    "setup.h"
 #include	"Commom.h"
+#include 	"main.h"
 
 
 //////////////////////////////////////
@@ -3801,7 +3802,12 @@ unsigned int Default_Cur_State_Display(void)
 {
 	unsigned int i,j;
 
-	j=65;
+	if (eSETMODE == 0) 		j = 61;
+	else if (eSETMODE == 1) j = 62;
+	else if (eSETMODE == 2) j = 63;
+	else if (eSETMODE == 3) j = 64;
+	else 					j = 65;
+	
 	for(i=0;i<16;i++)	New485Ladder[SECONDLINE_BASE+i] =StatusMessage[j][i];          		
 
 /*
@@ -4220,6 +4226,11 @@ unsigned int  MenuOnChk(void)
 
 	switch(LadderGroup){
 		case    GROUP1_BLOCK:
+			if (LadderGroupSub == 8){
+				if (_DIP_SW1 == DIPSW_OFF)	i = 0; // ¼û±è
+			}	
+			else i = 1; // º¸ÀÓ 	
+			break;
 		case    GROUP2_BLOCK:
 		case    GROUP3_BLOCK:
 		case    GROUP4_BLOCK:

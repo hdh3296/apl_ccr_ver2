@@ -66,11 +66,11 @@ const unsigned char StatusMessage[][17]	={
 										"Close Door      ",      //058                                     
 										"Auto Up         ",      //059                                     
 										"Auto Dn         ",      //060                                     
-										"Slow Speed      ",      //061
-										"Wait LuLd       ",      //062
-										"063             ",      //063
-										"No Define       ",      //064
-										"Auto Ready      "       //065
+										"Normal Mode     ",      //061
+										"SetMode Day     ",      //062
+										"SetMode Evening ",      //063
+										"SetMode Night   ",      //064
+										"No Define       "       //065
                                     	};                                       
 
 
