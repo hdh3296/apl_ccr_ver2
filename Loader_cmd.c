@@ -4237,7 +4237,7 @@ unsigned int  MenuOnChk(void)
 			i=1;
 			break;
 		default:
-			i=0;
+			i=1;
 			break;	
 	}
 	return(i);
