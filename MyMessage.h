@@ -15,7 +15,7 @@ extern	const unsigned char blinkx[];
 #define GROUP5_BLOCK		5
 #define GROUP6_BLOCK		6
 
-#define MAX_GROUP			GROUP4_BLOCK
+#define MAX_GROUP			GROUP3_BLOCK
 
 
 

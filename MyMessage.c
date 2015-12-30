@@ -33,7 +33,7 @@ const unsigned char StatusMessage[][17]	={
 										"Sus Error       ",      //025
 										"Sds Error       ",      //026
 										"LuLdChangeErr   ",      //027 
-										"Ld On Error	   ",      //028
+										"Ld On Error	 ",      //028
 										"Ld Off Error    ",      //029
 										"Lu On Error     ",      //030
 										"Lu Off Error    ",      //031
@@ -81,69 +81,69 @@ const unsigned char GroupLineMessage[][17]={
                                     "USER:Duty Cnt   ", // 2
                                     "USER:Duty Rate  ", // 3 
                                     "USER:SETMODE SEL", // 4
-                                    "USER:SET VAL DAY", // 5  
-                                    "USER:SET VAL EVE", // 6  
-                                    "USER:SET VAL NIG", // 7  
-                                    "USER:MaxSetA Day", // 8 
-                                    "USER:MaxSetA Eve", // 9 
-                                    "USER:MaxSetA Nig", // 10 
+                                    "USER:SET DAY    ", // 5  
+                                    "USER:SET EVENING", // 6  
+                                    "USER:SET NIGHT  ", // 7  
+                                    "USER:MaxSet  Day", // 8 
+                                    "USER:MaxSet  Eve", // 9 
+                                    "USER:MaxSet  Nig", // 10 
                                     "USER:           ", // 11 
                                     "USER:			 ", // 12 
                                     "USER:			 ", // 13 
-                                    "USER:Group Nm   ", // 14 
-                                    "USER:Local Nm   ", // 15 
-                                    "USER:Inv InBd Tp", // 16
-                                    "USER:Call(c-f-f)", // 17
-                                    "USER:hh-mm-ss   ", // 18 
-                                    "USER:yy-mm-dd   ", // 19
-                                    "USER:ErrStCnt   ", // 20  
-                                    "USER:Company    ", // 21									  
-                                    "USER:OutDate    ", // 22  
-                                    "USER:UserLamp3  ", // 23  
-                                    "USER:UserLamp4  ", // 24  
-                                    "USER:C-K-H-O-B-R", // 25 
-                                    "USER:User4      ", // 26 
-                                    "USER:User5      ", // 27 
-                                    "USER:User6      ", // 28 
-                                    "USER:F-Error(00)", // 29 
-                                    "USER:SenPosi(00)", // 30 
-                                    "USER:System Mode", // 31  
-                                    "USER: Stop Pulse", // 32 
+                                    "USER: 			 ", // 14 
+                                    "USER: 			 ", // 15 
+                                    "USER:			 ", // 16
+                                    "USER:			 ", // 17
+                                    "USER: 		     ", // 18 
+                                    "USER:  		 ", // 19
+                                    "USER:  		 ", // 20  
+                                    "USER:  		 ", // 21									  
+                                    "USER:   		 ", // 22  
+                                    "USER: 			 ", // 23  
+                                    "USER: 			 ", // 24  
+                                    "USER:			 ", // 25 
+                                    "USER:			 ", // 26 
+                                    "USER: 			 ", // 27 
+                                    "USER:			 ", // 28 
+                                    "USER:			 ", // 29 
+                                    "USER:			 ", // 30 
+                                    "USER:			 ", // 31  
+                                    "USER:			 ", // 32 
 ///////////////////////////////////////////////////////////                                    
 ///////////////////////////////////////////////////////////   
                                                                     
-                                    "TMR:SetDuty DAY ",// 1
-                                    "TMR:SetDuty EVE ",// 2
-                                    "TMR:SetDuty NIG ",// 3
-                                    "TMR:NextFlr Time",// 4
-                                    "TMR:LuLdOff Time",// 5
-                                    "TMR:Fan Off Time",// 6
-                                    "TMR:Lit Off Time",// 7
-                                    "TMR:OpClWaitTime",// 8
-                                    "TMR:PowerRunTime",// 9
-                                    "TMR:Dir Set Time",//10
-                                    "TMR:Voice OnTime",//11
-                                    "TMR:Brk Mgt Time",//12
-                                    "TMR:ReOpen  Time",//13
-                                    "TMR:P4  On  Time",//14
-                                    "TMR:U/D On  Time",//15
-                                    "TMR:Bk2 On  Time",//16
-                                    "TMR:Bk1 On  Time",//17
-                                    "TMR:Run On  Time",//18
-                                    "TMR:Run Off Time",//19
-                                    "TMR:Bk1 Off Time",//20
-                                    "TMR:Bk2 Off Time",//21
-                                    "TMR:U/D Off Time",//22
-                                    "TMR:P4  Off Time",//23
-                                    "TMR:Sol On  Time",//24
-                                    "TMR:Door St Time",//25
-                                    "TMR:Stop9   Time",//26
-                                    "TMR:Stop10  Time",//27
-                                    "TMR:Stop11  Time",//28
-                                    "TMR:Stop12  Time",//29
-                                    "TMR:Stop13  Time",//30
-                                    "TMR:Stop14  Time",//31
-                                    "TMR:Stop15  Time",//32            
+                                    "DSP:SetDuty DAY ",// 1
+                                    "DSP:SetDuty EVE ",// 2
+                                    "DSP:SetDuty NIG ",// 3
+                                    "DSP:			 ",// 4
+                                    "DSP:			 ",// 5
+                                    "TMR:			 ",// 6
+                                    "TMR:			 ",// 7
+                                    "TMR:			 ",// 8
+                                    "TMR:			 ",// 9
+                                    "TMR:			 ",//10
+                                    "TMR:			 ",//11
+                                    "TMR:			 ",//12
+                                    "TMR:			 ",//13
+                                    "TMR:			 ",//14
+                                    "TMR:			 ",//15
+                                    "TMR:			 ",//16
+                                    "TMR:			 ",//17
+                                    "TMR:			 ",//18
+                                    "TMR:			 ",//19
+                                    "TMR:			 ",//20
+                                    "TMR:			 ",//21
+                                    "TMR:			 ",//22
+                                    "TMR:			 ",//23
+                                    "TMR:			 ",//24
+                                    "TMR:			 ",//25
+                                    "TMR:			 ",//26
+                                    "TMR:			 ",//27
+                                    "TMR:			 ",//28
+                                    "TMR:			 ",//29
+                                    "TMR:			 ",//30
+                                    "TMR:			 ",//31
+                                    "TMR:			 ",//32            
 /*                                                                               
 ///////////////////////////////////////////////////////////                                                                                                           
 ///////////////////////////////////////////////////////////                                                                                                           
