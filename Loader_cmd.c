@@ -3525,6 +3525,19 @@ void  Group2(void)
             Integer_Digit();
 			break;
 		case	GROUP2_MENU05:
+			EditCursor=0;
+            EditStatus=NO_EDIT;
+            EditStart=3;
+            EditShiftCnt=5;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=60000;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+
+			EditDigitData=In_Current;	
+    		EditDataType=INT_TYPE;
+            Integer_Digit();
+			break;			
 		case	GROUP2_MENU06:
 		case	GROUP2_MENU07:
 		case	GROUP2_MENU08:
