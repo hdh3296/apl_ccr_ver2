@@ -9,6 +9,7 @@
 #include    "setup.h"
 #include	"Commom.h"
 #include 	"main.h"
+#include    "Pwm1.h"
 
 
 //////////////////////////////////////
@@ -2839,6 +2840,7 @@ unsigned int  ReadIntegerData(unsigned int pt)
 	return(0);
 }
 
+
 unsigned int  MyReadIntegerData(unsigned int pt)
 {
 	unsigned long a, b, Vlue;
@@ -3509,6 +3511,19 @@ void  Group2(void)
             Integer_Digit();
 			break;		
 		case	GROUP2_MENU04:
+			EditCursor=0;
+            EditStatus=NO_EDIT;
+            EditStart=3;
+            EditShiftCnt=4;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1023;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
+
+			EditDigitData=DutyCycle;	
+    		EditDataType=INT_TYPE;
+            Integer_Digit();
+			break;
 		case	GROUP2_MENU05:
 		case	GROUP2_MENU06:
 		case	GROUP2_MENU07:
@@ -4570,8 +4585,7 @@ unsigned int   NewFlashData(void)
                 Group1();
                 break;
             case    GROUP2_BLOCK:       
-                GroupBaseAddr= (GROUP2_MENU01);
-                Group2();
+                
                 break;
             case    GROUP3_BLOCK:       
                 GroupBaseAddr= (GROUP3_MENU01);
@@ -4582,6 +4596,7 @@ unsigned int   NewFlashData(void)
                 Group4();
                 break;
 		}
+
 
 
 
@@ -4665,6 +4680,12 @@ unsigned int   NewFlashData(void)
 */
 
     }
+
+	if(LadderGroup == GROUP2_BLOCK)
+	{
+		GroupBaseAddr= (GROUP2_MENU01);
+        Group2();
+	}	
 
    	LadderBuf[C_BASE_MEMORY]=LadderGroup;              
    	LadderBuf[C_OFFSET_MEMORY]=LadderGroupSub;          

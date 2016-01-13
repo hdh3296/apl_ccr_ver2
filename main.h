@@ -289,6 +289,8 @@ ULONG	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms)
 ULONG 	Multip[3] = {0,};	
 
 
+
+
 extern  void  Initial(void);
 extern  void  InitTimer0(void);
 extern void    InitPort(void);

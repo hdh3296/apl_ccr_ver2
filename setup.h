@@ -527,5 +527,9 @@ extern	unsigned char new_value[64];
 // ±‚≈∏ 
 #define BLOCK_SET_DUTYCYCLE_DAY	IntzData009	// 
 #define BLOCK_SET_DUTYCYCLE_TWL	IntzData010	// 
-#define BLOCK_SET_DUTYCYCLE_NIG	IntzData011	// 
+#define BLOCK_SET_DUTYCYCLE_NIG	IntzData011	//
+
+
+
+
 
