@@ -138,7 +138,7 @@ void   LdDataTx(void)
 }
 
 
-unsigned int  Loader_Func(void)
+unsigned int  ProcLoader(void)
 {
 	unsigned int i;
 

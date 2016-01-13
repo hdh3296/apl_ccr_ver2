@@ -2955,7 +2955,7 @@ void  Group1(void)
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
-            EditFlashAddr=BLOCK_SET_VALUE_EVE;
+            EditFlashAddr=BLOCK_SET_VALUE_TWL;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;		
@@ -3472,7 +3472,7 @@ void  Group2(void)
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
-            EditFlashAddr=BLOCK_SET_DUTYCYCLE_EVE;
+            EditFlashAddr=BLOCK_SET_DUTYCYCLE_TWL;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;				

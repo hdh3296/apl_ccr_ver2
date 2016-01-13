@@ -86,7 +86,7 @@ void    InitPort(void)
 // GPS 에서 수신된 펄스를 체크한다.
 // 1초마다 High 값이 수신된다.
 // High Edge 값을 체크한다.
-void GpsPPS1Chk(void)
+void ChkGpsPPS1(void)
 {
     if (_PPS_GPS)
     {
@@ -385,13 +385,13 @@ void ApaLampOnOff(void)
 			if(AdValue[2] < AdValue[3]){
 				if(DutyCycle < 0x3ff)	DutyCycle++;
 				else					DutyCycle=0x3ff;
-				OutPwm();
+				OutPWM();
 			}
 			else if(AdValue[2] > AdValue[3]){
 				if(DutyCycle > 0x0)	DutyCycle--;
 				else				DutyCycle=0;
 
-				OutPwm();
+				OutPWM();
 			}
 		}
 
@@ -459,7 +459,7 @@ void ApaLampOnOff(void)
 		if(bPwmOn){
 			PwmOff();
 			DutyCycle=0x3ff;
-			OutPwm();
+			OutPWM();
 		}
 		bPwmOn=0;
 
@@ -492,14 +492,14 @@ void SetApaLamp(void)
     {
         bAn2_Updated = FALSE;
 
-        if (stApl[0].bSetSwPushOK)		SetAVoltage = SetA1_Volt;
-        else if (stApl[2].bSetSwPushOK)	SetAVoltage = SetA3_Volt;
+        if (sAPL[0].bSetSwPushOK)		SetAVoltage = SetA1_Volt;
+        else if (sAPL[2].bSetSwPushOK)	SetAVoltage = SetA3_Volt;
         // Ad2 와 Ad3(또는 Ad4) 값을 비교하여 Pwm 듀티 값을 증가 또는 감소 한다.
-        DutyCycle = GetDutyByCompareCurrent(DutyCycle, SetAVoltage, A_IN_Volt, CurDayNight);
+        DutyCycle = GetDutyByCompareCurrent(DutyCycle, SetAVoltage, A_IN_Volt, CurDAY_TWL_NIG);
 
     }
     _LAMP_ON = ON_lamp; // 실제 APL 램프 ON
-    OutPwm(DutyCycle);
+    OutPWM(DutyCycle);
     bPwmOn = TRUE;
 }
 */
@@ -519,7 +519,7 @@ void ApaLampOnOff(void)
             bAgoBlkLedOff = FALSE;
             StartTimer = 0;
 
-            //if (CurDayNight == DAY)
+            //if (CurDAY_TWL_NIG == DAY)
                 //ReadVal(&SavedDutyCycle1, &SavedSetA1_Volt, Saved1Buf, &SetA1_Volt);
             //else
                 //ReadVal(&SavedDutyCycle3, &SavedSetA3_Volt, Saved3Buf, &SetA3_Volt);
@@ -533,15 +533,15 @@ void ApaLampOnOff(void)
                 {
                     bAn2_Updated = FALSE;
 
-                    if (CurDayNight == DAY) 	SetAVoltage = SetA1_Volt;
+                    if (CurDAY_TWL_NIG == DAY) 	SetAVoltage = SetA1_Volt;
                     else 					SetAVoltage = SetA3_Volt;
                     // Ad2 와 Ad3(또는 Ad4) 값을 비교하여 Pwm 듀티 값을 증가 또는 감소 한다.
-                    DutyCycle = GetDutyByCompareCurrent(DutyCycle, SetAVoltage, A_IN_Volt, CurDayNight);
+                    DutyCycle = GetDutyByCompareCurrent(DutyCycle, SetAVoltage, A_IN_Volt, CurDAY_TWL_NIG);
                 }
             }
         }
         _LAMP_ON = ON_lamp; // 실제 APL 램프 ON
-        OutPwm(DutyCycle);
+        OutPWM(DutyCycle);
         bPwmOn = TRUE;
         _LED_LAMP_ON = ON_runled1; // 상태 LED 깜빡 깜빡 !!!
 
@@ -552,7 +552,7 @@ void ApaLampOnOff(void)
         {
             PwmOff();
             DutyCycle = 0x3ff;
-            OutPwm(DutyCycle);
+            OutPWM(DutyCycle);
         }
         bPwmOn = FALSE;
         _PWM = 0;
@@ -566,9 +566,9 @@ void ApaLampOnOff(void)
 // GPS 펄스에 의한 엣지가 생기면 !
 // msec 값을 999으로 변경하고
 // GPS 시,분,초 변수값에 시간을 저장한다.
-bit IsBlink_On(void)
+bit IsDutyOnByGpsTime(void)
 {
-    static bit bBlink_DutyOn;
+    static bit bDutyOn;
 
 	// 
     if (bPPS_Edge && bPPS_On)
@@ -617,19 +617,19 @@ bit IsBlink_On(void)
 
     if (Gms60000 < LED_ON_DUTY_MSEC)
     {
-        bBlink_DutyOn = TRUE; // APL LAMP ON
+        bDutyOn = TRUE; // APL LAMP ON
     }
     else
     {
-        bBlink_DutyOn = FALSE;  // APL LAMP off
+        bDutyOn = FALSE;  // APL LAMP off
     }
 
-    return bBlink_DutyOn;
+    return bDutyOn;
 }
 
 // GPS RX2 통신 값을 받아서 Com1TxBuffer로 넘겨준다.
 // GPS 수신 Good 신호를 받으면, 시,분,초 변수에 각각 저장한다.
-void GpsRx2DataProc(void)
+void ProcGpsRx2Data(void)
 {
     unsigned int i;
 
@@ -666,25 +666,25 @@ void GpsRx2DataProc(void)
 // Blink Led On, Off 판별
 bit IsInput_ON(unsigned char bLedState, unsigned char* Timer)
 {
-    static bit bBlkLedOn;
+    static bit bInputOn;
 
-    bBlkLedOn = TRUE;
+    bInputOn = TRUE;
     if (bLedState)	//	High
     {
         if (*Timer > 90) // High 가 90ms 유지 되면 낮이다.
-            bBlkLedOn = FALSE;
+            bInputOn = FALSE;
     }
     else 	// Low, 60Hz 이면 밤이다. 
     {
         *Timer = 0;
-        bBlkLedOn =  TRUE;
+        bInputOn =  TRUE;
     }
 
-    return bBlkLedOn;
+    return bInputOn;
 }
 
 
-unsigned char GetDayEveningNight(void)
+unsigned char GetDAY_TWL_NIG(void)
 {
     static bit bCDS_Day, bCDS_Night;
     unsigned char ret;
@@ -692,16 +692,12 @@ unsigned char GetDayEveningNight(void)
     bCDS_Day = IsInput_ON(_CDS_DAY, &CDS_DayTimer);
 	bCDS_Night = IsInput_ON(_CDS_NIGHT, &CDS_NightTimer);
 
-    if (bCDS_Day)		_LED_CDS_IN_DAY = LED_CDS_ON;
-	else				_LED_CDS_IN_DAY = LED_CDS_OFF;
-    if (bCDS_Night) 	_LED_CDS_IN_NIG = LED_CDS_ON;
-	else				_LED_CDS_IN_NIG = LED_CDS_OFF;
 
 	// 고광도용 (낮 / 저녁 / 밤)
 	if (_DIP_SW2 == DIPSW_ON)
 	{
 		if ((bCDS_Day) && (bCDS_Night))
-			ret = EVE;	
+			ret = TWL;	
 		else if (bCDS_Day)
 			ret = DAY;	
 		else if (bCDS_Night)
@@ -763,20 +759,20 @@ void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle)
 
 
 
-// 최초 전원 껐다 켰을 떄 
-void PwOffOnLampOut(void)
+// 최초 전원 On시에 셋팅된 값을 토대로 APL 램프의 불을 밝힌다. 
+void OutLampWhenPowerOn(void)
 {
     do
     {
-        BefCurDayNight = CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 저장
-		DutyCycle = stApl[CurDayNight].Set_DutyCycle; 
+        BefDAY_TWL_NIG = CurDAY_TWL_NIG = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 저장
+		DutyCycle = sAPL[CurDAY_TWL_NIG].Set_DutyCycle; 
 		_LAMP_ON = TRUE;
-		ChangPwmCycleRegedit(CurDayNight);
-        OutPwm(DutyCycle);
+		ChangePwmT2CON(CurDAY_TWL_NIG);
+        OutPWM(DutyCycle);
 		
         CLRWDT();
     }
-    while (BeginTimer < 100);
+    while (OutLampWhenPowerOnTimer < 100);
 }
 
 
@@ -797,19 +793,19 @@ unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
                                  unsigned char DayNig, unsigned int Offset)
 {
 	
-//	Offset = GetOffSet(stApl[0].Set_Current);	
+//	Offset = GetOffSet(sAPL[0].Set_Current);	
 
-    if (stApl[DayNig].Set_Current > In_Current) 
+    if (sAPL[DayNig].Set_Current > In_Current) 
     {		
-        if (stApl[DayNig].Set_Current > (In_Current + Offset))  
+        if (sAPL[DayNig].Set_Current > (In_Current + Offset))  
         {
             if (duty < DUTI_MAX)	duty++;
             else					duty = DUTI_MAX;
         }
     }
-    else if (stApl[DayNig].Set_Current < In_Current)
+    else if (sAPL[DayNig].Set_Current < In_Current)
     {
-        if ((stApl[DayNig].Set_Current + Offset) < In_Current)
+        if ((sAPL[DayNig].Set_Current + Offset) < In_Current)
         {
             if (duty > 0)		duty--;
         }
@@ -831,25 +827,24 @@ unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
 
 
 // 셋팅 스위치 눌렀을 때 APL 램프 셋팅 
-void OnAplLampSet(tag_CurDay Sw_DayNig)
+void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 {	
-	_LAMP_ON = TRUE; // LAMP ON
 	if (bAD_A_IN_mV_Upd)
 	{
 		bAD_A_IN_mV_Upd = FALSE;		
 		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
 		
-		DutyCycle = GetDutyByCmp(stApl[Sw_DayNig].Set_DutyCycle, 
-								 stApl[Sw_DayNig].Set_mV, Sw_DayNig, 0);
-		stApl[Sw_DayNig].Set_DutyCycle = DutyCycle;
+		DutyCycle = GetDutyByCmp(sAPL[Sw_DayNig].Set_DutyCycle, 
+								 sAPL[Sw_DayNig].Set_mV, Sw_DayNig, 0);
+		sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle;
 //		DutyCycle_Avr = AvrDutyCycle(DutyCycle); // Q?? 
 	}
-	ChangPwmCycleRegedit(Sw_DayNig);
-	OutPwm(DutyCycle);		
+	ChangePwmT2CON(Sw_DayNig);
+	OutPWM(DutyCycle);		
 }
 
 // 현재(실제) APL LAPM On, Off 처리 
-void OutLampOnOff(tag_CurDay CurDayNig)
+void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 {
 	if (bBlink_DutyOn) // Blink Led 가 On 일 때
 	{	
@@ -859,13 +854,13 @@ void OutLampOnOff(tag_CurDay CurDayNig)
 			bLampOnReady = FALSE;
 			StDelayTimer = 0; 
 
-//			ReadVal((arSavedBuf + (CurDayNig*4)), &stApl[CurDayNig].Setting_mV, &stApl[CurDayNig].DutyCycle);
-//			stApl[CurDayNig].Set_Current = GetSetCurrent(stApl[CurDayNig].Setting_mV, CurDayNig);
-			DutyCycle = stApl[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
-			ChangPwmCycleRegedit(CurDayNig);
-			OutPwm(DutyCycle);	
+//			ReadVal((arSavedBuf + (CurDayNig*4)), &sAPL[CurDayNig].Setting_mV, &sAPL[CurDayNig].DutyCycle);
+//			sAPL[CurDayNig].Set_Current = GetSetCurrent(sAPL[CurDayNig].Setting_mV, CurDayNig);
+			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
+			ChangePwmT2CON(CurDayNig);
+			OutPWM(DutyCycle);	
 
-			if (stApl[CurDayNig].Set_Current > JUNG_GIJUN) StDelayTime = 0;
+			if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN) StDelayTime = 0;
 			else	StDelayTime = 100;	
 		}
 		else
@@ -877,13 +872,13 @@ void OutLampOnOff(tag_CurDay CurDayNig)
 					bAD_A_IN_mV_Upd = FALSE;
 					In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
 					
-					if (stApl[CurDayNig].Set_Current > JUNG_GIJUN)
-						DutyCycle = GetDutyByCmp(DutyCycle, stApl[CurDayNig].Set_mV, CurDayNig, 0);
+					if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
+						DutyCycle = GetDutyByCmp(DutyCycle, sAPL[CurDayNig].Set_mV, CurDayNig, 0);
 					else
-						DutyCycle = GetDutyByCmp(DutyCycle, stApl[CurDayNig].Set_mV, CurDayNig, 100);
+						DutyCycle = GetDutyByCmp(DutyCycle, sAPL[CurDayNig].Set_mV, CurDayNig, 100);
 				}
-				ChangPwmCycleRegedit(CurDayNig);
-				OutPwm(DutyCycle);
+				ChangePwmT2CON(CurDayNig);
+				OutPWM(DutyCycle);
 			}			
 		}
 		
@@ -892,12 +887,12 @@ void OutLampOnOff(tag_CurDay CurDayNig)
 	{
 		_LAMP_ON = FALSE; // LAMP OFF 
 		
-		DutyCycle = ((stApl[CurDayNig].Set_DutyCycle * 6) / 100);
+		DutyCycle = ((sAPL[CurDayNig].Set_DutyCycle * 6) / 100);
 		if (DutyCycle >= 20) DutyCycle = DutyCycle + 10;
 		else if (DutyCycle >= 10) DutyCycle = DutyCycle - 1;
 		else DutyCycle = DutyCycle + 1;
-		ChangPwmCycleRegedit(CurDayNig);		
-		OutPwm(DutyCycle);	
+		ChangePwmT2CON(CurDayNig);		
+		OutPWM(DutyCycle);	
 		bLampOnReady = TRUE;
 		
 	}
@@ -906,12 +901,12 @@ void OutLampOnOff(tag_CurDay CurDayNig)
 
 
 // 기준 셋팅값에 따라 PIN_PWM 주기 레지스트 설정 값 변경 
-void ChangPwmCycleRegedit(tag_CurDay CurDayNight)
+void ChangePwmT2CON(tag_CurDay CurDayNight)
 {
-	if (stApl[CurDayNight].Set_Current > JUNG_GIJUN)
+	if (sAPL[CurDayNight].Set_Current > JUNG_GIJUN)
 	{
-		if (T2CON != 0x04)
-			T2CON = 0x04; // 2000천 간델라 일 떄 !
+		if (T2CON != 0x06)
+			T2CON = 0x06; // 2000천 간델라 일 떄 !
 	}
 	else
 	{
@@ -928,7 +923,7 @@ void Chk232TxErr(void)
 	{
 		if (Com1SerialTime > 3)
 		{
-			Com1SerialTime = 0;
+			Com1SerialTime = 0;=================
 			Com1RxStatus = STX_CHK;
 			Com1TxCurCnt = 0;
 			Com1TxTotalCnt = 0;
@@ -942,31 +937,31 @@ void Chk232TxErr(void)
 // 셋업 모드에서 셋업 스위치 누르고 뗐을 때 ! 현재 DutyCycle, SetA값 저장 !
 void WriteProc(void)
 {
-	if (stApl[SW_DAY].bSetSw_UpEdge)
+	if (sAPL[SW_DAY].bSetSw_UpEdge)
 	{
-		if (stApl[SW_DAY].bWriteEnab)
+		if (sAPL[SW_DAY].bWriteEnab)
 		{	
-			WriteVal(DutyCycle, stApl[SW_DAY].Set_mV, (arSavedBuf + (SW_DAY * 4)));
-			stApl[SW_DAY].bSetSw_UpEdge = FALSE;
-			stApl[SW_DAY].bWriteEnab = FALSE;
+			WriteVal(DutyCycle, sAPL[SW_DAY].Set_mV, (arSavedBuf + (SW_DAY * 4)));
+			sAPL[SW_DAY].bSetSw_UpEdge = FALSE;
+			sAPL[SW_DAY].bWriteEnab = FALSE;
 		}
 		else
 		{
-			stApl[SW_DAY].bSetSw_UpEdge = FALSE;
+			sAPL[SW_DAY].bSetSw_UpEdge = FALSE;
 		}
 	}
 	
-	if (stApl[SW_NIG].bSetSw_UpEdge)
+	if (sAPL[SW_NIG].bSetSw_UpEdge)
 	{
-		if (stApl[SW_NIG].bWriteEnab)
+		if (sAPL[SW_NIG].bWriteEnab)
 		{			
-			WriteVal(DutyCycle, stApl[SW_NIG].Set_mV, (arSavedBuf + (SW_NIG * 4)));
-			stApl[SW_NIG].bSetSw_UpEdge = FALSE;
-			stApl[SW_NIG].bWriteEnab = FALSE;
+			WriteVal(DutyCycle, sAPL[SW_NIG].Set_mV, (arSavedBuf + (SW_NIG * 4)));
+			sAPL[SW_NIG].bSetSw_UpEdge = FALSE;
+			sAPL[SW_NIG].bWriteEnab = FALSE;
 		}
 		else
 		{
-			stApl[SW_NIG].bSetSw_UpEdge = FALSE;
+			sAPL[SW_NIG].bSetSw_UpEdge = FALSE;
 		}		
 	}	
 
@@ -984,6 +979,146 @@ ULONG GetInCurrent(ULONG CurA_IN_mV)
 	return In_Current;
 }
 
+// 저장된 값 Read(Load) /////////////////////////////////////
+bit ReadSetValueWhenPowerOn(void)
+{
+	unsigned char 	i;
+	static 	 bit 	ret;
+
+	ret = FALSE;
+	
+	// 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다. 
+	sAPL[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
+	sAPL[TWL].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
+	sAPL[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
+	sAPL[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
+	sAPL[TWL].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_TWL);
+	sAPL[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
+	for (i=0; i<3; i++)
+	{	
+		sAPL[i].Set_Current = GetSetCurrent(sAPL[i].Set_mV, i);
+	}
+
+	ret = TRUE;
+	return(ret);
+}
+
+
+void ProcReadWrite(void)
+{
+// Read !!!
+	// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
+	// Lamp Blink에서의 On 주기 시간(msec)
+	DUTY_CNT = MyReadByteData(BLOCK_DUTY_CNT);		
+	DUTY_RATE = MyReadByteData(BLOCK_DUTY_RATE);		
+	if(DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT)); 
+	LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
+	
+	// 각 V_IN 셋팅 값 
+	sAPL[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY); // 낮 셋팅 값 
+	sAPL[TWL].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_TWL); // 저녁 셋팅 값
+	sAPL[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG); // 밤 셋팅 값
+	
+	
+	Multip[DAY] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetADay) * 1000) / A_SET_V_MAX; 
+	Multip[TWL] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetAEve) * 1000) / A_SET_V_MAX; 
+	Multip[NIG] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetANig) * 1000) / A_SET_V_MAX; 
+	
+	// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
+	// 셋팅 모드 선택 
+	eSETMODE = MyReadByteData(BLOCK_SETMODE_SEL);
+	
+// Write !!!
+	// Set_DutyCycle 값 
+	if (eSETMODE != Bef_eSETMODE)
+	{	
+		if (Bef_eSETMODE)
+		{
+			EditDataType = INT_TYPE;
+			if (Bef_eSETMODE == SETMODE_DAY) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
+			else if (Bef_eSETMODE == SETMODE_EVE) EditFlashAddr = BLOCK_SET_DUTYCYCLE_TWL;
+			else if (Bef_eSETMODE == SETMODE_NIG) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
+			EditDigitData = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+			Group1_Save();	
+		}
+		Bef_eSETMODE = eSETMODE;
+	}
+
+}
+
+
+void ProcGPS(void)
+{
+// Int_Gps : com2 232Rx 데이타 수신
+	if (Com2RxStatus == RX_GOOD) 
+	{
+		Com2RxStatus = STX_CHK;
+		
+		ProcGpsRx2Data(); // 시간값을 가져온다. 
+	}
+	
+// GPS Puls 체크	
+	ChkGpsPPS1(); 
+
+}
+
+void ProcBlink(void)
+{
+// 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.  
+	if (_DIP_SW3 == DIPSW_ON) // GPS
+	{
+		bBlink_DutyOn = bDutyOnByGpsTime;
+	}
+	else // FU : _IN_BLINK 입력 상태 확인 
+	{
+		bBlink_DutyOn = bBLKInputOn = IsInput_ON(_IN_BLINK, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
+	}
+	
+// Blink 에 따른 LED 상태 
+	if(bBlink_DutyOn)	_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
+	else				_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
+
+}
+
+// CDS 낮, 저녁, 밤 체크 기능
+void ProcDAY_TWL_NIG(void)
+{
+// CDS 값을 읽어셔 표현 
+	CurDAY_TWL_NIG = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 가져온다. 
+	
+// 낮, 밤이 바뀔 때 처리 
+	if (CurDAY_TWL_NIG != BefDAY_TWL_NIG)
+	{
+		BefDAY_TWL_NIG = CurDAY_TWL_NIG;
+		bLampOnReady = TRUE;
+	}
+}
+
+
+void ProcAD(void)
+{
+	bUdtAd = IsUdtAd(arInPut_mV, arIs_AdUpd, AdChSel);
+	if (bUdtAd) // input AD 값 얻음.
+	{			
+		GetMyAD(); // 각 AD 값이 Updated 이면, 각 관련 변수에 저장 한다.		
+		AdChSel = ChangeAdChSel(AdChSel, 1); // 채널 변경	
+		Set_AdCh(AdChSel); // 채널 설정 
+		
+		// AD 채널이 변경 되었다. 
+		// 변경시 쓰레기 값이 저장되는 문제 때문에 추가 하였다. 
+		if (AdChSel != BefAdChSel)
+		{
+			bAdCalcEnable = FALSE;
+			AdCalcWaitCnt = 0;
+			BefAdChSel = AdChSel;
+		}
+		
+		bAdConversion = FALSE;
+		DONE = 1;
+	}
+}
+
+
 ///////////////////////////
 //   메인 함수 			  //
 ///////////////////////////
@@ -992,6 +1127,7 @@ void main(void)
 {
     unsigned char i;
 	UCHAR ch;
+	static bit ret;
 
     di();
     Initial();
@@ -1003,167 +1139,67 @@ void main(void)
     Com2_Init();
 	Loader_Com_Init(); // COM1 초기화 
     ei();
-
+	
     DONE = 1;	// A/D Conversion Status bit
     TMR0IE = 1;
     SWDTEN = 1;  // Software Controlled Watchdog Timer Enable bit / 1 = Watchdog Timer is on
 
-
-// 저장된 값 Read(Load) /////////////////////////////////////
-	// 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다. 
-	stApl[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
-	stApl[EVE].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE);
-	stApl[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
-	stApl[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
-	stApl[EVE].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_EVE);
-	stApl[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
-	for (i=0; i<3; i++)
-	{	
-		stApl[i].Set_Current = GetSetCurrent(stApl[i].Set_mV, i);
-	}
-    PwOffOnLampOut();
+	ret = FALSE;
+	ret = ReadSetValueWhenPowerOn();
+    if(ret)	OutLampWhenPowerOn();
 ////////////////////////////////////////////////////////////////
 
-    MainTimer = 0;
-    msec100 = 0;
-	// 깜빡임 기능을 사용할지 여부 
-	stApl[0].bBlinkEnab = TRUE;	// TRUE = 깜빡임 ON
-	stApl[2].bBlinkEnab = TRUE;	
-
-
-	//////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////
 
     while (1)
     {
         CLRWDT();
 
-// 로더를 통해 셋팅하고자 하는 값을 가져온다. ///////////////////////////////
- 		Loader_Func(); // 
 
-		// Read !!!
-		// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
-		// Lamp Blink에서의 On 주기 시간(msec)
-		DUTY_CNT = MyReadByteData(BLOCK_DUTY_CNT);		
-		DUTY_RATE = MyReadByteData(BLOCK_DUTY_RATE);		
-		if(DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT)); 
-		LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
+ 		ProcLoader(); 
 
-		// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
-		// 셋팅 모드 선택 
-		eSETMODE = MyReadByteData(BLOCK_SETMODE_SEL);
-		// 각 V_IN 셋팅 값 
-		stApl[SW_DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY); // 낮 셋팅 값 
-		stApl[SW_EVE].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_EVE); // 저녁 셋팅 값
-		stApl[SW_NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG); // 밤 셋팅 값
 
-		// Write !!!
-		// Set_DutyCycle 값 
-		if (eSETMODE != eBefSETMODE)
-		{	
-			if (eBefSETMODE)
-			{
-				EditDataType = INT_TYPE;
-				if (eBefSETMODE == SETMODE_DAY) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
-				else if (eBefSETMODE == SETMODE_EVE) EditFlashAddr = BLOCK_SET_DUTYCYCLE_EVE;
-				else if (eBefSETMODE == SETMODE_NIG) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
-				EditDigitData = stApl[eBefSETMODE - 1].Set_DutyCycle;
-				Group1_Save();	
-			}
-			eBefSETMODE = eSETMODE;
-		}
-
-		Multip[DAY] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetADay) * 1000) / A_SET_V_MAX; 
-		Multip[EVE] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetAEve) * 1000) / A_SET_V_MAX; 
-		Multip[NIG] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetANig) * 1000) / A_SET_V_MAX; 
-		
+		ProcReadWrite();		
 	
-// BLink 기능 	////////////////////////////////////////////////
-		// Int_Gps : com2 232Rx 데이타 수신
-        if (Com2RxStatus == RX_GOOD) // GPS RX2 통신 GOOD !
-        {
-            Com2RxStatus = STX_CHK;
-            GpsRx2DataProc();
-        }
-		GpsPPS1Chk(); // GPS Puls 체크
 
-		// FU에 의한 Blink 처리 
-		bFU_BlkOn = IsInput_ON(_IN_BLINK, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 
+		ProcGPS(); // GPS 통신 및 펄스 수신 처리  
+
+ 
+		ProcBlink(); // BLink 기능 처리
+
+
+		ProcDAY_TWL_NIG(); // CDS 낮, 저녁, 밤이 바끼었을 때 처리 
 		
-		// 딥스위치 2번에 따라 Blink를 GPS에 의해 할자 FU에 의해 할지 결정된다.  
-		if (_DIP_SW3 == DIPSW_ON) // GPS
-		{
-			bBlink_DutyOn = bGPS_Blk_ON;
-		}
-		else // FU : _IN_BLINK 입력 상태 확인 
-		{
-			bBlink_DutyOn = bFU_BlkOn;
-		}
-		
-		// Blink 에 따른 LED 상태 
-		if(bBlink_DutyOn) 	_LED_LAMP_ON = ON_runled1; // Run 상태 LED On
-		else 				_LED_LAMP_ON = OFF_runled1; // Run 상태 LED Off
 
-// CDS 낮, 저녁, 밤 체크 기능 ///////////////////////////////////////
-		// CDS 값을 읽어셔 표현 
-        CurDayNight = GetDayEveningNight(); // NONE, DAY , EVE , NIG 값 가져온다. 
-		// 낮, 밤이 바뀔 때 처리 
-		if (CurDayNight != BefCurDayNight)
-		{
-			BefCurDayNight = CurDayNight;
-			bLampOnReady = TRUE;
-		}		
+		ProcAD();
 
-
-// AD 처리 ///////////////////////////////////////////////////////
-		bUdtAd = IsUdtAd(arInPut_mV, arIs_AdUpd, AdChSel);
-        if (bUdtAd) // input AD 값 얻음.
-        {			
-			GetMyAD(); // 각 AD 값이 Updated 이면, 각 관련 변수에 저장 한다. 		
-			AdChSel = ChangeAdChSel(AdChSel, 1); // 채널 변경 	
-			Set_AdCh(AdChSel); // 채널 설정 
-			
-			// AD 채널이 변경 되었다. 
-			// 변경시 쓰레기 값이 저장되는 문제 때문에 추가 하였다. 
-			if (AdChSel != BefAdChSel)
-			{
-				bAdCalcEnable = FALSE;
-				AdCalcWaitCnt = 0;
-				BefAdChSel = AdChSel;
-			}
-			
-			bAdConversion = FALSE;
-			DONE = 1;
-        }
 
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
 		// 셋팅 모드 !!!
-		// 셋팅모드에서 ALP Lamp 셋업값 얻어온다.
 		if (eSETMODE) 
 		{	
-			bLampOnReady = TRUE;
-			
+			_LAMP_ON = TRUE; // LAMP ON
 			if (bSetModeReady)
-			{
-				bSetModeReady = FALSE;	
-				_LAMP_ON = TRUE; // LAMP ON
-				T2CON = 0x06; // 2000천 간델라 일 떄 !
-				OutPwm(0);	
-				SetModeReadyTimer = 0;		
-			}
-			else if(SetModeReadyTimer > 1000)
 			{				
-				stApl[eSETMODE-1].Set_Current 
-					= GetSetCurrent(stApl[eSETMODE-1].Set_mV, (eSETMODE-1));
-				OnAplLampSet(eSETMODE-1);
-			}			
+				T2CON = 0x06; // 2000천 간델라 일 떄 !
+				OutPWM(0);	
+				bSetModeReady = FALSE;
+				SetModeReady_Timer = 0;
+						
+			}
+			else if(SetModeReady_Timer > 1000)
+			{
+				sAPL[eSETMODE-1].Set_Current 
+					= GetSetCurrent(sAPL[eSETMODE-1].Set_mV, (eSETMODE-1));
+				OutAplLamp_WhenSetMode(eSETMODE-1);
+			}
+
+			bLampOnReady = TRUE;
 		}
 		// 일반 모드 !!!
-		// 일반 모드에서 APL LAMP On, OFF 처리 
 		else 		
 		{
+			OutAplLamp_WhenNomalMode(CurDAY_TWL_NIG);		
 			bSetModeReady = TRUE;
-			OutLampOnOff(CurDayNight);			
 		}
     }
 }
@@ -1181,22 +1217,22 @@ void interrupt isr(void)
 
 
 		Loader_Msec1_Interrpt(); // 로더 시간 
-
+		
 
         // Int_Gps Timer에 의한 Blink 처리 
-		bGPS_Blk_ON = IsBlink_On(); // GPS에 의한 Blimk 이다. 
+		bDutyOnByGpsTime = IsDutyOnByGpsTime(); // GPS에 의한 Blink 이다. 
 
 
         Com1SerialTime++;
         Com2SerialTime++;
 
-        if (stApl[0].SetSwCharterTimer < 250)
-            stApl[0].SetSwCharterTimer++;
-        if (stApl[2].SetSwCharterTimer < 250)
-            stApl[2].SetSwCharterTimer++;
+        if (sAPL[0].SetSwCharterTimer < 250)
+            sAPL[0].SetSwCharterTimer++;
+        if (sAPL[2].SetSwCharterTimer < 250)
+            sAPL[2].SetSwCharterTimer++;
 
-        if (BeginTimer < 1000)
-            BeginTimer++;
+        if (OutLampWhenPowerOnTimer < 1000)
+            OutLampWhenPowerOnTimer++;
 
         if (AnalogValidTime < 200)
             AnalogValidTime++;
@@ -1210,8 +1246,8 @@ void interrupt isr(void)
             IN_BLK_Timer++;
 		
 				
-		if (SetModeReadyTimer < 0xffff)
-            SetModeReadyTimer++;
+		if (SetModeReady_Timer < 0xffff)
+            SetModeReady_Timer++;
 		if (StDelayTimer < 0xffff)
             StDelayTimer++;
 		
@@ -1221,7 +1257,6 @@ void interrupt isr(void)
         {
             msec100 = 0;
             DayNightTimer++;
-            MainTimer++;
 
             if (SettingReadyTime < 100)	SettingReadyTime++;
             if (NightSetTime < 100)		NightSetTime++;
@@ -1229,10 +1264,10 @@ void interrupt isr(void)
 
         }
 
-		if(stApl[SW_DAY].SwPushTimer < 0xffff) stApl[SW_DAY].SwPushTimer++;
-		if(stApl[SW_DAY].SwTouchCntTimer < 0xffff) stApl[SW_DAY].SwTouchCntTimer++;
-		if(stApl[SW_NIG].SwPushTimer < 0xffff) stApl[SW_NIG].SwPushTimer++;
-		if(stApl[SW_NIG].SwTouchCntTimer < 0xffff) stApl[SW_NIG].SwTouchCntTimer++;		
+		if(sAPL[SW_DAY].SwPushTimer < 0xffff) sAPL[SW_DAY].SwPushTimer++;
+		if(sAPL[SW_DAY].SwTouchCntTimer < 0xffff) sAPL[SW_DAY].SwTouchCntTimer++;
+		if(sAPL[SW_NIG].SwPushTimer < 0xffff) sAPL[SW_NIG].SwPushTimer++;
+		if(sAPL[SW_NIG].SwTouchCntTimer < 0xffff) sAPL[SW_NIG].SwTouchCntTimer++;		
     }
 
     // GPS Rx2 통신 인터럽트

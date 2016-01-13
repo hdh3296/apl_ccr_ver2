@@ -26,7 +26,7 @@
 
 
 extern	unsigned int	Loader_Com_Init(void);
-extern	unsigned int	Loader_Func(void);
+extern	unsigned int	ProcLoader(void);
 extern	unsigned int	Loader_Msec1_Interrpt(void);
 extern	unsigned int	Loader_Com_Interrpt(void);
 

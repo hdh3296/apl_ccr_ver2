@@ -25,7 +25,7 @@ void PwmOff(void)
 }
 
 
-void OutPwm(unsigned int DutyCycle)
+void OutPWM(unsigned int DutyCycle)
 {
 	DC1B0 = (bit)DutyCycle; 	//update the PIN_PWM duty cycle 
 	DC1B1 = (bit)(DutyCycle>>1);
@@ -46,7 +46,7 @@ void InitPwm1(void)
 	T2CON=(0x06);		// 16x
 
 	DutyCycle = 0; // Q???
-	OutPwm(DutyCycle); // Q???
+	OutPWM(DutyCycle); // Q???
 }
 
 

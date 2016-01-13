@@ -113,7 +113,7 @@ const unsigned char GroupLineMessage[][17]={
 ///////////////////////////////////////////////////////////   
                                                                     
                                     "DSP:SetDuty DAY ",// 1
-                                    "DSP:SetDuty EVE ",// 2
+                                    "DSP:SetDuty TWL ",// 2
                                     "DSP:SetDuty NIG ",// 3
                                     "DSP:			 ",// 4
                                     "DSP:			 ",// 5

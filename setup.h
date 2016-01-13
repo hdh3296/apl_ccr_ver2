@@ -5,12 +5,12 @@
 #define     dDuty_Cnt		40
 #define     dDuty_Rate		50
 #define		dSETMODE_SEL	0
+/*
+#define     dSET_VAL_DAY_L	0xd0 // 2000
+#define     dSET_VAL_DAY_H	0x07
 
-#define     dSET_VAL_DAY_L	0xe8 // 1000
-#define     dSET_VAL_DAY_H	0x03
-
-#define     dSET_VAL_EVE_L	0xf4 // 500
-#define     dSET_VAL_EVE_H	0x01
+#define     dSET_VAL_EVE_L	0xe8 // 1000
+#define     dSET_VAL_EVE_H	0x03
 
 #define     dSET_VAL_NIG_L	0x64 // 100	
 #define     dSET_VAL_NIG_H 	0x00
@@ -23,7 +23,24 @@
 
 #define     dMaxSetA_Nig_L	0xe8 // 1000
 #define     dMaxSetA_Nig_H	0x03
-
+*/
+#define     dSET_VAL_DAY_L	0xd0 // 2000
+#define     dSET_VAL_DAY_H	0x07
+	
+#define     dSET_VAL_EVE_L	0xd0 // 2000
+#define     dSET_VAL_EVE_H	0x07
+	
+#define     dSET_VAL_NIG_L	0x64 // 100	
+#define     dSET_VAL_NIG_H 	0x00
+	
+#define     dMaxSetA_Day_L	0x88 // 5000
+#define     dMaxSetA_Day_H	0x13
+	
+#define     dMaxSetA_Eve_L	0x88 // 5000
+#define     dMaxSetA_Eve_H	0x13
+	
+#define     dMaxSetA_Nig_L	0xe8 // 1000
+#define     dMaxSetA_Nig_H	0x03
 
 
 
@@ -502,13 +519,13 @@ extern	unsigned char new_value[64];
 #define BLOCK_SETMODE_SEL		ByteData004	// 4
 
 #define BLOCK_SET_VALUE_DAY		IntzData003	// 5, 6
-#define BLOCK_SET_VALUE_EVE		IntzData004	// 7, 8
+#define BLOCK_SET_VALUE_TWL		IntzData004	// 7, 8
 #define BLOCK_SET_VALUE_NIG		IntzData005	// 9, 10
 #define BLOCK_MaxSetADay		IntzData006	// 11, 12
 #define BLOCK_MaxSetAEve		IntzData007	// 13, 14
 #define BLOCK_MaxSetANig		IntzData008	// 15, 16
 // ±‚≈∏ 
 #define BLOCK_SET_DUTYCYCLE_DAY	IntzData009	// 
-#define BLOCK_SET_DUTYCYCLE_EVE	IntzData010	// 
+#define BLOCK_SET_DUTYCYCLE_TWL	IntzData010	// 
 #define BLOCK_SET_DUTYCYCLE_NIG	IntzData011	// 
 

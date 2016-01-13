@@ -193,8 +193,6 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 //#define		NIGHT_VOLT			200
 //#define		NIGHT_DAY_VOLT		135
 
-
-unsigned    char  	MainTimer = 0;
 unsigned    char	msec100 = 0;
 
 
@@ -236,14 +234,14 @@ bit		bNightDay = 0;
 bit		bBlink_DutyOn = 0;
 
 
-unsigned int BeginTimer = 0;
+unsigned int OutLampWhenPowerOnTimer = 0;
 unsigned char CDS_DayTimer = 0;
 unsigned char CDS_NightTimer = 0;
 unsigned char IN_BLK_Timer = 0;
 
 
-bit bFU_BlkOn = 0;
-bit bGPS_Blk_ON = 0;
+bit bBLKInputOn = 0;
+bit bDutyOnByGpsTime = 0;
 
 
 
@@ -262,7 +260,7 @@ unsigned int AnalogValidTime = 0;
 #define WRSIZE	12
 volatile const unsigned char  arSavedBuf[WRSIZE] = {0, };
 
-unsigned int SetModeReadyTimer = 0;
+unsigned int SetModeReady_Timer = 0;
 unsigned int StDelayTimer = 0;
 unsigned int StDelayTime = 0;
 
@@ -273,7 +271,7 @@ unsigned char L_Duty_Rate = 0;
 
 
 typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_EVE = 2, SETMODE_NIG = 3} tag_SETMODE;
-tag_SETMODE		eSETMODE = 0, eBefSETMODE = 0;
+tag_SETMODE		eSETMODE = 0, Bef_eSETMODE = 0;
 
 
 
@@ -295,20 +293,20 @@ extern  void  Initial(void);
 extern  void  InitTimer0(void);
 extern void    InitPort(void);
 extern void  Serial2Check(void);
-extern void GpsPPS1Chk(void);
+extern void ChkGpsPPS1(void);
 extern void LedBlinkModeInit(void);
 extern unsigned int ReSettingDayNigntChk(void);
 extern void ApaLampOnOff(void);
-extern bit IsBlink_On(void);
-extern void GpsRx2DataProc(void);
+extern bit IsDutyOnByGpsTime(void);
+extern void ProcGpsRx2Data(void);
 extern void ChkSetupSw(void);
-extern unsigned char GetDayEveningNight(void);
+extern unsigned char GetDAY_TWL_NIG(void);
 extern void WriteVal(unsigned int DutyCycle, unsigned int SetAVoltage, volatile const unsigned char* DestBuf);
 extern void GetAdValue(void);
 extern unsigned int GetDutyByCompareCurrent(unsigned int duty, unsigned int setVolt, 
-												  unsigned int inVolt, unsigned char CurDayNight);
+												  unsigned int inVolt, unsigned char CurDAY_TWL_NIG);
 extern void SetApaLamp(void);
-extern void PwOffOnLampOut(void);
+extern void OutLampWhenPowerOn(void);
 
 
 extern bit IsInput_ON(unsigned char bLedState, unsigned char* Timer);
@@ -318,6 +316,10 @@ extern unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
 extern void ChkSwTwoTouch(void);
 extern void Chk232TxErr(void);
 extern void WriteProc(void);
+extern bit ReadSetValueWhenPowerOn(void);
+extern void ProcReadWrite(void);
+extern void ProcGPS(void);
+
 
 
 #endif

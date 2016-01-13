@@ -7,13 +7,13 @@
 
 
 #define SW_DAY	0
-#define SW_EVE	1
+#define SW_TWL	1
 #define SW_NIG	2
 
 #define	A_SET_V_MAX 3300 // mV
 
-typedef enum{DAY = 0, EVE = 1, NIG = 2, NONE = 100} tag_CurDay;
-tag_CurDay	CurDayNight = 100, BefCurDayNight = 100;
+typedef enum{DAY = 0, TWL = 1, NIG = 2, NONE = 100} tag_CurDay;
+tag_CurDay	CurDAY_TWL_NIG = 100, BefDAY_TWL_NIG = 100;
 
 
 typedef struct 
@@ -29,11 +29,10 @@ typedef struct
 	unsigned char 	bSetSwPushOK	: 1;
 	unsigned char 	bSetSw_UpEdge 	: 1;
 	unsigned char 	bSwSlightPush 	: 1;
-	unsigned char 	bBlinkEnab		: 1;
 	unsigned char   bWriteEnab 		: 1;
 	
 }tag_Apl;
-tag_Apl		stApl[3] = {
+tag_Apl		sAPL[3] = {
 					{0,},	// Set0
 					{0,},	// Set1
 					{0,},	// Set2
@@ -55,9 +54,9 @@ bit bStTwoEnab = FALSE;
 bit bSettingMode = FALSE;
 
 extern void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle);
-extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight);
-extern void OnAplLampSet(tag_CurDay CurDayNight);
-extern void ChangPwmCycleRegedit(tag_CurDay CurDayNight);
+extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDAY_TWL_NIG);
+extern void OutAplLamp_WhenSetMode(tag_CurDay CurDAY_TWL_NIG);
+extern void ChangePwmT2CON(tag_CurDay CurDAY_TWL_NIG);
 extern ULONG GetInCurrent(ULONG AD_A_IN_mV);
 
 #endif

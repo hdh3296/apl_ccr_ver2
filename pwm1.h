@@ -9,6 +9,6 @@ unsigned int	DutyCycle;
 
 
 extern	void InitPwm1(void);
-extern  void OutPwm(unsigned int DutyCycle);
+extern  void OutPWM(unsigned int DutyCycle);
 extern	void PwmOn(void);
 extern	void PwmOff(void);
