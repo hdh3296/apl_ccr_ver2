@@ -2931,42 +2931,60 @@ void  Group1(void)
 			ReadByteData(EditFlashAddr);
             Integer_Digit();
 			break;			
-		case	GROUP1_MENU05: // 낮 셋팅 값 
+		case	GROUP1_MENU05: // 주간 셋팅 값 
             EditCursor=0;
-            EditStatus=DIGIT_EDIT;
+			if (eSETMODE == SETMODE_DAY) EditStatus=DIGIT_EDIT;
+            else EditStatus=NO_EDIT;
             EditStart=3;
-            EditShiftCnt=4;
-            EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=3300;
+			EditDigitMaxValue=MyReadIntegerData(BLOCK_MaxSetDAY);
             EditDigitMinValue=0;
+			if (EditDigitMaxValue >= 10000) EditShiftCnt= 5;
+			else if (EditDigitMaxValue >= 1000) EditShiftCnt= 4;
+			else if (EditDigitMaxValue >= 100) EditShiftCnt= 3;
+			else if (EditDigitMaxValue >= 10) EditShiftCnt= 2;
+			else EditShiftCnt= 1;
+            EditDivide=DIVIDE_1;				
+            
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_DAY;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;			
-		case	GROUP1_MENU06: // 저녁 셋팅 값 
+		case	GROUP1_MENU06: // 박명 셋팅 값 
             EditCursor=0;
-            EditStatus=DIGIT_EDIT;
+            if (eSETMODE == SETMODE_TWL) EditStatus=DIGIT_EDIT;
+            else EditStatus=NO_EDIT;
             EditStart=3;
-            EditShiftCnt=4;
-            EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=3300;
+			EditDigitMaxValue=MyReadIntegerData(BLOCK_MaxSetTWL);
             EditDigitMinValue=0;
+            if (EditDigitMaxValue >= 10000) EditShiftCnt= 5;
+			else if (EditDigitMaxValue >= 1000) EditShiftCnt= 4;
+			else if (EditDigitMaxValue >= 100) EditShiftCnt= 3;
+			else if (EditDigitMaxValue >= 10) EditShiftCnt= 2;
+			else EditShiftCnt= 1;
+            EditDivide=DIVIDE_1;				
+            
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_TWL;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;		
-		case	GROUP1_MENU07: // 밤 셋팅 값 
+		case	GROUP1_MENU07: // 야간 셋팅 값 
             EditCursor=0;
-            EditStatus=DIGIT_EDIT;
+            if (eSETMODE == SETMODE_NIG) EditStatus=DIGIT_EDIT;
+            else EditStatus=NO_EDIT;
             EditStart=3;
-            EditShiftCnt=4;
-            EditDivide=DIVIDE_1;				
-            EditDigitMaxValue=3300;
+			EditDigitMaxValue=MyReadIntegerData(BLOCK_MaxSetNIG);
             EditDigitMinValue=0;
+            if (EditDigitMaxValue >= 10000) EditShiftCnt= 5;
+			else if (EditDigitMaxValue >= 1000) EditShiftCnt= 4;
+			else if (EditDigitMaxValue >= 100) EditShiftCnt= 3;
+			else if (EditDigitMaxValue >= 10) EditShiftCnt= 2;
+			else EditShiftCnt= 1;
+            EditDivide=DIVIDE_1;				
+            
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
             EditFlashAddr=BLOCK_SET_VALUE_NIG;
@@ -2983,7 +3001,7 @@ void  Group1(void)
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
-            EditFlashAddr=BLOCK_MaxSetADay;
+            EditFlashAddr=BLOCK_MaxSetDAY;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;			
@@ -2997,7 +3015,7 @@ void  Group1(void)
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
-            EditFlashAddr=BLOCK_MaxSetAEve;
+            EditFlashAddr=BLOCK_MaxSetTWL;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;			
@@ -3011,7 +3029,7 @@ void  Group1(void)
             EditDigitMinValue=0;
 			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);	
 			
-            EditFlashAddr=BLOCK_MaxSetANig;
+            EditFlashAddr=BLOCK_MaxSetNIG;
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;	
@@ -3802,7 +3820,12 @@ unsigned int Default_Cur_State_Display(void)
 {
 	unsigned int i,j;
 
-	if (eSETMODE == 0) 		j = 61;
+	if (eSETMODE == 0)
+	{
+		if (CurDAY_TWL_NIG == DAY) j = 59;
+		else if (CurDAY_TWL_NIG == TWL) j = 60;
+		else if (CurDAY_TWL_NIG == NIG) j = 61;
+	}
 	else if (eSETMODE == 1) j = 62;
 	else if (eSETMODE == 2) j = 63;
 	else if (eSETMODE == 3) j = 64;

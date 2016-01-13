@@ -64,12 +64,12 @@ const unsigned char StatusMessage[][17]	={
 										"Safety Open     ",      //056
 										"Open Door       ",      //057
 										"Close Door      ",      //058                                     
-										"Auto Up         ",      //059                                     
-										"Auto Dn         ",      //060                                     
-										"Normal Mode     ",      //061
-										"SetMode Day     ",      //062
-										"SetMode Evening ",      //063
-										"SetMode Night   ",      //064
+										"Normal DAY      ",      //059                                     
+										"Normal TWL      ",      //060                                     
+										"Normal NIG      ",      //061
+										"SetMode DAY     ",      //062
+										"SetMode TWL 	 ",      //063
+										"SetMode NIG     ",      //064
 										"No Define       "       //065
                                     	};                                       
 
@@ -82,11 +82,11 @@ const unsigned char GroupLineMessage[][17]={
                                     "USER:Duty Rate  ", // 3 
                                     "USER:SETMODE SEL", // 4
                                     "USER:SET DAY    ", // 5  
-                                    "USER:SET EVENING", // 6  
-                                    "USER:SET NIGHT  ", // 7  
-                                    "USER:MaxSet  Day", // 8 
-                                    "USER:MaxSet  Eve", // 9 
-                                    "USER:MaxSet  Nig", // 10 
+                                    "USER:SET TWL    ", // 6  
+                                    "USER:SET NIG    ", // 7  
+                                    "USER:MaxSet  DAY", // 8 
+                                    "USER:MaxSet  TWL", // 9 
+                                    "USER:MaxSet  NIG", // 10 
                                     "USER:           ", // 11 
                                     "USER:			 ", // 12 
                                     "USER:			 ", // 13 

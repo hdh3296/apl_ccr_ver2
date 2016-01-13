@@ -270,7 +270,7 @@ unsigned char L_Duty_Cnt = 0;
 unsigned char L_Duty_Rate = 0;
 
 
-typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_EVE = 2, SETMODE_NIG = 3} tag_SETMODE;
+typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_TWL = 2, SETMODE_NIG = 3} tag_SETMODE;
 tag_SETMODE		eSETMODE = 0, Bef_eSETMODE = 0;
 
 
@@ -311,7 +311,7 @@ extern void OutLampWhenPowerOn(void);
 
 extern bit IsInput_ON(unsigned char bLedState, unsigned char* Timer);
 
-extern unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
+extern unsigned int CompareSet_InCurrent(unsigned int duty, 
                                  unsigned char DayNig, unsigned int Offset);
 extern void ChkSwTwoTouch(void);
 extern void Chk232TxErr(void);

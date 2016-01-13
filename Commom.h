@@ -18,19 +18,10 @@ tag_CurDay	CurDAY_TWL_NIG = 100, BefDAY_TWL_NIG = 100;
 
 typedef struct 
 {
-	unsigned int 	Set_mV; // 셋팅값 
-	unsigned int 	SwPushTimer;
-	unsigned char 	SwTouchCnt;
-	unsigned int 	SwTouchCntTimer;
-	unsigned char   SetSwCharterTimer;
-	unsigned long 	Set_Current; // 변환된 볼륨에의한 셋팅 전류 값
-	unsigned int	Set_DutyCycle; 
-	
-	unsigned char 	bSetSwPushOK	: 1;
-	unsigned char 	bSetSw_UpEdge 	: 1;
-	unsigned char 	bSwSlightPush 	: 1;
-	unsigned char   bWriteEnab 		: 1;
-	
+	unsigned int	Max_Current;
+	unsigned int 	Set_Current; // 변환된 볼륨에의한 셋팅 전류 값
+	unsigned int	Set_DutyCycle;
+		 	
 }tag_Apl;
 tag_Apl		sAPL[3] = {
 					{0,},	// Set0

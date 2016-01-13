@@ -789,7 +789,7 @@ ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight)
 
 
 
-unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
+unsigned int CompareSet_InCurrent(unsigned int duty,
                                  unsigned char DayNig, unsigned int Offset)
 {
 	
@@ -800,7 +800,6 @@ unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
         if (sAPL[DayNig].Set_Current > (In_Current + Offset))  
         {
             if (duty < DUTI_MAX)	duty++;
-            else					duty = DUTI_MAX;
         }
     }
     else if (sAPL[DayNig].Set_Current < In_Current)
@@ -813,11 +812,11 @@ unsigned int GetDutyByCmp(unsigned int duty, unsigned int set_mV,
 
     if (AnalogValidTime > 20)
     {
-        if (set_mV <= 0)
+        if (sAPL[DayNig].Set_Current <= 0)
             duty = 0;
-        if (set_mV >= A_SET_V_MAX)
-            duty = DUTI_MAX;
     }
+
+	if (duty > DUTI_MAX)	duty = DUTI_MAX;
 
     return duty;
 }
@@ -831,14 +830,14 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 {	
 	if (bAD_A_IN_mV_Upd)
 	{
-		bAD_A_IN_mV_Upd = FALSE;		
+		bAD_A_IN_mV_Upd = FALSE;
 		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
 		
-		DutyCycle = GetDutyByCmp(sAPL[Sw_DayNig].Set_DutyCycle, 
-								 sAPL[Sw_DayNig].Set_mV, Sw_DayNig, 0);
-		sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle;
-//		DutyCycle_Avr = AvrDutyCycle(DutyCycle); // Q?? 
+		sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle = CompareSet_InCurrent(sAPL[Sw_DayNig].Set_DutyCycle, Sw_DayNig, 0);
+		
+//		DutyCycle_Avr = AvrDutyCycle(DutyCycle); // Q?? 		
 	}
+	
 	ChangePwmT2CON(Sw_DayNig);
 	OutPWM(DutyCycle);		
 }
@@ -860,8 +859,8 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 			ChangePwmT2CON(CurDayNig);
 			OutPWM(DutyCycle);	
 
-			if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN) StDelayTime = 0;
-			else	StDelayTime = 100;	
+			if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN) 	StDelayTime = 0;
+			else											StDelayTime = 100;	
 		}
 		else
 		{
@@ -873,9 +872,9 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 					In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
 					
 					if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
-						DutyCycle = GetDutyByCmp(DutyCycle, sAPL[CurDayNig].Set_mV, CurDayNig, 0);
+						DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
 					else
-						DutyCycle = GetDutyByCmp(DutyCycle, sAPL[CurDayNig].Set_mV, CurDayNig, 100);
+						DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
 				}
 				ChangePwmT2CON(CurDayNig);
 				OutPWM(DutyCycle);
@@ -934,38 +933,7 @@ void Chk232TxErr(void)
 }
 */
 
-// 셋업 모드에서 셋업 스위치 누르고 뗐을 때 ! 현재 DutyCycle, SetA값 저장 !
-void WriteProc(void)
-{
-	if (sAPL[SW_DAY].bSetSw_UpEdge)
-	{
-		if (sAPL[SW_DAY].bWriteEnab)
-		{	
-			WriteVal(DutyCycle, sAPL[SW_DAY].Set_mV, (arSavedBuf + (SW_DAY * 4)));
-			sAPL[SW_DAY].bSetSw_UpEdge = FALSE;
-			sAPL[SW_DAY].bWriteEnab = FALSE;
-		}
-		else
-		{
-			sAPL[SW_DAY].bSetSw_UpEdge = FALSE;
-		}
-	}
-	
-	if (sAPL[SW_NIG].bSetSw_UpEdge)
-	{
-		if (sAPL[SW_NIG].bWriteEnab)
-		{			
-			WriteVal(DutyCycle, sAPL[SW_NIG].Set_mV, (arSavedBuf + (SW_NIG * 4)));
-			sAPL[SW_NIG].bSetSw_UpEdge = FALSE;
-			sAPL[SW_NIG].bWriteEnab = FALSE;
-		}
-		else
-		{
-			sAPL[SW_NIG].bSetSw_UpEdge = FALSE;
-		}		
-	}	
 
-}
 
 ULONG GetInCurrent(ULONG CurA_IN_mV)
 {
@@ -988,21 +956,16 @@ bit ReadSetValueWhenPowerOn(void)
 	ret = FALSE;
 	
 	// 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다. 
-	sAPL[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
-	sAPL[TWL].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
-	sAPL[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
+	sAPL[DAY].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
+	sAPL[TWL].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
+	sAPL[NIG].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
 	sAPL[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
 	sAPL[TWL].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_TWL);
 	sAPL[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
 
-	Multip[DAY] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetADay) * 1000) / A_SET_V_MAX; 
-	Multip[TWL] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetAEve) * 1000) / A_SET_V_MAX; 
-	Multip[NIG] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetANig) * 1000) / A_SET_V_MAX; 
-	
-	for (i=0; i<3; i++)
-	{	
-		sAPL[i].Set_Current = GetSetCurrent(sAPL[i].Set_mV, i);
-	}
+	sAPL[DAY].Max_Current = MyReadIntegerData(BLOCK_MaxSetDAY);
+	sAPL[TWL].Max_Current = MyReadIntegerData(BLOCK_MaxSetTWL); 
+	sAPL[NIG].Max_Current = MyReadIntegerData(BLOCK_MaxSetNIG); 
 
 	ret = TRUE;
 	return(ret);
@@ -1020,14 +983,13 @@ void ProcReadWrite(void)
 	LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
 	
 	// 각 V_IN 셋팅 값 
-	sAPL[DAY].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_DAY); // 낮 셋팅 값 
-	sAPL[TWL].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_TWL); // 저녁 셋팅 값
-	sAPL[NIG].Set_mV = MyReadIntegerData(BLOCK_SET_VALUE_NIG); // 밤 셋팅 값
+	sAPL[DAY].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
+	sAPL[TWL].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
+	sAPL[NIG].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
 	
-	
-	Multip[DAY] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetADay) * 1000) / A_SET_V_MAX; 
-	Multip[TWL] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetAEve) * 1000) / A_SET_V_MAX; 
-	Multip[NIG] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetANig) * 1000) / A_SET_V_MAX; 
+	sAPL[DAY].Max_Current = MyReadIntegerData(BLOCK_MaxSetDAY);
+	sAPL[TWL].Max_Current = MyReadIntegerData(BLOCK_MaxSetTWL); 
+	sAPL[NIG].Max_Current = MyReadIntegerData(BLOCK_MaxSetNIG);
 	
 	// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
 	// 셋팅 모드 선택 
@@ -1041,7 +1003,7 @@ void ProcReadWrite(void)
 		{
 			EditDataType = INT_TYPE;
 			if (Bef_eSETMODE == SETMODE_DAY) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
-			else if (Bef_eSETMODE == SETMODE_EVE) EditFlashAddr = BLOCK_SET_DUTYCYCLE_TWL;
+			else if (Bef_eSETMODE == SETMODE_TWL) EditFlashAddr = BLOCK_SET_DUTYCYCLE_TWL;
 			else if (Bef_eSETMODE == SETMODE_NIG) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
 			EditDigitData = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
 			Group1_Save();	
@@ -1193,8 +1155,6 @@ void main(void)
 			}
 			else if(SetModeReady_Timer > 1000)
 			{
-				sAPL[eSETMODE-1].Set_Current 
-					= GetSetCurrent(sAPL[eSETMODE-1].Set_mV, (eSETMODE-1));
 				OutAplLamp_WhenSetMode(eSETMODE-1);
 			}
 
@@ -1231,11 +1191,6 @@ void interrupt isr(void)
         Com1SerialTime++;
         Com2SerialTime++;
 
-        if (sAPL[0].SetSwCharterTimer < 250)
-            sAPL[0].SetSwCharterTimer++;
-        if (sAPL[2].SetSwCharterTimer < 250)
-            sAPL[2].SetSwCharterTimer++;
-
         if (OutLampWhenPowerOnTimer < 1000)
             OutLampWhenPowerOnTimer++;
 
@@ -1267,12 +1222,7 @@ void interrupt isr(void)
             if (NightSetTime < 100)		NightSetTime++;
             if (NightDaySetTime < 100)	NightDaySetTime++;
 
-        }
-
-		if(sAPL[SW_DAY].SwPushTimer < 0xffff) sAPL[SW_DAY].SwPushTimer++;
-		if(sAPL[SW_DAY].SwTouchCntTimer < 0xffff) sAPL[SW_DAY].SwTouchCntTimer++;
-		if(sAPL[SW_NIG].SwPushTimer < 0xffff) sAPL[SW_NIG].SwPushTimer++;
-		if(sAPL[SW_NIG].SwTouchCntTimer < 0xffff) sAPL[SW_NIG].SwTouchCntTimer++;		
+        }	
     }
 
     // GPS Rx2 통신 인터럽트
