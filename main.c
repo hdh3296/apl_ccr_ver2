@@ -994,6 +994,11 @@ bit ReadSetValueWhenPowerOn(void)
 	sAPL[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
 	sAPL[TWL].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_TWL);
 	sAPL[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
+
+	Multip[DAY] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetADay) * 1000) / A_SET_V_MAX; 
+	Multip[TWL] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetAEve) * 1000) / A_SET_V_MAX; 
+	Multip[NIG] = ((ULONG)MyReadIntegerData(BLOCK_MaxSetANig) * 1000) / A_SET_V_MAX; 
+	
 	for (i=0; i<3; i++)
 	{	
 		sAPL[i].Set_Current = GetSetCurrent(sAPL[i].Set_mV, i);
