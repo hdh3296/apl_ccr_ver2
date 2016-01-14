@@ -833,7 +833,7 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 		bAD_A_IN_mV_Upd = FALSE;
 		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
 		
-		sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle = CompareSet_InCurrent(sAPL[Sw_DayNig].Set_DutyCycle, Sw_DayNig, 0);
+		sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle = CompareSet_InCurrent(DutyCycle, Sw_DayNig, 0);
 		
 //		DutyCycle_Avr = AvrDutyCycle(DutyCycle); // Q?? 		
 	}
@@ -1148,10 +1148,10 @@ void main(void)
 			if (bSetModeReady)
 			{				
 				T2CON = 0x06; // 2000천 간델라 일 떄 !
-				OutPWM(0);	
+				DutyCycle = 0;
+				OutPWM(DutyCycle);
 				bSetModeReady = FALSE;
-				SetModeReady_Timer = 0;
-						
+				SetModeReady_Timer = 0;						
 			}
 			else if(SetModeReady_Timer > 1000)
 			{

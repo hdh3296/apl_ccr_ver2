@@ -26,9 +26,13 @@
 */
 #define     dSET_VAL_DAY_L	0xd0 // 2000
 #define     dSET_VAL_DAY_H	0x07
+
+#define     dSET_VAL_TWL_L	0x02 // 2050
+#define     dSET_VAL_TWL_H	0x08
+
 	
-#define     dSET_VAL_TWL_L	0xd2 // 2000
-#define     dSET_VAL_TWL_H	0x0f
+//#define     dSET_VAL_TWL_L	0xd2 // 4050
+//#define     dSET_VAL_TWL_H	0x0f
 	
 #define     dSET_VAL_NIG_L	0x64 // 100	
 #define     dSET_VAL_NIG_H 	0x00
