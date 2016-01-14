@@ -119,7 +119,7 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 	        SumAD = SumAD + (unsigned long)ADBuf; // 12비트 AD 
 			SumCnt++;
 
-	        if (SumCnt >= 10)
+	        if (SumCnt >= 50)
 	        {
 				AdVal = (((SumAD * 1000) / 1240) / SumCnt); // 12비트 3.3V 기준 
 				if (AdVal >= 10)	

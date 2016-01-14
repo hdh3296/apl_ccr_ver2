@@ -36,7 +36,7 @@ unsigned int AD_V_IN_mV = 0;
 bit bAD_A_IN_mV_Upd = FALSE;
 
 
-ULONG In_Current;  // 변환된 입력 피드백 전류 값
+unsigned int In_Current;  // 변환된 입력 피드백 전류 값
 
 
 bit bSetModeReady= FALSE;
