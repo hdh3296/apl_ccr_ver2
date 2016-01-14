@@ -1151,9 +1151,9 @@ void main(void)
 				DutyCycle = 0;
 				OutPWM(DutyCycle);
 				bSetModeReady = FALSE;
-				SetModeReady_Timer = 0;						
+				//SetModeReady_Timer = 0;						
 			}
-			else if(SetModeReady_Timer > 1000)
+			else
 			{
 				OutAplLamp_WhenSetMode(eSETMODE-1);
 			}

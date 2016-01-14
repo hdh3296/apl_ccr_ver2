@@ -115,8 +115,8 @@ const unsigned char GroupLineMessage[][17]={
                                     "DSP:SetDuty DAY ",// 1
                                     "DSP:SetDuty TWL ",// 2
                                     "DSP:SetDuty NIG ",// 3
-                                    "DSP:DutyCycle	 ",// 4
-                                    "DSP:In Current	 ",// 5
+                                    "DSP:CurDutyCycle",// 4
+                                    "DSP:In  Current ",// 5
                                     "TMR:			 ",// 6
                                     "TMR:			 ",// 7
                                     "TMR:			 ",// 8
