@@ -122,10 +122,8 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 	        if (SumCnt >= 50)
 	        {
 				AdVal = (((SumAD * 1000) / 1240) / SumCnt); // 12비트 3.3V 기준 
-				if (AdVal >= 10)	
-					arInPut_mV[AdChSel] = (unsigned int)(AdVal - 10); 
-				else 
-					arInPut_mV[AdChSel] = 0;
+				arInPut_mV[AdChSel] = (unsigned int)AdVal; 
+
 				arIs_AdUpd[AdChSel] = TRUE;
 				
 	            SumAD = 0;

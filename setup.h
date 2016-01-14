@@ -3,7 +3,7 @@
 
 #define 	dFW_VERSION		1
 #define     dDuty_Cnt		40
-#define     dDuty_Rate		100
+#define     dDuty_Rate		50
 #define		dSETMODE_SEL	0
 /*
 #define     dSET_VAL_DAY_L	0xd0 // 2000
@@ -27,12 +27,13 @@
 #define     dSET_VAL_DAY_L	0xd0 // 2000
 #define     dSET_VAL_DAY_H	0x07
 
-#define     dSET_VAL_TWL_L	0x02 // 2050
-#define     dSET_VAL_TWL_H	0x08
-
-	
+//#define     dSET_VAL_TWL_L	0x02 // 2050
+//#define     dSET_VAL_TWL_H	0x08	
 //#define     dSET_VAL_TWL_L	0xd2 // 4050
 //#define     dSET_VAL_TWL_H	0x0f
+#define     dSET_VAL_TWL_L	0x70 // 6000
+#define     dSET_VAL_TWL_H	0x17
+
 	
 #define     dSET_VAL_NIG_L	0x64 // 100	
 #define     dSET_VAL_NIG_H 	0x00
@@ -40,8 +41,8 @@
 #define     dMaxSetA_Day_L	0x88 // 5000
 #define     dMaxSetA_Day_H	0x13
 	
-#define     dMaxSetA_Eve_L	0x88 // 5000
-#define     dMaxSetA_Eve_H	0x13
+#define     dMaxSetA_Eve_L	0x70 // 6000
+#define     dMaxSetA_Eve_H	0x17
 	
 #define     dMaxSetA_Nig_L	0xe8 // 1000
 #define     dMaxSetA_Nig_H	0x03

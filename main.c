@@ -845,51 +845,50 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 // 현재(실제) APL LAPM On, Off 처리 
 void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 {
+	unsigned int i; 
+	
 	if (bBlink_DutyOn) // Blink Led 가 On 일 때
 	{	
 		_LAMP_ON = TRUE; // LAMP ON
 		if (bLampOnReady)
 		{
 			bLampOnReady = FALSE;
-			StDelayTimer = 0; 
 
 //			ReadVal((arSavedBuf + (CurDayNig*4)), &sAPL[CurDayNig].Setting_mV, &sAPL[CurDayNig].DutyCycle);
 //			sAPL[CurDayNig].Set_Current = GetSetCurrent(sAPL[CurDayNig].Setting_mV, CurDayNig);
 			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
 			ChangePwmT2CON(CurDayNig);
-			OutPWM(DutyCycle);	
-
-			if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN) 	StDelayTime = 0;
-			else											StDelayTime = 100;	
+			OutPWM(DutyCycle);		
 		}
 		else
 		{
-			if (StDelayTimer >= StDelayTime)
-			{
-				if (bAD_A_IN_mV_Upd)
-				{	
-					bAD_A_IN_mV_Upd = FALSE;
-					In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
-					
-					if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
-						DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
-					else
-						DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
-				}
-				ChangePwmT2CON(CurDayNig);
-				OutPWM(DutyCycle);
-			}			
+			if (bAD_A_IN_mV_Upd)
+			{	
+				bAD_A_IN_mV_Upd = FALSE;
+				In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
+				
+				if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
+					DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
+				else
+					DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
+			}
+			ChangePwmT2CON(CurDayNig);
+			OutPWM(DutyCycle);		
 		}
 		
 	}
 	else // Blink Led 가 Off 일 때
 	{
+		i = sAPL[CurDayNig].Set_Current;
+		if (i >= 6000) DutyCycle = 10;
+		else if (i >= 5000) DutyCycle = 5;
+		else if (i >= 4000) DutyCycle = 4;
+		else if (i >= 3000) DutyCycle = 4;
+		else if (i >= 2000) DutyCycle = 3;
+		else if (i >= 1000) DutyCycle = 3;
+		else DutyCycle = 3;
+
 		_LAMP_ON = FALSE; // LAMP OFF 
-		
-		DutyCycle = ((sAPL[CurDayNig].Set_DutyCycle * 6) / 100);
-		if (DutyCycle >= 20) DutyCycle = DutyCycle + 10;
-		else if (DutyCycle >= 10) DutyCycle = DutyCycle - 1;
-		else DutyCycle = DutyCycle + 1;
 		ChangePwmT2CON(CurDayNig);		
 		OutPWM(DutyCycle);	
 		bLampOnReady = TRUE;
@@ -1158,10 +1157,10 @@ void main(void)
 				OutAplLamp_WhenSetMode(eSETMODE-1);
 			}
 
-			bLampOnReady = TRUE;
+			bLampOnReady = TRUE;			
 		}
 		// 일반 모드 !!!
-		else 		
+		else if (sAPL[CurDAY_TWL_NIG].Set_DutyCycle)		
 		{
 			OutAplLamp_WhenNomalMode(CurDAY_TWL_NIG);		
 			bSetModeReady = TRUE;
@@ -1208,8 +1207,6 @@ void interrupt isr(void)
 				
 		if (SetModeReady_Timer < 0xffff)
             SetModeReady_Timer++;
-		if (StDelayTimer < 0xffff)
-            StDelayTimer++;
 		
 
         msec100++;

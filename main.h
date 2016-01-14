@@ -261,8 +261,6 @@ unsigned int AnalogValidTime = 0;
 volatile const unsigned char  arSavedBuf[WRSIZE] = {0, };
 
 unsigned int SetModeReady_Timer = 0;
-unsigned int StDelayTimer = 0;
-unsigned int StDelayTime = 0;
 
 // 임시 : LCD 로더에서 온값 저장할 변수들
 //Flashing Set
