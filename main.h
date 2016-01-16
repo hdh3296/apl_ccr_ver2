@@ -185,7 +185,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #endif
 
 
-#define JUNG_GIJUN 1500
+#define JUNG_GIJUN 2000
 
 
 #define		LED_ONOFF_CNT		20

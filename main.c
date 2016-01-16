@@ -796,11 +796,11 @@ unsigned int CompareSet_InCurrent(unsigned int duty,
 //	Offset = GetOffSet(sAPL[0].Set_Current);	
 
     if (sAPL[DayNig].Set_Current > In_Current) 
-    {		
-        if (sAPL[DayNig].Set_Current > (In_Current + Offset))  
-        {
-            if (duty < DUTI_MAX)	duty++;
-        }
+    {	
+		if (sAPL[DayNig].Set_Current > (In_Current + Offset))	
+		{
+			if (duty < DUTI_MAX)	duty++;
+		}			
     }
     else if (sAPL[DayNig].Set_Current < In_Current)
     {
@@ -842,6 +842,7 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 	OutPWM(DutyCycle);		
 }
 
+
 // 현재(실제) APL LAPM On, Off 처리 
 void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 {
@@ -858,7 +859,7 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 //			sAPL[CurDayNig].Set_Current = GetSetCurrent(sAPL[CurDayNig].Setting_mV, CurDayNig);
 			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
 			ChangePwmT2CON(CurDayNig);
-			OutPWM(DutyCycle);		
+			OutPWM(DutyCycle);	
 		}
 		else
 		{
@@ -879,8 +880,14 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 	}
 	else // Blink Led 가 Off 일 때
 	{
+		if (bAD_A_IN_mV_Upd)
+		{		
+			bAD_A_IN_mV_Upd = FALSE;
+			In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기 
+		}
+
 		i = sAPL[CurDayNig].Set_Current;
-		if (i >= 6000) DutyCycle = 10;
+		if (i >= 6000) DutyCycle = sAPL[CurDayNig].Set_DutyCycle / 20;
 		else if (i >= 5000) DutyCycle = 5;
 		else if (i >= 4000) DutyCycle = 4;
 		else if (i >= 3000) DutyCycle = 4;
@@ -888,9 +895,9 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 		else if (i >= 1000) DutyCycle = 3;
 		else DutyCycle = 3;
 
+
 		_LAMP_ON = FALSE; // LAMP OFF 
-		ChangePwmT2CON(CurDayNig);		
-		OutPWM(DutyCycle);	
+		OutPWM(DutyCycle);		
 		bLampOnReady = TRUE;
 		
 	}
@@ -1207,7 +1214,6 @@ void interrupt isr(void)
 				
 		if (SetModeReady_Timer < 0xffff)
             SetModeReady_Timer++;
-		
 
         msec100++;
         if (msec100 > 100)
