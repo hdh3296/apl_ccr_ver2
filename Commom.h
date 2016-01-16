@@ -20,7 +20,9 @@ typedef struct
 {
 	unsigned int	Max_Current;
 	unsigned int 	Set_Current; // 변환된 볼륨에의한 셋팅 전류 값
-	unsigned int	Set_DutyCycle;		 	
+	unsigned int	Set_DutyCycle;	
+
+	unsigned char   bEveryOnSet;
 }tag_Apl;
 tag_Apl		sAPL[3] = {
 					{0,},	// Set0

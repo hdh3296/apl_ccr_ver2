@@ -3035,9 +3035,51 @@ void  Group1(void)
 			ReadIntegerData(EditFlashAddr);
             Integer_Digit();
 			break;	
-		case	GROUP1_MENU11:
+		case	GROUP1_MENU11: 
+			// 점등 / 점멸 설정 : 주간  
+			EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=1;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);
+			
+            EditFlashAddr=BLOCK_EveryOn_DAY;
+			ReadByteData(EditFlashAddr);
+            Integer_Digit();
+			break;			
 		case	GROUP1_MENU12:
-		case	GROUP1_MENU13:	
+			// 점등 / 점멸 설정 : 박명 
+			EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=1;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);
+			
+            EditFlashAddr=BLOCK_EveryOn_TWL;
+			ReadByteData(EditFlashAddr);
+            Integer_Digit();
+			break;
+		case	GROUP1_MENU13:
+			// 점등 / 점멸 설정 : 야간 
+			EditCursor=0;
+            EditStatus=DIGIT_EDIT;
+            EditStart=3;
+            EditShiftCnt=1;
+            EditDivide=DIVIDE_1;				
+            EditDigitMaxValue=1;
+            EditDigitMinValue=0;
+			if(EditDivide > 0)	EditShiftCnt=(EditShiftCnt+1);
+			
+            EditFlashAddr=BLOCK_EveryOn_NIG;
+			ReadByteData(EditFlashAddr);
+            Integer_Digit();
+			break;
 		case	GROUP1_MENU14:
 		case	GROUP1_MENU15:
 		case	GROUP1_MENU16:

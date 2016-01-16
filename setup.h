@@ -3,7 +3,7 @@
 
 #define 	dFW_VERSION		1
 #define     dDuty_Cnt		40
-#define     dDuty_Rate		100
+#define     dDuty_Rate		50
 #define		dSETMODE_SEL	0
 /*
 #define     dSET_VAL_DAY_L	0xd0 // 2000
@@ -529,10 +529,16 @@ extern	unsigned char new_value[64];
 #define BLOCK_MaxSetDAY			IntzData006	// 11, 12
 #define BLOCK_MaxSetTWL			IntzData007	// 13, 14
 #define BLOCK_MaxSetNIG			IntzData008	// 15, 16
+
+#define BLOCK_EveryOn_DAY		ByteData017 // 17
+#define BLOCK_EveryOn_TWL		ByteData018	// 18 
+#define BLOCK_EveryOn_NIG		ByteData019 // 19
+
+
 // ±‚≈∏ 
-#define BLOCK_SET_DUTYCYCLE_DAY	IntzData009	// 
-#define BLOCK_SET_DUTYCYCLE_TWL	IntzData010	// 
-#define BLOCK_SET_DUTYCYCLE_NIG	IntzData011	//
+#define BLOCK_SET_DUTYCYCLE_DAY	IntzData101	// 
+#define BLOCK_SET_DUTYCYCLE_TWL	IntzData102 // 
+#define BLOCK_SET_DUTYCYCLE_NIG	IntzData103	//
 
 
 

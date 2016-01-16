@@ -87,9 +87,9 @@ const unsigned char GroupLineMessage[][17]={
                                     "USER:MaxSet  DAY", // 8 
                                     "USER:MaxSet  TWL", // 9 
                                     "USER:MaxSet  NIG", // 10 
-                                    "USER:           ", // 11 
-                                    "USER:			 ", // 12 
-                                    "USER:			 ", // 13 
+                                    "USER:EveryOn DAY", // 11 
+                                    "USER:EveryOn TWL", // 12 
+                                    "USER:EveryOn NIG", // 13 
                                     "USER: 			 ", // 14 
                                     "USER: 			 ", // 15 
                                     "USER:			 ", // 16

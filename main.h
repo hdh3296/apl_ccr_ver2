@@ -272,7 +272,6 @@ typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_TWL = 2, SETMODE_NIG = 3
 tag_SETMODE		eSETMODE = 0, Bef_eSETMODE = 0;
 
 
-
 // Current Set
 unsigned int L_MAX_Current_Day = 0;
 unsigned int L_MAX_Current_Evening = 0;
