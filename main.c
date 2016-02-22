@@ -5,12 +5,13 @@
 #include	"Commom.h"
 #include   	"analog.h"
 #include	"serial.h"
-#include   	"Com1_Port.h"
 #include   	"Com2_Port.h"
 #include   	"Pwm1.h"
-#include   	"setup.h"
-#include    "loader_45k80.h"
-#include	"Loader_cmd.h"
+
+#include    "system\system.h" // 로더 관련 
+#include    "loader_45k80\loader_45k80_main.h"
+
+
 
 
 void    InitPort(void)
@@ -965,16 +966,7 @@ bit ReadSetValueWhenPowerOn(void)
     ret = FALSE;
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
-    sAPL[DAY].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
-    sAPL[TWL].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
-    sAPL[NIG].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
-    sAPL[DAY].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_DAY);
-    sAPL[TWL].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_TWL);
-    sAPL[NIG].Set_DutyCycle = MyReadIntegerData(BLOCK_SET_DUTYCYCLE_NIG);
 
-    sAPL[DAY].Max_Current = MyReadIntegerData(BLOCK_MaxSetDAY);
-    sAPL[TWL].Max_Current = MyReadIntegerData(BLOCK_MaxSetTWL);
-    sAPL[NIG].Max_Current = MyReadIntegerData(BLOCK_MaxSetNIG);
 
     ret = TRUE;
     return(ret);
@@ -984,45 +976,10 @@ bit ReadSetValueWhenPowerOn(void)
 void ProcReadWrite(void)
 {
 // Read !!!
-    // LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
-    // Lamp Blink에서의 On 주기 시간(msec)
-    DUTY_CNT = MyReadByteData(BLOCK_DUTY_CNT);
-    DUTY_RATE = MyReadByteData(BLOCK_DUTY_RATE);
-    if (DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT));
-    LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
 
-    // 각 V_IN 셋팅 값
-    sAPL[DAY].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_DAY);
-    sAPL[TWL].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_TWL);
-    sAPL[NIG].Set_Current = MyReadIntegerData(BLOCK_SET_VALUE_NIG);
-
-    sAPL[DAY].Max_Current = MyReadIntegerData(BLOCK_MaxSetDAY);
-    sAPL[TWL].Max_Current = MyReadIntegerData(BLOCK_MaxSetTWL);
-    sAPL[NIG].Max_Current = MyReadIntegerData(BLOCK_MaxSetNIG);
-
-    // 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
-    // 셋팅 모드 선택
-    eSETMODE = MyReadByteData(BLOCK_SETMODE_SEL);
-
-    sAPL[DAY].bEveryOnSet = MyReadByteData(BLOCK_EveryOn_DAY);
-    sAPL[TWL].bEveryOnSet = MyReadByteData(BLOCK_EveryOn_TWL);
-    sAPL[NIG].bEveryOnSet = MyReadByteData(BLOCK_EveryOn_NIG);
 
 // Write !!!
-    // Set_DutyCycle 값
-    if (eSETMODE != Bef_eSETMODE)
-    {
-        if (Bef_eSETMODE)
-        {
-            EditDataType = INT_TYPE;
-            if (Bef_eSETMODE == SETMODE_DAY) EditFlashAddr = BLOCK_SET_DUTYCYCLE_DAY;
-            else if (Bef_eSETMODE == SETMODE_TWL) EditFlashAddr = BLOCK_SET_DUTYCYCLE_TWL;
-            else if (Bef_eSETMODE == SETMODE_NIG) EditFlashAddr = BLOCK_SET_DUTYCYCLE_NIG;
-            EditDigitData = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-            Group1_Save();
-        }
-        Bef_eSETMODE = eSETMODE;
-    }
+
 
 }
 
@@ -1117,7 +1074,7 @@ void main(void)
     InitPwm1();
     //UserBaudRate();
     Com2_Init();
-    Loader_Com_Init(); // COM1 초기화
+	Loader_Com_Init(); // 로더 관련 
     ei();
 
     DONE = 1;	// A/D Conversion Status bit
@@ -1135,7 +1092,7 @@ void main(void)
         CLRWDT();
 
 
-        ProcLoader();
+		Loader_Func(); // 로더 관련 함수 
 
 
         ProcReadWrite();
@@ -1194,7 +1151,7 @@ void interrupt isr(void)
         TMR0H = MSEC_H;
 
 
-        Loader_Msec1_Interrpt(); // 로더 시간
+		Loader_Msec1_Interrpt(); // 로더 관련 함수 
 
 
         // Int_Gps Timer에 의한 Blink 처리
@@ -1295,8 +1252,7 @@ void interrupt isr(void)
         DONE = 0;
     }
 
-    Loader_Com_Interrpt(); //
-
+	Loader_Com_Interrpt(); // 로더 관련 함수 
 }
 
 

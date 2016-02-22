@@ -1,15 +1,12 @@
 
 
-#include    <pic18.h>
 
+#include        "loader_45k80_main.h"
 
-
-
-#include    "com1_port.h"
-#include	"Commom.h"
-
-#include    "serial.h"
-
+/*
+#include    "loader_com1_port.h"
+#include    "loader_serial.h"
+*/
 
 ///////////////////////
 #define     ASCTOHEX(x) ((x <= '9') ? (x - '0') : (x - '7')) 
@@ -17,28 +14,28 @@
 
 
 
-unsigned char	Com1TxBuffer[COM1_MAX_TX_BUF];
-unsigned char	Com1RxBuffer[COM1_MAX_RX_BUF];
-unsigned char	Com1TxCnt=0;
-unsigned char	Com1TxThisPt=0;
+uint8_t	Com1TxBuffer[COM1_MAX_TX_BUF];
+uint8_t	Com1RxBuffer[COM1_MAX_RX_BUF];
+uint8_t	Com1TxCnt=0;
+uint8_t	Com1TxThisPt=0;
+uint8_t	Com1RxTxStatus=0;
+uint8_t	Com1RxCnt=0;
+uint8_t	Com1SerialTime=0x0;
 
-unsigned char   Com1RxTxStatus=0;
+uint16_t	Com1BaudRate=19200;
+uint16_t  	Crc;  
+uint16_t  	Chksum1;  
 
-unsigned char	Com1RxCnt=0;
-unsigned char	Com1SerialTime=0x0;
-unsigned int	Com1BaudRate=19200;
 
-unsigned    int  Crc;  
-unsigned    int  Chksum1;  
 
 
 void    Init_Com1(void)
 {
-	unsigned int tmpbaudrate;
+	uint16_t tmpbaudrate;
 
 	SPBRG = DIVIDER;     	
 
-	tmpbaudrate=((int)(FOSC/(16UL * Com1BaudRate) -1));
+	tmpbaudrate=((uint16_t)(FOSC/(16UL * Com1BaudRate) -1));
 	SPBRG = tmpbaudrate;     	
 
 	TXSTA = (SPEED|NINE_BITS|0x20);
@@ -58,9 +55,9 @@ void    Init_Com1(void)
 
 
 
-void    Crc_Calulate(unsigned int crcdata)
+void    Crc_Calulate(uint16_t crcdata)
 {
-	register unsigned int    i;
+	register uint16_t    i;
 
    Crc=Crc ^ (crcdata & 0x00ff);
    for(i=0;i<=7;i++){
@@ -71,10 +68,10 @@ void    Crc_Calulate(unsigned int crcdata)
 
 
 
-unsigned char	Chksum_Sum(void)
+uint8_t	Chksum_Sum(void)
 {    
-    unsigned char	i;
-    unsigned char	temp;
+    uint8_t	i;
+    uint8_t	temp;
     
     Chksum1=0;
     for(i=0;Com1TxBuffer[i];i++){
@@ -109,12 +106,12 @@ void    Com1TxStart(void)
 
 void USART1_TXC(void)
 {					
-	if((Com1TxThisPt >= Com1TxCnt)){
+	if((Com1TxThisPt > Com1TxCnt)){
+		Com1RxTxStatus = STX_CHK;
+		TXIE=0;
 		Com1SerialTime=0;
 		Com1TxThisPt=0;
  		Com1TxCnt=0;	
-		TXIE=0;
-		Com1RxTxStatus = STX_CHK;
 	}
 	else{
 		
@@ -140,14 +137,15 @@ void USART1_TXC(void)
 
 void USART1_RXC(void)
 {
-   	unsigned char   buf=0;
-   	unsigned char   temp=0;
+   	uint8_t   buf=0;
+   	uint8_t   temp=0;
 
 
    	buf=RCREG;
+
     Com1SerialTime=0;
 
-	
+
     if(Com1RxTxStatus != TX_SET){   
 
         if(Com1RxCnt < (COM1_MAX_RX_BUF-1)){
@@ -157,7 +155,9 @@ void USART1_RXC(void)
             Com1RxCnt=0;
         }
 
+
         Com1RxBuffer[Com1RxCnt]=buf;
+
 
         switch(Com1RxTxStatus){
             case    STX_CHK:
@@ -176,6 +176,7 @@ void USART1_RXC(void)
                 }
                 break;
             case    BCC1_CHK:               
+
                 buf=ASCTOHEX(buf);
                 Com1RxBuffer[Com1RxCnt]=0x0;
                 temp=(Chksum1 & 0xf0) >> 4; 
