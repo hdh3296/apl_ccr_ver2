@@ -1,4 +1,4 @@
-
+// °ψΕλ 
 
 #ifndef	_ALLCOMMOM_H_
 #define	_ALLCOMMOM_H_

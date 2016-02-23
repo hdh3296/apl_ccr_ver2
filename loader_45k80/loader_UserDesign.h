@@ -42,16 +42,24 @@ const uint8_t StatusMessage[][17]	={
 // 메뉴 이름 
 const uint8_t GroupLineMessage[][17]={
                                     "USER:Version    ",// 1  // group0
-                                    "USER:Basket Sel ",// 2 
-                                    "USER:Display Sel",// 3  
+                                    "USER:Display Sel",// 2 
+                                    "USER:Initial    ",// 3  
                                     "USER:Flash      ",// 4  
-                                    "USER:Not Use4   ",// 5  
-                                    "USER:Not Use5   ",// 6  
-                                    "USER:Not Use6   ",// 7  
-                                    "USER:Not Use7   ",// 8 
-                                    "BAS1:X_LENGTH   ",// 9  // group1
-                                    "BAS1:Z_LENGTH   ",// 10 
-                                    "BAS1:X_Z_LENGTH ",// 11  
+                                    "USER:DUTY_CNT   ",// 5  
+                                    "USER:DUTY_RATE  ",// 6  
+                                    "USER:SEL SETMODE",// 6 
+                                    "USER:SET VAL DAY",// 7  
+                                    "USER:SET VAL TWL",// 8 
+                                    "USER:SET VAL NIG",// 8 
+                                    "USER:MSET VAL D ",// 7  
+                                    "USER:MSET VAL T ",// 8 
+                                    "USER:MSET VAL N ",// 8 
+                                    "USER:EveryOn DAY",// 7  
+                                    "USER:EveryOn TWL",// 8 
+                                    "USER:EveryOn NIG",// 8 
+                                    "View:DuCy_D_SVal",// 9  // group1
+                                    "View:DuCy_T_SVal",// 10 
+                                    "View:DuCy_N_SVal",// 11  
                                     "BAS1:Z_X_LENGTH ",// 12  
                                     "BAS1:VIB_TIME   ",// 13  
                                     "BAS1:REPEAT_CNT ",// 14  
@@ -78,6 +86,11 @@ const uint8_t GroupLineMessage[][17]={
                   			};
 
 
+const uint8_t myVersion[][17]={
+                                    "V1.1.0.0        ", // 0  
+                  			};
+
+
 
 
 const uint8_t  DefaultMsg[][17] ={
@@ -87,12 +100,30 @@ const uint8_t  DefaultMsg[][17] ={
 
 
 
-const uint8_t BasketWorkSel[][17]={
-                                    "BA1-BA2-BA3   ",// 0  
-                                    "BA1-BA2       ",// 1 
-                                    "BA1-BA3       ",// 2  
-                                    "BA2-BA3       ",//3  
+const uint8_t MsgSelModeSel[][17]={
+                                    "Normal        ",// 0  
+                                    "Set DAY       ",// 1 
+                                    "Set TWL       ",// 2  
+                                    "Set NIG       ",//3  
                   			};
+
+const uint8_t MsgSelEveryOnSetD[][17]={
+                                    "Flashing      ",// 0  
+                                    "Every On      ",// 1 
+                  			};
+
+const uint8_t MsgSelEveryOnSetT[][17]={
+                                    "Flashing      ",// 0  
+                                    "Every On      ",// 1 
+                  			};
+
+const uint8_t MsgSelEveryOnSetN[][17]={
+                                    "Flashing      ",// 0  
+                                    "Every On      ",// 1 
+                  			};
+
+
+
 
 
 const uint8_t DefaultMsgSel[][17]={
@@ -136,36 +167,68 @@ const uint8_t FlashMsgSel[][17]={
 #define  F_FLASH_COPY		ByteData004           			// 1
 #define  F_INITIAL			ByteData008           			// 1
 
-#define  F_BAS1_X_LENGTH	IntzData009           			// 1
-#define  F_BAS1_Z_LENGTH	IntzData010           			// 1
-#define  F_BAS1_X_Z_LENGTH	IntzData011           			// 1
-#define  F_BAS1_Z_X_LENGTH	IntzData012           			// 1
-#define  F_BAS1_VIB_TIME	IntzData013           			// 1
-#define  F_BAS1_REPETE		IntzData014           			// 1
-#define  F_BAS1_NOT_USE1	IntzData015           			// 1
-#define  F_BAS1_NOT_USE2	IntzData016           			// 1
+#define  F_DUTY_CNT			ByteData009           			// 1
+#define  F_DUTY_RATE		ByteData010           			// 1
+
+#define  F_SETMODE_SEL		ByteData011
+
+#define  F_EveryOnSetD		ByteData012
+#define  F_EveryOnSetT		ByteData013
+#define  F_EveryOnSetN		ByteData014
 
 
-#define  F_BAS2_X_LENGTH	IntzData017           			// 1
-#define  F_BAS2_Z_LENGTH	IntzData018           			// 1
-#define  F_BAS2_X_Z_LENGTH	IntzData019           			// 1
-#define  F_BAS2_Z_X_LENGTH	IntzData020           			// 1
-#define  F_BAS2_VIB_TIME	IntzData021           			// 1
-#define  F_BAS2_REPETE		IntzData022           			// 1
-#define  F_BAS2_NOT_USE1	IntzData023           			// 1
-#define  F_BAS2_NOT_USE2	IntzData024           			// 1
+#define  F_SETCURR_DAY		IntzData009           			// 1
+#define  F_SETCURR_TWL		IntzData010           			// 1
+#define  F_SETCURR_NIG		IntzData011           			// 1
 
-#define  F_BAS3_X_LENGTH	IntzData025           			// 1
-#define  F_BAS3_Z_LENGTH	IntzData026           			// 1
-#define  F_BAS3_X_Z_LENGTH	IntzData027           			// 1
-#define  F_BAS3_Z_X_LENGTH	IntzData028           			// 1
-#define  F_BAS3_VIB_TIME	IntzData029           			// 1
-#define  F_BAS3_REPETE		IntzData030           			// 1
-#define  F_BAS3_NOT_USE1	IntzData031           			// 1
-#define  F_BAS3_NOT_USE2	IntzData032           			// 1
+#define  F_MSETCURR_DAY		IntzData012           			// 1
+#define  F_MSETCURR_TWL		IntzData013           			// 1
+#define  F_MSETCURR_NIG		IntzData014           			// 1
+
+#define  F_SET_DUTYCYCLED	IntzData015           			
+#define  F_SET_DUTYCYCLET	IntzData016	
+#define  F_SET_DUTYCYCLEN	IntzData017	
 
 
-#define  F_TEST_LONG		longData033           			// 1
+
+
+
+
+
+
+#define  F_BAS1_X_LENGTH	IntzData051           			// 1
+#define  F_BAS1_Z_LENGTH	IntzData052           			// 1
+#define  F_BAS1_X_Z_LENGTH	IntzData053           			// 1
+#define  F_BAS1_Z_X_LENGTH	IntzData054           			// 1
+#define  F_BAS1_VIB_TIME	IntzData055           			// 1
+#define  F_BAS1_REPETE		IntzData056           			// 1
+#define  F_BAS1_NOT_USE1	IntzData057           			// 1
+#define  F_BAS1_NOT_USE2	IntzData058           			// 1
+
+#define  F_BAS2_X_LENGTH	IntzData059           			// 1
+#define  F_BAS2_Z_LENGTH	IntzData060           			// 1
+#define  F_BAS2_X_Z_LENGTH	IntzData061           			// 1
+#define  F_BAS2_Z_X_LENGTH	IntzData062           			// 1
+#define  F_BAS2_VIB_TIME	IntzData063           			// 1
+#define  F_BAS2_REPETE		IntzData064           			// 1
+#define  F_BAS2_NOT_USE1	IntzData065           			// 1
+#define  F_BAS2_NOT_USE2	IntzData066           			// 1
+
+#define  F_BAS3_X_LENGTH	IntzData067           			// 1
+#define  F_BAS3_Z_LENGTH	IntzData068           			// 1
+#define  F_BAS3_X_Z_LENGTH	IntzData069           			// 1
+#define  F_BAS3_Z_X_LENGTH	IntzData070           			// 1
+#define  F_BAS3_VIB_TIME	IntzData071           			// 1
+#define  F_BAS3_REPETE		IntzData072           			// 1
+#define  F_BAS3_NOT_USE1	IntzData073           			// 1
+#define  F_BAS3_NOT_USE2	IntzData074           			// 1
+
+
+
+
+
+
+#define  F_TEST_LONG		longData101           			// 1
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -177,6 +240,34 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_DEFAULT_DSP			cF_ByteData(F_DEFAULT_DSP)
 #define  cF_FLASH_COPY			cF_ByteData(F_FLASH_COPY)
 #define  cF_INITIAL				cF_ByteData(F_INITIAL)
+
+#define  cF_DUTY_CNT			cF_ByteData(F_DUTY_CNT)
+#define  cF_DUTY_RATE			cF_ByteData(F_DUTY_RATE)
+
+#define  cF_SETMODE_SEL			cF_ByteData(F_SETMODE_SEL)
+
+#define  cF_EveryOnSetD			cF_ByteData(F_EveryOnSetD)
+#define  cF_EveryOnSetT			cF_ByteData(F_EveryOnSetT)
+#define  cF_EveryOnSetN			cF_ByteData(F_EveryOnSetN)
+
+
+
+#define  cF_SETCURR_DAY			iF_IntData(F_SETCURR_DAY)
+#define  cF_SETCURR_TWL			iF_IntData(F_SETCURR_TWL)
+#define  cF_SETCURR_NIG			iF_IntData(F_SETCURR_NIG)
+
+#define  cF_MSETCURR_DAY			iF_IntData(F_MSETCURR_DAY)
+#define  cF_MSETCURR_TWL			iF_IntData(F_MSETCURR_TWL)
+#define  cF_MSETCURR_NIG			iF_IntData(F_MSETCURR_NIG)
+
+#define  cF_SET_DUTYCYCLED			iF_IntData(F_SET_DUTYCYCLED)
+#define  cF_SET_DUTYCYCLET			iF_IntData(F_SET_DUTYCYCLET)
+#define  cF_SET_DUTYCYCLEN			iF_IntData(F_SET_DUTYCYCLEN)
+
+
+
+
+
 
 
 #define  iF_BAS1_X_LENGTH		iF_IntData(F_BAS1_X_LENGTH)
@@ -206,6 +297,10 @@ const uint8_t FlashMsgSel[][17]={
 #define  iF_BAS3_REPETE			iF_IntData(F_BAS3_REPETE)
 #define  iF_BAS3_NOT_USE1		iF_IntData(F_BAS3_NOT_USE1)
 #define  iF_BAS3_NOT_USE2		iF_IntData(F_BAS3_NOT_USE2)
+
+
+
+
 
 
 #define  lF_TEST_LONG			lF_LongData(LongData033)

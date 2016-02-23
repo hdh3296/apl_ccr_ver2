@@ -64,12 +64,12 @@ typedef  union  _long_union
 
 
 
-
+// read
 #define  cF_ByteData(adr)	GET_LONGFIELD(&information[(adr/4)])	.byte[(adr	% 4)]
-#define  iF_IntData(adr)	GET_LONGFIELD(&information[adr/4])		.intger[(adr%4)/2]
+#define  iF_IntData(adr)		GET_LONGFIELD(&information[adr/4])	.intger[(adr%4)/2]
 #define  lF_LongData(adr)	GET_LONGFIELD(&information[(adr/4)])	.long_data
 
-
+// write
 #define  cSR_ByteData(adr)	GET_LONGFIELD(&new_value[((adr % FLASH_ONE_BLOCK_SIZE)/4)]).byte[(adr%4)]
 #define  iSR_IntData(adr)	GET_LONGFIELD(&new_value[((adr % FLASH_ONE_BLOCK_SIZE)/4)]).intger[((adr % 4 ) / 2)]
 #define  lSR_LongData(adr)	GET_LONGFIELD(&new_value[((adr % FLASH_ONE_BLOCK_SIZE)/4)]).long_data

@@ -960,27 +960,74 @@ ULONG GetInCurrent(ULONG CurA_IN_mV)
 // 저장된 값 Read(Load) /////////////////////////////////////
 bit ReadSetValueWhenPowerOn(void)
 {
-    unsigned char 	i;
-    static 	 bit 	ret;
+    unsigned char     i;
+    static   bit     ret;
 
     ret = FALSE;
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
+    sAPL[DAY].Set_Current = cF_SETCURR_DAY;
+    sAPL[TWL].Set_Current = cF_SETCURR_TWL;
+    sAPL[NIG].Set_Current = cF_SETCURR_NIG;
 
+    sAPL[DAY].Max_Current = cF_MSETCURR_DAY;
+    sAPL[TWL].Max_Current = cF_MSETCURR_TWL;
+    sAPL[NIG].Max_Current = cF_MSETCURR_NIG;
+	
+    sAPL[DAY].Set_DutyCycle = cF_SET_DUTYCYCLED;
+    sAPL[TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
+    sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
 
     ret = TRUE;
     return(ret);
+
 }
 
 
 void ProcReadWrite(void)
 {
 // Read !!!
+	// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
+	// Lamp Blink에서의 On 주기 시간(msec)
+	DUTY_CNT = cF_DUTY_CNT;
+	DUTY_RATE = cF_DUTY_RATE;
+	if (DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT));
+	LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
 
+	// 각 V_IN 셋팅 값
+	sAPL[DAY].Set_Current = cF_SETCURR_DAY;
+	sAPL[TWL].Set_Current = cF_SETCURR_TWL;
+	sAPL[NIG].Set_Current = cF_SETCURR_NIG;
+	
+	sAPL[DAY].Max_Current = cF_MSETCURR_DAY;
+	sAPL[TWL].Max_Current = cF_MSETCURR_TWL;
+	sAPL[NIG].Max_Current = cF_MSETCURR_NIG;
+
+
+	// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
+	// 셋팅 모드 선택
+	eSETMODE = cF_SETMODE_SEL;
+
+	sAPL[DAY].bEveryOnSet = cF_EveryOnSetD;
+	sAPL[TWL].bEveryOnSet = cF_EveryOnSetT;
+	sAPL[NIG].bEveryOnSet = cF_EveryOnSetN;
 
 // Write !!!
-
-
+    // Set_DutyCycle 값
+    if (eSETMODE != Bef_eSETMODE)
+    {
+        if (Bef_eSETMODE)
+        {
+            if (Bef_eSETMODE == SETMODE_DAY) 
+			{
+				iSR_IntData(F_SET_DUTYCYCLED) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+            }
+            else if (Bef_eSETMODE == SETMODE_TWL) iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+            else if (Bef_eSETMODE == SETMODE_NIG) iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+        }
+        Bef_eSETMODE = eSETMODE;
+    }	
+	
 }
 
 

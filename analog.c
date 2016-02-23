@@ -10,7 +10,7 @@
 
 
 
-
+// AD 
 void	InitAD(void)
 {
     ADCON0 = 0x01;	//ADON = 1;
