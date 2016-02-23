@@ -960,7 +960,7 @@ uint16_t	DefaultValueSet(void)
 		iSR_IntData(F_SET_DUTYCYCLET) = DFL_SET_DUTYCYCLET;
 		iSR_IntData(F_SET_DUTYCYCLEN) = DFL_SET_DUTYCYCLEN;
 
-		FlashBlockWr(0);		
+		FlashBlockWr(0);	 // 0 : 첫 번쨰 블락만 Write	
 	}
 	return(0);
 }

@@ -1021,9 +1021,19 @@ void ProcReadWrite(void)
             if (Bef_eSETMODE == SETMODE_DAY) 
 			{
 				iSR_IntData(F_SET_DUTYCYCLED) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+				FlashBlockWr((F_SET_DUTYCYCLED/FLASH_ONE_BLOCK_SIZE));
             }
-            else if (Bef_eSETMODE == SETMODE_TWL) iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-            else if (Bef_eSETMODE == SETMODE_NIG) iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+            else if(Bef_eSETMODE == SETMODE_TWL) 
+			{
+				iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+				FlashBlockWr((F_SET_DUTYCYCLET/FLASH_ONE_BLOCK_SIZE));
+            }
+            else if(Bef_eSETMODE == SETMODE_NIG)
+			{
+				iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+				FlashBlockWr((F_SET_DUTYCYCLEN/FLASH_ONE_BLOCK_SIZE));
+            }
+			
         }
         Bef_eSETMODE = eSETMODE;
     }	
