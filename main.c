@@ -1193,6 +1193,9 @@ void main(void)
             OutAplLamp_WhenNomalMode(CurDAY_TWL_NIG);
             bSetModeReady = TRUE;
         }
+
+		UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
+		UserRam_16[viewCurDAY_TWL_NIG] = CurDAY_TWL_NIG;
     }
 }
 

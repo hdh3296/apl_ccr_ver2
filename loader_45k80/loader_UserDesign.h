@@ -87,7 +87,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V1.1.0.0        ", // 0  
+                                    "V1.3.0.0        ", // 0  
                   			};
 
 
@@ -303,14 +303,14 @@ const uint8_t FlashMsgSel[][17]={
 
 
 
-#define  lF_TEST_LONG			lF_LongData(LongData033)
+#define  lF_TEST_LONG			lF_LongData(F_TEST_LONG)
 
 
 ////////////////////////////////////////////////////////
 /////////////sram memory set- char type/////////////////
 ////////////////////////////////////////////////////////
-#define		UpButtonTime_8		0  	
-#define		msec100_8			1  	
+#define		UpButtonTime_8	0  	
+#define		msec100_8	1  	
 #define		sec1_8				2  	
 #define		MotorSeq_8			3  	
 #define		BasketNm_8			4  	
@@ -321,11 +321,12 @@ const uint8_t FlashMsgSel[][17]={
 #define		VARIABLE_8_END  	8
 
 
+
 /////////////////////////////////////////////////////////////////
 /////////////sram memory set- int type/////////////////////////
 /////////////////////////////////////////////////////////////////
-#define		StartKeyChartTime_16	0
-#define		VibTime_16				1
+#define		viewSET_DUTYCYCLE		0
+#define		viewCurDAY_TWL_NIG		1
 #define		LeftRightMovePulse_16	2	
 #define		UpDownMovePulse_16		3	
 #define		ReverseTime_16			4
