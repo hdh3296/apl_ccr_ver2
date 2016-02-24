@@ -18,14 +18,14 @@ extern	uint16_t DefaultDisplay(void);
 
 // 상태 메시지  
 const uint8_t StatusMessage[][17]	={
-                                     	"Wait_Ready      ",      //000                               
-                                     	"System Home.... ",      //000                               
-                                     	"Basket1 Home    ",      //000                               
-                                     	"Basket  Ready   ",      //000                               
-                                     	"Vibration       ",      //000                               
-                                     	"Down            ",      //000                               
-                                     	"Up              ",      //000                               
-                                     	"Up-Right        ",      //000                               
+                                     	"Wait_Ready      ",      // 0                              
+                                     	"Now Setting     ",      // 1                               
+                                     	"Day Running     ",      // 2                               
+                                     	"Twilight Running",      // 3                               
+                                     	"Night Running   ",      // 4                               
+                                     	"Day Not Set     ",      // 5                               
+                                     	"Twilight Not Set",      // 6                               
+                                     	"Night Not Set   ",      // 7                               
                                      	"Right           ",      //000                               
                                      	"Right-Down      ",      //000                               
                                      	"Down            ",      //000                               
@@ -51,9 +51,9 @@ const uint8_t GroupLineMessage[][17]={
                                     "USER:SET VAL DAY",// 7  
                                     "USER:SET VAL TWL",// 8 
                                     "USER:SET VAL NIG",// 8 
-                                    "USER:MSET VAL D ",// 7  
-                                    "USER:MSET VAL T ",// 8 
-                                    "USER:MSET VAL N ",// 8 
+                                    "USER:Max SET DAY",// 7  
+                                    "USER:Max SET TWL",// 8 
+                                    "USER:Max SET NIG",// 8 
                                     "USER:EveryOn DAY",// 7  
                                     "USER:EveryOn TWL",// 8 
                                     "USER:EveryOn NIG",// 8 
@@ -87,24 +87,24 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V1.3.0.0        ", // 0  
+                                    "V1.4.0.0        ", // 0  
                   			};
 
 
 
 
 const uint8_t  DefaultMsg[][17] ={
-                                    	"Running Basket  ",// 0
-										"Ready...        "							
+                                    	"APL CCR         ",// 0
+										"APL CCR         "							
 										};
 
 
 
 const uint8_t MsgSelModeSel[][17]={
-                                    "Normal        ",// 0  
-                                    "Set DAY       ",// 1 
-                                    "Set TWL       ",// 2  
-                                    "Set NIG       ",//3  
+                                    "Running Mode  ",// 0  
+                                    "Set DAY Mode  ",// 1 
+                                    "Set TWL Mode  ",// 2  
+                                    "Set NIG Mode  ",//3  
                   			};
 
 const uint8_t MsgSelEveryOnSetD[][17]={
@@ -326,8 +326,8 @@ const uint8_t FlashMsgSel[][17]={
 /////////////sram memory set- int type/////////////////////////
 /////////////////////////////////////////////////////////////////
 #define		viewSET_DUTYCYCLE		0
-#define		viewCurDAY_TWL_NIG		1
-#define		LeftRightMovePulse_16	2	
+#define		viewIn_Current			1
+#define		viewCurDAY_TWL_NIG		2	
 #define		UpDownMovePulse_16		3	
 #define		ReverseTime_16			4
 

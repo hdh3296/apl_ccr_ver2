@@ -70,7 +70,7 @@ void    InitPort(void)
     _LAMP_ON = 0;
     _PWM = 0;
     // LED : 1 = Led Off
-    _LED_CDS_IN_DAY  = 1; // CPU RUN
+    _LED_CPU_RUN  = 1; // CPU RUN
     _LED_CDS_IN_NIG = 1; // Night 상태 LED
     _LED_TEST = 1;
     _LED_LAMP_ON = 1;// APL Lamp On 듀티 LED
@@ -1186,15 +1186,26 @@ void main(void)
             }
 
             bLampOnReady = TRUE;
+			UserSystemStatus = 1;
         }
         // 일반 모드 !!!
         else if (sAPL[CurDAY_TWL_NIG].Set_DutyCycle)
         {
             OutAplLamp_WhenNomalMode(CurDAY_TWL_NIG);
             bSetModeReady = TRUE;
+			if(CurDAY_TWL_NIG == 0) UserSystemStatus = 2;
+			else if(CurDAY_TWL_NIG == 1) UserSystemStatus = 3;
+			else if(CurDAY_TWL_NIG == 2) UserSystemStatus = 4;
         }
+		else
+		{
+			if(CurDAY_TWL_NIG == 0) UserSystemStatus = 5;
+			else if(CurDAY_TWL_NIG == 1) UserSystemStatus = 6;
+			else if(CurDAY_TWL_NIG == 2) UserSystemStatus = 7;
+		}
 
 		UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
+		UserRam_16[viewIn_Current]	  =	In_Current;
 		UserRam_16[viewCurDAY_TWL_NIG] = CurDAY_TWL_NIG;
     }
 }
@@ -1203,7 +1214,6 @@ void main(void)
 
 void interrupt isr(void)
 {
-
     if (TMR0IF)
     {
         TMR0IF = 0 ;
@@ -1239,15 +1249,13 @@ void interrupt isr(void)
         if (SetModeReady_Timer < 0xffff)
             SetModeReady_Timer++;
 
-        msec100++;
-        if (msec100 > 100)
+        msec++;
+        if (msec > 300)
         {
-            msec100 = 0;
-            DayNightTimer++;
-
-            if (SettingReadyTime < 100)	SettingReadyTime++;
-            if (NightSetTime < 100)		NightSetTime++;
-            if (NightDaySetTime < 100)	NightDaySetTime++;
+            msec = 0;
+			
+			if(_LED_CPU_RUN) _LED_CPU_RUN = 0;
+			else _LED_CPU_RUN = 1;
 
         }
     }

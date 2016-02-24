@@ -113,7 +113,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CAN_TX			PIN_CAN_TX 					 	
 #define _CAN_RX			PIN_CAN_RX 
 // LED
-#define _LED_CDS_IN_DAY	PIN_LED_RUN0 // CDS DAY 입력 상태 LED 		
+#define _LED_CPU_RUN	PIN_LED_RUN0 // CDS DAY 입력 상태 LED 		
 #define _LED_CDS_IN_NIG	PIN_LED_RUN1 // CDS NIG 입력 상태 LED 				
 #define _LED_GPS_GOOD	PIN_LED_RUN2 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 			
 #define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
@@ -193,7 +193,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 //#define		NIGHT_VOLT			200
 //#define		NIGHT_DAY_VOLT		135
 
-unsigned    char	msec100 = 0;
+unsigned    int		msec = 0;
 
 
 unsigned    char	NightSetTime = 0;
