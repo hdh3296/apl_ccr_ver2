@@ -1,7 +1,6 @@
 
 // "640 byte(=64 * 10 ) 플레시 확보해 놓는다."  or  "160 long = (64/4) * 10"  
-#define	MAX_FLASH_BLOCK_NM		10  
-
+#define	MAX_FLASH_BLOCK_NM		1 // --> 버그 : 특정 개수 이상 블락 개수를 설정하면 Write 시 문제 생긴다.
 // 전체 메뉴 갯수(현재 상태 제외)  
 #define	MAX_MENU			50
 
@@ -87,7 +86,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V1.4.0.0        ", // 0  
+                                    "V1.4.2.0        ", // 0  
                   			};
 
 
