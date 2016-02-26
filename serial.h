@@ -5,26 +5,26 @@
 #ifndef _SERIAL_H_
 #define _SERIAL_H_
 
-#define BAUD 19200      
+#define com2BAUD 19200      
 //#define FOSC 8000000L
-#define FOSC 32000000L
-#define NINE 0     /* Use 9bit communication? FALSE=8bit */
-#define OUTPUT 0
-#define INPUT 1
+#define com2FOSC 32000000L
+#define com2NINE 0     /* Use 9bit communication? FALSE=8bit */
+#define com2OUTPUT 0
+#define com2INPUT 1
 
-#define DIVIDER ((int)(FOSC/(16UL * BAUD) -1))
-#define HIGH_SPEED 1
+#define com2DIVIDER ((int)(com2FOSC/(16UL * com2BAUD) -1))
+#define com2HIGH_SPEED 1
 
-#if NINE == 1
-#define NINE_BITS 0x40
+#if com2NINE == 1
+#define com2NINE_BITS 0x40
 #else
-#define NINE_BITS 0
+#define com2NINE_BITS 0
 #endif
 
-#if HIGH_SPEED == 1
-#define SPEED 0x4
+#if com2HIGH_SPEED == 1
+#define com2SPEED 0x4
 #else
-#define SPEED 0
+#define com2SPEED 0
 #endif
 
 /*

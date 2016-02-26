@@ -27,15 +27,15 @@ void    Com2_Init(void)
 {
 	unsigned int tmpbaudrate;
 
-	SPBRG2 = DIVIDER;     	
+	SPBRG2 = com2DIVIDER;     	
 
-	tmpbaudrate=((int)(FOSC/(16UL * Com2BaudRate) -1));
+	tmpbaudrate=((int)(com2FOSC/(16UL * Com2BaudRate) -1));
 	SPBRG2 = tmpbaudrate;     	
 
-	TXSTA2 = (SPEED|NINE_BITS|0x20);
-	RCSTA2 = (NINE_BITS|0x90);
-	TRISD6=OUTPUT;
-	TRISD7=INPUT;
+	TXSTA2 = (com2SPEED|com2NINE_BITS|0x20);
+	RCSTA2 = (com2NINE_BITS|0x90);
+	TRISD6=com2OUTPUT;
+	TRISD7=com2INPUT;
 
     RC2IE=1;	    // USART RX interrupt enable
     TX2IE=1;	    // USART TX interrupt enable

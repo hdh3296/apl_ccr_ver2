@@ -50,7 +50,6 @@ void    Init_Com1(void)
     TXIF=0;	    // USART TX interrupt enable
 
 	UART1MD=0;
-	UART2MD=1;
 }
 
 
