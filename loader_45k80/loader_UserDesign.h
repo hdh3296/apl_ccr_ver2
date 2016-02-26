@@ -86,7 +86,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V1.4.2.0        ", // 0  
+                                    "V1.5.0.0        ", // 0  
                   			};
 
 

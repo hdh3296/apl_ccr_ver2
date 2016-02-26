@@ -8,7 +8,7 @@
 #include   	"Com2_Port.h"
 #include   	"Pwm1.h"
 
-#include    "system\system.h" // 로더 관련 
+#include    "system\system.h" // 로더 관련
 #include    "loader_45k80\loader_45k80_main.h"
 
 
@@ -973,7 +973,7 @@ bit ReadSetValueWhenPowerOn(void)
     sAPL[DAY].Max_Current = cF_MSETCURR_DAY;
     sAPL[TWL].Max_Current = cF_MSETCURR_TWL;
     sAPL[NIG].Max_Current = cF_MSETCURR_NIG;
-	
+
     sAPL[DAY].Set_DutyCycle = cF_SET_DUTYCYCLED;
     sAPL[TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
     sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
@@ -987,30 +987,30 @@ bit ReadSetValueWhenPowerOn(void)
 void ProcReadWrite(void)
 {
 // Read !!!
-	// LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
-	// Lamp Blink에서의 On 주기 시간(msec)
-	DUTY_CNT = cF_DUTY_CNT;
-	DUTY_RATE = cF_DUTY_RATE;
-	if (DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT));
-	LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
+    // LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
+    // Lamp Blink에서의 On 주기 시간(msec)
+    DUTY_CNT = cF_DUTY_CNT;
+    DUTY_RATE = cF_DUTY_RATE;
+    if (DUTY_CNT >= 1) LED_CYCLE_MSEC = (60000 / (DUTY_CNT));
+    LED_ON_DUTY_MSEC = (LED_CYCLE_MSEC * DUTY_RATE) / 100;
 
-	// 각 V_IN 셋팅 값
-	sAPL[DAY].Set_Current = cF_SETCURR_DAY;
-	sAPL[TWL].Set_Current = cF_SETCURR_TWL;
-	sAPL[NIG].Set_Current = cF_SETCURR_NIG;
-	
-	sAPL[DAY].Max_Current = cF_MSETCURR_DAY;
-	sAPL[TWL].Max_Current = cF_MSETCURR_TWL;
-	sAPL[NIG].Max_Current = cF_MSETCURR_NIG;
+    // 각 V_IN 셋팅 값
+    sAPL[DAY].Set_Current = cF_SETCURR_DAY;
+    sAPL[TWL].Set_Current = cF_SETCURR_TWL;
+    sAPL[NIG].Set_Current = cF_SETCURR_NIG;
+
+    sAPL[DAY].Max_Current = cF_MSETCURR_DAY;
+    sAPL[TWL].Max_Current = cF_MSETCURR_TWL;
+    sAPL[NIG].Max_Current = cF_MSETCURR_NIG;
 
 
-	// 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
-	// 셋팅 모드 선택
-	eSETMODE = cF_SETMODE_SEL;
+    // 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
+    // 셋팅 모드 선택
+    eSETMODE = cF_SETMODE_SEL;
 
-	sAPL[DAY].bEveryOnSet = cF_EveryOnSetD;
-	sAPL[TWL].bEveryOnSet = cF_EveryOnSetT;
-	sAPL[NIG].bEveryOnSet = cF_EveryOnSetN;
+    sAPL[DAY].bEveryOnSet = cF_EveryOnSetD;
+    sAPL[TWL].bEveryOnSet = cF_EveryOnSetT;
+    sAPL[NIG].bEveryOnSet = cF_EveryOnSetN;
 
 // Write !!!
     // Set_DutyCycle 값
@@ -1018,26 +1018,26 @@ void ProcReadWrite(void)
     {
         if (Bef_eSETMODE)
         {
-            if (Bef_eSETMODE == SETMODE_DAY) 
-			{
-				iSR_IntData(F_SET_DUTYCYCLED) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-				FlashBlockWr((F_SET_DUTYCYCLED/FLASH_ONE_BLOCK_SIZE));
+            if (Bef_eSETMODE == SETMODE_DAY)
+            {
+                iSR_IntData(F_SET_DUTYCYCLED) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+                FlashBlockWr((F_SET_DUTYCYCLED / FLASH_ONE_BLOCK_SIZE));
             }
-            else if(Bef_eSETMODE == SETMODE_TWL) 
-			{
-				iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-				FlashBlockWr((F_SET_DUTYCYCLET/FLASH_ONE_BLOCK_SIZE));
+            else if (Bef_eSETMODE == SETMODE_TWL)
+            {
+                iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+                FlashBlockWr((F_SET_DUTYCYCLET / FLASH_ONE_BLOCK_SIZE));
             }
-            else if(Bef_eSETMODE == SETMODE_NIG)
-			{
-				iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-				FlashBlockWr((F_SET_DUTYCYCLEN/FLASH_ONE_BLOCK_SIZE));
+            else if (Bef_eSETMODE == SETMODE_NIG)
+            {
+                iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+                FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
             }
-			
+
         }
         Bef_eSETMODE = eSETMODE;
-    }	
-	
+    }
+
 }
 
 
@@ -1113,6 +1113,45 @@ void ProcAD(void)
 }
 
 
+// 낮, 박명, 밤 셋팅 최대치를 MAX 셋팅 값에 따라 로더에서 제한 설정 하기 위하여 만든 함수이다.
+void Loader_ValueSetEdit_sub(unsigned char ch, unsigned int iValue)
+{
+    unsigned int i;
+
+    i = MenuStatus[ch].M_EditDigitMaxValue = iValue;
+
+    if (i >= 10000) MenuStatus[ch].M_EditShiftCnt = 5;
+    else if (i >= 1000) MenuStatus[ch].M_EditShiftCnt = 4;
+    else if (i >= 100) MenuStatus[ch].M_EditShiftCnt = 3;
+    else if (i >= 10) MenuStatus[ch].M_EditShiftCnt = 2;
+    else MenuStatus[ch].M_EditShiftCnt = 1;
+
+}
+
+
+void Loader_SetValueEdit(void)
+{
+    if (bef_MSETCURR_DAY != cF_MSETCURR_DAY)
+    {
+        Loader_ValueSetEdit_sub(7, cF_MSETCURR_DAY);
+        bef_MSETCURR_DAY = cF_MSETCURR_DAY;
+    }
+
+    if (bef_MSETCURR_TWL != cF_MSETCURR_TWL)
+    {
+        Loader_ValueSetEdit_sub(8, cF_MSETCURR_TWL);
+        bef_MSETCURR_TWL = cF_MSETCURR_TWL;
+    }
+
+    if (bef_MSETCURR_NIG != cF_MSETCURR_NIG)
+    {
+        Loader_ValueSetEdit_sub(9, cF_MSETCURR_NIG);
+        bef_MSETCURR_NIG = cF_MSETCURR_NIG;
+    }
+
+}
+
+
 ///////////////////////////
 //   메인 함수 			  //
 ///////////////////////////
@@ -1131,7 +1170,7 @@ void main(void)
     InitPwm1();
     //UserBaudRate();
     Com2_Init();
-	Loader_Com_Init(); // 로더 관련 
+    Loader_Com_Init(); // 로더 관련
     ei();
 
     DONE = 1;	// A/D Conversion Status bit
@@ -1144,12 +1183,13 @@ void main(void)
 ////////////////////////////////////////////////////////////////
 
 
+
     while (1)
     {
         CLRWDT();
 
 
-		Loader_Func(); // 로더 관련 함수 
+        Loader_Func(); // 로더 관련 함수
 
 
         ProcReadWrite();
@@ -1165,6 +1205,9 @@ void main(void)
 
 
         ProcAD();
+
+
+        Loader_SetValueEdit();
 
 
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
@@ -1186,27 +1229,33 @@ void main(void)
             }
 
             bLampOnReady = TRUE;
-			UserSystemStatus = 1;
+
+            UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다.
         }
         // 일반 모드 !!!
         else if (sAPL[CurDAY_TWL_NIG].Set_DutyCycle)
         {
             OutAplLamp_WhenNomalMode(CurDAY_TWL_NIG);
             bSetModeReady = TRUE;
-			if(CurDAY_TWL_NIG == 0) UserSystemStatus = 2;
-			else if(CurDAY_TWL_NIG == 1) UserSystemStatus = 3;
-			else if(CurDAY_TWL_NIG == 2) UserSystemStatus = 4;
-        }
-		else
-		{
-			if(CurDAY_TWL_NIG == 0) UserSystemStatus = 5;
-			else if(CurDAY_TWL_NIG == 1) UserSystemStatus = 6;
-			else if(CurDAY_TWL_NIG == 2) UserSystemStatus = 7;
-		}
 
-		UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
-		UserRam_16[viewIn_Current]	  =	In_Current;
-		UserRam_16[viewCurDAY_TWL_NIG] = CurDAY_TWL_NIG;
+            // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다.
+            if (CurDAY_TWL_NIG == 0) UserSystemStatus = 2;
+            else if (CurDAY_TWL_NIG == 1) UserSystemStatus = 3;
+            else if (CurDAY_TWL_NIG == 2) UserSystemStatus = 4;
+        }
+        else
+        {
+            // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다.
+            if (CurDAY_TWL_NIG == 0) UserSystemStatus = 5;
+            else if (CurDAY_TWL_NIG == 1) UserSystemStatus = 6;
+            else if (CurDAY_TWL_NIG == 2) UserSystemStatus = 7;
+        }
+
+        // 현재 변수 값을 로더에서 보기 위하여 ram 영역 변수에 현재 변수 값들을 저장하고 있다.
+        UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
+        UserRam_16[viewIn_Current]	  =	In_Current;
+        UserRam_16[viewCurDAY_TWL_NIG] = CurDAY_TWL_NIG;
+
     }
 }
 
@@ -1221,7 +1270,7 @@ void interrupt isr(void)
         TMR0H = MSEC_H;
 
 
-		Loader_Msec1_Interrpt(); // 로더 관련 함수 
+        Loader_Msec1_Interrpt(); // 로더 관련 함수
 
 
         // Int_Gps Timer에 의한 Blink 처리
@@ -1253,9 +1302,9 @@ void interrupt isr(void)
         if (msec > 300)
         {
             msec = 0;
-			
-			if(_LED_CPU_RUN) _LED_CPU_RUN = 0;
-			else _LED_CPU_RUN = 1;
+
+            if (_LED_CPU_RUN) _LED_CPU_RUN = 0;
+            else _LED_CPU_RUN = 1;
 
         }
     }
@@ -1320,7 +1369,7 @@ void interrupt isr(void)
         DONE = 0;
     }
 
-	Loader_Com_Interrpt(); // 로더 관련 함수 
+    Loader_Com_Interrpt(); // 로더 관련 함수
 }
 
 

@@ -285,6 +285,13 @@ ULONG	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms)
 
 ULONG 	Multip[3] = {0,};	
 
+unsigned int bef_MSETCURR_DAY = 0;
+unsigned int bef_MSETCURR_TWL = 0;
+unsigned int bef_MSETCURR_NIG = 0;
+
+
+
+
 
 
 
