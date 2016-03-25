@@ -29,7 +29,7 @@ void    UserBaudRate(void)
 }
 
 
-uint16_t  Loader_Com_Init(void)
+uint16_t  InitComLoader(void)
 {
 	UserBaudRate();
     Init_Com1();

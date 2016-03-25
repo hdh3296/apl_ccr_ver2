@@ -13,7 +13,8 @@
 #define	A_SET_V_MAX 3300 // mV
 
 typedef enum{DAY = 0, TWL = 1, NIG = 2, NONE = 100} tag_CurDay;
-tag_CurDay	CurDAY_TWL_NIG = 100, BefDAY_TWL_NIG = 100;
+tag_CurDay	CurD_T_N = 100; // 현재 낮, 밤, 박명 상태 저장 변수  
+tag_CurDay	BefD_T_N = 100;
 
 
 typedef struct 
@@ -46,9 +47,8 @@ bit bStTwoEnab = FALSE;
 bit bSettingMode = FALSE;
 
 extern void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle);
-extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDAY_TWL_NIG);
-extern void OutAplLamp_WhenSetMode(tag_CurDay CurDAY_TWL_NIG);
-extern void ChangePwmT2CON(tag_CurDay CurDAY_TWL_NIG);
+extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurD_T_N);
+extern void OutAplLamp_WhenSetMode(tag_CurDay CurD_T_N);
 extern ULONG GetInCurrent(ULONG AD_A_IN_mV);
 
 #endif

@@ -43,9 +43,9 @@ const uint8_t GroupLineMessage[][17]={
                                     "USER:Version    ",// 1  // group0
                                     "USER:Display Sel",// 2 
                                     "USER:Initial    ",// 3  
-                                    "USER:Flash      ",// 4  
-                                    "USER:DUTY_CNT   ",// 5  
-                                    "USER:DUTY_RATE  ",// 6  
+                                    "USER:Read/Write ",// 4  
+                                    "USER:FlashingCNT",// 5  
+                                    "USER:FlashingRat",// 6  
                                     "USER:SEL SETMODE",// 6 
                                     "USER:SET VAL DAY",// 7  
                                     "USER:SET VAL TWL",// 8 
@@ -86,7 +86,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V1.5.0.0        ", // 0  
+                                    "V2.0.0.0        ", // 2016.04.04 
                   			};
 
 
@@ -240,8 +240,8 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_FLASH_COPY			cF_ByteData(F_FLASH_COPY)
 #define  cF_INITIAL				cF_ByteData(F_INITIAL)
 
-#define  cF_DUTY_CNT			cF_ByteData(F_DUTY_CNT)
-#define  cF_DUTY_RATE			cF_ByteData(F_DUTY_RATE)
+#define  cF_BLK_1MIN_CNT			cF_ByteData(F_DUTY_CNT)
+#define  cF_BLK_DUTYRATE			cF_ByteData(F_DUTY_RATE)
 
 #define  cF_SETMODE_SEL			cF_ByteData(F_SETMODE_SEL)
 
@@ -255,9 +255,9 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_SETCURR_TWL			iF_IntData(F_SETCURR_TWL)
 #define  cF_SETCURR_NIG			iF_IntData(F_SETCURR_NIG)
 
-#define  cF_MSETCURR_DAY			iF_IntData(F_MSETCURR_DAY)
-#define  cF_MSETCURR_TWL			iF_IntData(F_MSETCURR_TWL)
-#define  cF_MSETCURR_NIG			iF_IntData(F_MSETCURR_NIG)
+#define  cF_MaxSetA_DAY			iF_IntData(F_MSETCURR_DAY)
+#define  cF_MaxSetA_TWL			iF_IntData(F_MSETCURR_TWL)
+#define  cF_MaxSetA_NIG			iF_IntData(F_MSETCURR_NIG)
 
 #define  cF_SET_DUTYCYCLED			iF_IntData(F_SET_DUTYCYCLED)
 #define  cF_SET_DUTYCYCLET			iF_IntData(F_SET_DUTYCYCLET)
@@ -327,8 +327,13 @@ const uint8_t FlashMsgSel[][17]={
 #define		viewSET_DUTYCYCLE		0
 #define		viewIn_Current			1
 #define		viewCurDAY_TWL_NIG		2	
-#define		UpDownMovePulse_16		3	
-#define		ReverseTime_16			4
+#define		ReverseTime0_16			3	
+#define		ReverseTime1_16			4
+
+#define		ViewZeroTimer			0
+
+#define		ViewBlk			0
+
 
 #define		VARIABLE_16_END  		5
 

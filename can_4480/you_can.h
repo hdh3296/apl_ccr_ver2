@@ -1,6 +1,11 @@
 
+
+
 #ifndef	_YOU_CAN_H_
 #define	_YOU_CAN_H_
+
+#include	"..\AllCommom.h"
+
 
 
 //#include    "..\..\system_com\memory_map.h"
@@ -34,13 +39,13 @@
 
 bit    				MaskSetBit = 0;
 unsigned    char    CallMeAdr = 0;
-unsigned    char    SrcAddress = 0;
 
+bit bCAN_RxGood;
 
 
 
 extern  void    CANTxDLC(char MsgFlag,unsigned char DataCnt);
-extern  void    CAN_Init(void);
+extern  void    InitCAN(void);
 extern  void    CanCheck(void);
 extern  unsigned int    CanInterrupt(void);
 extern  void    CanTx0(void);
@@ -60,7 +65,7 @@ extern  unsigned    char    bCanTxAct;
 extern  unsigned    char    CanKeyValue[8];
 extern  unsigned    char    CanCmd;
 extern  unsigned    char    Company;
-extern  unsigned    char    SelHostAdr;
+extern  unsigned    char    myAdr;
 extern  unsigned    char    CanDataCnt0;
 extern  unsigned    char    CanDatacnt1;
 extern  unsigned    char    CAN_ReceivedAdr;

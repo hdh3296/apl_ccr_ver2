@@ -1023,7 +1023,8 @@ uint16_t DefaultDisplay(void)
     uint16_t  i,j,k;
 
 
-	k=cF_DEFAULT_DSP;
+	k=cF_DEFAULT_DSP;	
+	
 	
 	if(BefDspMode != k){
 		BefDspMode = k;
@@ -1052,7 +1053,7 @@ uint16_t DefaultDisplay(void)
 			Nm_Display();
 			Five_Dig_Dsp((uint32_t)UserRam_16[CurKeyPoint],0); 
 			break;																																																																
-        case    3:
+        case    3: // long 타입 디스플레이 
 			Nm_Display();
 			Ten_Dig_Dsp((uint32_t)UserRam_32[CurKeyPoint],0);     
             break;

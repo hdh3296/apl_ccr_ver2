@@ -42,8 +42,8 @@ void InitPwm1(void)
 	CCP1CON=0x0;	/* select PIN_PWM mode */
 	PwmOn(); // PIN_PWM ON	
 
-	PR2=0xff;			
-	T2CON=(0x06);		// 16x
+	PR2 = 0xff;			
+	T2CON = 0x06;		// 가장 안정적이다. 다른 값은 오랜시간 사용시 열이 난다. 
 
 	DutyCycle = 0; // Q???
 	OutPWM(DutyCycle); // Q???

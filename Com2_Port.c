@@ -23,7 +23,7 @@ unsigned char	Com2Xor=0;
 
 
 
-void    Com2_Init(void)
+void    InitCom2(void)
 {
 	unsigned int tmpbaudrate;
 
@@ -33,9 +33,9 @@ void    Com2_Init(void)
 	SPBRG2 = tmpbaudrate;     	
 
 	TXSTA2 = (com2SPEED|com2NINE_BITS|0x20);
-	RCSTA2 = (com2NINE_BITS|0x90);
-	TRISD6=com2OUTPUT;
-	TRISD7=com2INPUT;
+	RCSTA2 = (com2NINE_BITS|0x90); // RD6,7번 핀을 IO핀으로 할지 시리얼 핀으로 할지 여부 결정 / SPEN: Serial Port Enable bit
+	TRISD6 =com2OUTPUT;
+	TRISD7 =com2INPUT;
 
     RC2IE=1;	    // USART RX interrupt enable
     TX2IE=1;	    // USART TX interrupt enable

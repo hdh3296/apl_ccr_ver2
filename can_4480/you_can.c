@@ -86,14 +86,14 @@ extern      bit    MaskSetBit;              //new
 unsigned    char    NoCanInt = 0;
 unsigned    int     CanTime = 0;
 unsigned    char    CAN_RcvBuf[MAX_SAVE_BUF];
-unsigned    char    bCanTxAct;
+unsigned    char    bCanTxAct = FALSE;
 unsigned    char    CanKeyValue[8];
 unsigned    char    CanCmd;
-unsigned    char    Company;
-unsigned    char    SelHostAdr;
-unsigned    char    CanDataCnt0;
-unsigned    char    CanDatacnt1;
-unsigned    char    CAN_ReceivedAdr;
+unsigned    char    Company = 'A';
+unsigned    char    myAdr = 0; // can my addr
+unsigned    char    CanDataCnt0 = 8;
+unsigned    char    CanDatacnt1 = 8;
+unsigned    char    CAN_ReceivedAdr = 0; // can your addr
 unsigned    char    CanReceiveCnt;
 unsigned    long    EidBuffer;
 unsigned    int     SidBuffer;
@@ -218,7 +218,7 @@ void CAN_SetFilter_SUB(char filter_no, unsigned int sid, unsigned long eid)
 
 
 
-void CAN_SetMask_SUB(char mask_no, unsigned int sid, unsigned long eid)
+void CAN_SetMask_SUB(char mask_no, unsigned int sid, unsigned long eid) // 1, 0x007f, 0x0
 {
     unsigned int uppereid;
 
@@ -440,7 +440,7 @@ void    CanLiveChk(void)
 
     if (NoCanInt > 100)
     {
-        CAN_Init();
+        InitCAN();
         NoCanInt = 0;
     }
 }
@@ -457,7 +457,7 @@ void    CAN_ArraryTxSidEid(void)
     SidBuffer = (unsigned int)(itmp2 | itmp1);
 
     ltmp1 = 0;
-    ltmp1 = (ltmp1 | (unsigned long)SelHostAdr);
+    ltmp1 = (ltmp1 | (unsigned long)myAdr);
     ltmp1 = (ltmp1 << 14);
     ltmp1 = (ltmp1 | (unsigned long)CallMeAdr);
 
@@ -485,17 +485,16 @@ void    CAN_ArraryRxSidEid(void)
 
     ltmp1 = (unsigned long)(RXB0EIDL);
     RxEidBuffer = (RxEidBuffer | ltmp1);
-
+	
+	// 수신된 로컬 어드레스 저장 
     TmpRcvAdr = (unsigned char)((RxEidBuffer & HOST_ADDRESS) >> 14);
-    CAN_ReceivedAdr = (unsigned char)(TmpRcvAdr & 0x03);
-    SrcAddress = (unsigned char)(TmpRcvAdr & 0x03);
+    CAN_ReceivedAdr = (unsigned char)(TmpRcvAdr & 0x03); 
 
 
     if (MAX_ELEV == 8)
     {
         TmpRcvAdr = (unsigned char)((RxEidBuffer & NEW_HOST_ADDRESS) >> 14);
         CAN_ReceivedAdr = (unsigned char)(TmpRcvAdr & 0x07);
-        SrcAddress = (unsigned char)(TmpRcvAdr & 0x07);
     }
 }
 
@@ -542,7 +541,7 @@ void    LoadCanTxBuf(unsigned char *pt)
 
 void    CanTx0(void)
 {
-    if (!TXB0REQ && bCanTxAct && (CAN_ReceivedAdr == SelHostAdr))
+    if (!TXB0REQ && bCanTxAct && (CAN_ReceivedAdr == myAdr))
     {
         CAN_ArraryTxSidEid(); // Tx를 위한 SidEidBuffer 세팅  
         CANTxDLC(0, CanDataCnt0); // DLC 세팅  
@@ -571,7 +570,7 @@ void    CanTx0(void)
 
 void    CanTx1(void)
 {
-    if (!TXB1REQ && bCanTxAct && (CAN_ReceivedAdr == SelHostAdr))
+    if (!TXB1REQ && bCanTxAct && (CAN_ReceivedAdr == myAdr))
     {
         CAN_ArraryTxSidEid();
         CANTxDLC(1, CanDatacnt1);
@@ -668,6 +667,8 @@ unsigned int	CanInterrupt(void)
 
         RXB0IF = 0;
         RXB0FUL = 0;
+
+		bCAN_RxGood = TRUE;
     }
 
     return(0);
@@ -677,7 +678,7 @@ unsigned int	CanInterrupt(void)
 
 
 
-void CAN_Init(void)
+void InitCAN(void)
 {
     unsigned int i;
 
@@ -715,9 +716,9 @@ void CAN_Init(void)
     RXF4EXIDEN = 1;
     RXF5EXIDEN = 1;
 
-
-    CAN_SetFilter();
-    CAN_SetMask();
+	// 현재 sidbuffer 비트들에대해서만 마스크 되어있다. 
+    CAN_SetFilter(); // 마스크 1로 셋된 비트에 대해서만 비교를 한다. 필터값이 0이면 0인 값들만 수용하고, 1이면 1인 값만 수용한다. 
+    CAN_SetMask(); // 마스크 값이 0이면 필터 무시, 1이면 필터값과 비교
 
     TXB0RTR  = 0;
 

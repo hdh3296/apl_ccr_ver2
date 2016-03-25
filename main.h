@@ -99,13 +99,13 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CDS_DAY		PIN_IN_DAY 				
 #define _CDS_NIGHT		PIN_IN_NIGHT
 // 깜빡임 외부에서 제어 
-#define _IN_BLINK		PIN_IN_BLINK // FU			
+#define _IN_FU		PIN_IN_BLINK // FU			
 // 딥스위치 On이면 0값이다.  	
 #define _DIP_SW1		PIN_MODE_0 // 고광도용(20만,2만,2천) / 중광도용(주간2만, 야간2천) 					
 #define _DIP_SW2		PIN_MODE_1 // CDS-A(주간,저녁,야간) / CDS-B(야간)					
-#define _DIP_SW3		PIN_MODE_2 // Int_GPS 사용 (FU 미사용) / Int_GPS 미사용 (FU 미사용)					
-#define _DIP_SW4		PIN_MODE_3 // Ext_GPS 사용 / Ext_GPS 미사용  					
-#define _DIP_SW5		PIN_MODE_4 // 예비  				
+#define _DIP_SW3		PIN_MODE_2 // GPS 사용 (FU 미사용) / GPS 미사용 (FU 사용)					
+#define _DIP_SW4		PIN_MODE_3 // Ext_GPS 사용 / IN_GPS 사용  					
+#define _DIP_SW5		PIN_MODE_4 // Slave / Master			
 // 232통신 			
 #define _TX_232			PIN_TX_232 // CCP3/CK1/TX1/CANTX	
 #define _RX_232			PIN_RX_232 // CANRX/RX1/DT1/CCP4
@@ -113,11 +113,11 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _CAN_TX			PIN_CAN_TX 					 	
 #define _CAN_RX			PIN_CAN_RX 
 // LED
-#define _LED_CPU_RUN	PIN_LED_RUN0 // CDS DAY 입력 상태 LED 		
-#define _LED_CDS_IN_NIG	PIN_LED_RUN1 // CDS NIG 입력 상태 LED 				
-#define _LED_GPS_GOOD	PIN_LED_RUN2 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 			
-#define _LED_LAMP_ON	PIN_LED_RUN3 // APL Lamp On 듀티 LED			
-#define _LED_TEST 		PIN_LED_RUN4 		
+#define _LED_CPU_RUN	PIN_LED_RUN0 // CPU 런 상태 		
+#define _LED_BLK 		PIN_LED_RUN1 // APL Lamp On 듀티 LED 				
+#define _LED_CAN_TX 	PIN_LED_RUN2 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 			
+#define _LED_CAN_RX		PIN_LED_RUN3 // 	CAN Tx 상태 	
+#define _LED_GPS 		PIN_LED_RUN4 // CAN Tx 상태 <<< 현재 시리얼 Tx핀으로 설정 되어 있어서 사용 보류 	
 // GPS
 #define _RX_GPS			PIN_TX_DP // 통신 RX2
 #define _PPS_GPS		PIN_1PPS 				
@@ -170,18 +170,18 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define	OFF_lamp	0
 #endif
 
-#ifndef	ON_runled1
-#define	ON_runled1	0
+#ifndef	ON_LED
+#define	ON_LED	0
 #endif
-#ifndef	OFF_runled1
-#define	OFF_runled1	1
+#ifndef	OFF_LED
+#define	OFF_LED	1
 #endif
 
-#ifndef	DIPSW_ON
-#define	DIPSW_ON	0
+#ifndef	ON_DIPSW
+#define	ON_DIPSW	0
 #endif
-#ifndef	DIPSW_OFF
-#define	DIPSW_OFF	1
+#ifndef	OFF_DIPSW
+#define	OFF_DIPSW	1
 #endif
 
 
@@ -193,6 +193,13 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 //#define		NIGHT_VOLT			200
 //#define		NIGHT_DAY_VOLT		135
 
+
+#define MASTER		0
+#define SLAVE		1
+#define CMD_EXTGPS	0
+#define CMD_TIMER_1SEC	1
+#define CMD_BLK_EDGE		2
+
 unsigned    int		msec = 0;
 
 
@@ -202,9 +209,11 @@ unsigned    char	SettingReadyTime = 0;
 
 unsigned    char	DayNightTimer = 0;
 
-unsigned    char	Ghour = 0, Gmin = 0, Gsec = 0; // Gps 로 부터 수신된 RxData 값 
-unsigned    int		Gms1 = 0; // 마이컴의 인터럽트에 의한 발생된 msec 값 저장 변수 
-unsigned    int		Gms60000 = 0; // 현재 시간값을 ms단위로 환산한 값 저장 변수 
+unsigned    char	Ghour = 0, Gmin = 0, Gsec = 0; // Gps로 부터 수신된 RxData 값 
+unsigned    int		Gm1 = 0; // 미리세크, 마이컴의 인터럽트에 의한 발생된 msec 값 저장 변수
+
+unsigned    long	CurTotalGms = 0;
+unsigned    int		Gms60000 = 0; 
 
 
 unsigned    char	WakeupTime = 0;
@@ -214,7 +223,7 @@ unsigned	int		OnTime[LED_ONOFF_CNT];
 unsigned	int		LedCycle_Msec;
 unsigned	int		LedOnDuty_Msec;
 unsigned	long	ZeroTimer = 0;
-unsigned	long	l_hour, l_min, l_sec;
+unsigned	long	l_hour, l_min, l_sec; 
 
 unsigned    char	NightVolt = 0;
 unsigned    char	NightDayVolt = 0;
@@ -231,7 +240,9 @@ bit		bPPS_Edge = 0;
 bit		bNight = 0;
 bit		bNightDay = 0;
 
-bit		bBlink_DutyOn = 0;
+bit		bBlkLedOn = 0;
+bit 	bBefBlk_LedOn = 0;
+
 
 
 unsigned int OutLampWhenPowerOnTimer = 0;
@@ -240,8 +251,8 @@ unsigned char CDS_NightTimer = 0;
 unsigned char IN_BLK_Timer = 0;
 
 
-bit bBLKInputOn = 0;
-bit bDutyOnByGpsTime = 0;
+bit bFUOn = 0;
+bit bBlkDutyOn = 0;
 
 
 
@@ -278,22 +289,42 @@ unsigned int L_MAX_Current_Evening = 0;
 unsigned int L_MAX_Current_Night = 0;
 
 // blink Duty 시간 변수들 
-UCHAR	DUTY_CNT = 0;  // 1분당  LED ON 횟수
-UCHAR   DUTY_RATE = 0;	// LED ON 듀티 비(%)
-ULONG   LED_CYCLE_MSEC = 0;
-ULONG	LED_ON_DUTY_MSEC = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
+UCHAR	Blk_1Min_Cnt = 0;  // 1분당  LED ON 횟수
+UCHAR  	Blk_DutyRate = 0;	// 1 cycle에 대하여 ON 비율(%) = 펄스폭과 같은 말 
+ULONG  	Blk_DutyCycle = 0; // 1회 깜빡일때의 시간 
+ULONG	Blk_DutyTime = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
 
 ULONG 	Multip[3] = {0,};	
 
-unsigned int bef_MSETCURR_DAY = 0;
-unsigned int bef_MSETCURR_TWL = 0;
-unsigned int bef_MSETCURR_NIG = 0;
+unsigned int bef_MaxSetA_DAY = 0;
+unsigned int bef_MaxSetA_TWL = 0;
+unsigned int bef_MaxSetA_NIG = 0;
 
 
+// CAN 수신 저장 변수 
+unsigned char cRxCMD = 0xff;
+unsigned char cRxCurD_T_N = 0;
+unsigned char cRxBlkLedOn = 0;
+unsigned char cRxDReserve0 = 0;
+unsigned char cRxDReserve1 = 0;
+unsigned char cRxHour = 0;
+unsigned char cRxMin = 0;
+unsigned char cRxSec = 0;
+
+bit byr1Sec_TimerUpd = 0;
+bit bExtGpsUpd = 0;
+
+unsigned int myTestTimerTx = 0;
 
 
+// BlkMode
+#define BM_Master_FU		1
+#define BM_Master_GPS_IN	2
+#define	BM_Master_GPS_EXT	3
+#define BM_Slave_BLK	4
 
 
+unsigned char BlkMode = 0;
 
 
 extern  void  Initial(void);
@@ -304,14 +335,14 @@ extern void ChkGpsPPS1(void);
 extern void LedBlinkModeInit(void);
 extern unsigned int ReSettingDayNigntChk(void);
 extern void ApaLampOnOff(void);
-extern bit IsDutyOnByGpsTime(void);
+extern bit IsBlk_DutyOn_ByTimer(void);
 extern void ProcGpsRx2Data(void);
 extern void ChkSetupSw(void);
 extern unsigned char GetDAY_TWL_NIG(void);
 extern void WriteVal(unsigned int DutyCycle, unsigned int SetAVoltage, volatile const unsigned char* DestBuf);
 extern void GetAdValue(void);
 extern unsigned int GetDutyByCompareCurrent(unsigned int duty, unsigned int setVolt, 
-												  unsigned int inVolt, unsigned char CurDAY_TWL_NIG);
+												  unsigned int inVolt, unsigned char CurD_T_N);
 extern void SetApaLamp(void);
 extern void OutLampWhenPowerOn(void);
 
@@ -326,6 +357,11 @@ extern void WriteProc(void);
 extern bit ReadSetValueWhenPowerOn(void);
 extern void ProcReadWrite(void);
 extern void ProcGPS(void);
+
+extern void SelDipSW(void);
+extern bit SaveCANRxData(void);
+extern bit LoadCANTxData(unsigned char CanCmd);
+extern void ViewCurData(void);
 
 
 

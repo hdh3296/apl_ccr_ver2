@@ -13,7 +13,7 @@
 
 
 
-extern	uint16_t	Loader_Com_Init(void);
+extern	uint16_t	InitComLoader(void);
 extern	uint16_t	Loader_Func(void);
 extern	uint16_t	Loader_Msec1_Interrpt(void);
 extern	uint16_t	Loader_Com_Interrpt(void);
