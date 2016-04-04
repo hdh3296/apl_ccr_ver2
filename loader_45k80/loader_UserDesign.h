@@ -25,7 +25,7 @@ const uint8_t StatusMessage[][17]	={
                                      	"Day Not Set     ",      // 5                               
                                      	"Twilight Not Set",      // 6                               
                                      	"Night Not Set   ",      // 7                               
-                                     	"Right           ",      //000                               
+                                     	"CDS Error       ",      //000                               
                                      	"Right-Down      ",      //000                               
                                      	"Down            ",      //000                               
                                      	"Up              ",      //000

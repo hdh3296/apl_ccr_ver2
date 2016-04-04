@@ -312,7 +312,7 @@ unsigned char GetDAY_TWL_NIG(void)
         else if (bCDS_Night)
             ret = NIG;
         else
-            ret = DAY;
+            ret = NONE;
     }
     // 중광도용 (낮 / 밤)
     else
@@ -975,6 +975,11 @@ void main(void)
 
             UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
         }
+		else if (CurD_T_N == NONE)
+		{
+			OutPWM(0);
+			UserSystemStatus = 8;
+		}
         else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 
         {
             OutAplLamp_WhenNomalMode(CurD_T_N);

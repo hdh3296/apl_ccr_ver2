@@ -12,9 +12,9 @@
 
 #define	A_SET_V_MAX 3300 // mV
 
-typedef enum{DAY = 0, TWL = 1, NIG = 2, NONE = 100} tag_CurDay;
-tag_CurDay	CurD_T_N = 100; // 현재 낮, 밤, 박명 상태 저장 변수  
-tag_CurDay	BefD_T_N = 100;
+typedef enum{DAY = 0, TWL = 1, NIG = 2, NONE = 3} tag_CurDay;
+tag_CurDay	CurD_T_N = NONE; // 현재 낮, 밤, 박명 상태 저장 변수  
+tag_CurDay	BefD_T_N = NONE;
 
 
 typedef struct 
@@ -25,7 +25,7 @@ typedef struct
 
 	unsigned char   bEveryOnSet;
 }tag_Apl;
-tag_Apl		sAPL[3] = {
+tag_Apl		sAPL[NONE] = {
 					{0,},	// Set0
 					{0,},	// Set1
 					{0,},	// Set2
