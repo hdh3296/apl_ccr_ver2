@@ -56,6 +56,9 @@ const uint8_t GroupLineMessage[][17]={
                                     "USER:EveryOn DAY",// 7  
                                     "USER:EveryOn TWL",// 8 
                                     "USER:EveryOn NIG",// 8 
+                                    "USER:SDutycycleD",// 8 
+                                    "USER:SDutycycleT",// 8 
+                                    "USER:SDutycycleN",// 8 
                                     "View:DuCy_D_SVal",// 9  // group1
                                     "View:DuCy_T_SVal",// 10 
                                     "View:DuCy_N_SVal",// 11  
@@ -86,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "V2.0.0.0        ", // 2016.04.04 
+                                    "v2.1.0.1(TEST)  ", // 2016.04.04 
                   			};
 
 
@@ -188,6 +191,13 @@ const uint8_t FlashMsgSel[][17]={
 #define  F_SET_DUTYCYCLET	IntzData016	
 #define  F_SET_DUTYCYCLEN	IntzData017	
 
+#define  F_SET_stDUTYCYCLE_D	IntzData018	
+#define  F_SET_stDUTYCYCLE_T	IntzData019
+#define  F_SET_stDUTYCYCLE_N	IntzData020
+
+
+
+
 
 
 
@@ -262,6 +272,11 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_SET_DUTYCYCLED			iF_IntData(F_SET_DUTYCYCLED)
 #define  cF_SET_DUTYCYCLET			iF_IntData(F_SET_DUTYCYCLET)
 #define  cF_SET_DUTYCYCLEN			iF_IntData(F_SET_DUTYCYCLEN)
+
+#define  cF_SET_stDUTYCYCLE_D		iF_IntData(F_SET_stDUTYCYCLE_D)
+#define  cF_SET_stDUTYCYCLE_T		iF_IntData(F_SET_stDUTYCYCLE_T)
+#define  cF_SET_stDUTYCYCLE_N		iF_IntData(F_SET_stDUTYCYCLE_N)
+
 
 
 

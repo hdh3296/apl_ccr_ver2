@@ -491,18 +491,10 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
             In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
         }
 
-        i = sAPL[CurDayNig].Set_Current;
-        if (i >= 6000) DutyCycle = sAPL[CurDayNig].Set_DutyCycle / 20;
-        else if (i >= 5000) DutyCycle = 5;
-        else if (i >= 4000) DutyCycle = 4;
-        else if (i >= 3000) DutyCycle = 4;
-        else if (i >= 2000) DutyCycle = 3;
-        else if (i >= 1000) DutyCycle = 3;
-        else DutyCycle = 3;
-
-
         _LAMP_ON = FALSE; // LAMP OFF
-        OutPWM(DutyCycle);
+        if (CurDayNig == DAY) OutPWM(cF_SET_stDUTYCYCLE_D);
+		else if(CurDayNig == TWL) OutPWM(cF_SET_stDUTYCYCLE_T);
+		else if(CurDayNig == NIG) OutPWM(cF_SET_stDUTYCYCLE_N);
         bLampOnReady = TRUE;
 
     }

@@ -41,6 +41,13 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define 	DFL_SET_DUTYCYCLET			0	
 #define 	DFL_SET_DUTYCYCLEN			0
 
+#define 	DFL_SET_stDUTYCYCLE_D			0
+#define 	DFL_SET_stDUTYCYCLE_T			0
+#define 	DFL_SET_stDUTYCYCLE_N			0
+
+
+
+
 
 
 
@@ -368,6 +375,46 @@ uint16_t Group1_Menu_Status_Set(void)
 
 	UserMenuSerialNm++;
 	sub_gr++;		
+
+
+/////////////////////////////////////////////////////////////////////
+//sub Menu	유저 출력 시작 시 PWM 시작 값 
+/////////////////////////////////////////////////////////////////////
+	
+	IntType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SET_stDUTYCYCLE_D; // max 셋팅값 밤
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=1023; // 최대값 
+
+	UserMenuSerialNm++;
+	sub_gr++;
+
+/////////////////////////////////////////////////////////////////////
+//sub Menu	유저 출력 시작 시 PWM 시작 값 
+/////////////////////////////////////////////////////////////////////
+	
+	IntType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SET_stDUTYCYCLE_T; // max 셋팅값 밤
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=1023; // 최대값 
+
+	UserMenuSerialNm++;
+	sub_gr++;
+
+/////////////////////////////////////////////////////////////////////
+//sub Menu	유저 출력 시작 시 PWM 시작 값 
+/////////////////////////////////////////////////////////////////////
+	
+	IntType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SET_stDUTYCYCLE_N; // max 셋팅값 밤
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=1023; // 최대값 
+
+	UserMenuSerialNm++;
+	sub_gr++;	
 
 	return(0);
 }
@@ -960,6 +1007,10 @@ uint16_t	DefaultValueSet(void)
 		iSR_IntData(F_SET_DUTYCYCLET) = DFL_SET_DUTYCYCLET;
 		iSR_IntData(F_SET_DUTYCYCLEN) = DFL_SET_DUTYCYCLEN;
 
+		iSR_IntData(F_SET_stDUTYCYCLE_D) = DFL_SET_stDUTYCYCLE_D;
+		iSR_IntData(F_SET_stDUTYCYCLE_T) = DFL_SET_stDUTYCYCLE_T;
+		iSR_IntData(F_SET_stDUTYCYCLE_N) = DFL_SET_stDUTYCYCLE_N;
+ 
 		FlashBlockWr(0);	 // 0 : 첫 번쨰 블락만 Write	
 	}
 	return(0);
