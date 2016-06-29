@@ -458,29 +458,19 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
     if (bBlkLedOn) // Blink Led 가 On 일 때
     {
         _LAMP_ON = TRUE; // LAMP ON
-        if (bLampOnReady)
-        {
-            bLampOnReady = FALSE;
 
-//			ReadVal((arSavedBuf + (CurDayNig*4)), &sAPL[CurDayNig].Setting_mV, &sAPL[CurDayNig].DutyCycle);
-//			sAPL[CurDayNig].Set_Current = GetSetCurrent(sAPL[CurDayNig].Setting_mV, CurDayNig);
-            DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
-            OutPWM(DutyCycle);
-        }
-        else
+        if (bAD_A_IN_mV_Upd)
         {
-            if (bAD_A_IN_mV_Upd)
-            {
-                bAD_A_IN_mV_Upd = FALSE;
-                In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
+            bAD_A_IN_mV_Upd = FALSE;
+            In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
 
-                if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
-                    DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
-                else
-                    DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
-            }
-            OutPWM(DutyCycle);
+            if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
+                DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
+            else
+                DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
         }
+        OutPWM(DutyCycle);
+
 
     }
     else // Blink Led 가 Off 일 때
@@ -495,8 +485,6 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
         if (CurDayNig == DAY) OutPWM(cF_SET_stDUTYCYCLE_D);
 		else if(CurDayNig == TWL) OutPWM(cF_SET_stDUTYCYCLE_T);
 		else if(CurDayNig == NIG) OutPWM(cF_SET_stDUTYCYCLE_N);
-        bLampOnReady = TRUE;
-
     }
 }
 
@@ -690,7 +678,6 @@ void ProcDAY_TWL_NIG(void)
     if (CurD_T_N != BefD_T_N)
     {
         BefD_T_N = CurD_T_N;
-        bLampOnReady = TRUE;
     }
 }
 
@@ -965,8 +952,6 @@ void main(void)
             {
                 OutAplLamp_WhenSetMode(eSETMODE - 1);
             }
-
-            bLampOnReady = TRUE;
 
             UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
         }
