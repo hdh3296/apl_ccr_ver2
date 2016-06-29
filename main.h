@@ -254,7 +254,8 @@ unsigned char IN_BLK_Timer = 0;
 bit bFUOn = 0;
 bit bBlkDutyOn = 0;
 
-
+bit bChanged_DTN;
+bit bSetModed;
 
 // 5000이면 5V이다.
 unsigned int SetAVoltage=0; 

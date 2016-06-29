@@ -459,6 +459,13 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
     {
         _LAMP_ON = TRUE; // LAMP ON
 
+		if (bChanged_DTN || bSetModed)
+		{
+			bChanged_DTN = FALSE;
+			bSetModed = FALSE;
+			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.			
+		}
+		
         if (bAD_A_IN_mV_Upd)
         {
             bAD_A_IN_mV_Upd = FALSE;
@@ -468,6 +475,8 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
                 DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
             else
                 DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
+
+			sAPL[CurDayNig].Set_DutyCycle = DutyCycle;
         }
         OutPWM(DutyCycle);
 
@@ -678,6 +687,7 @@ void ProcDAY_TWL_NIG(void)
     if (CurD_T_N != BefD_T_N)
     {
         BefD_T_N = CurD_T_N;
+		bChanged_DTN = TRUE;
     }
 }
 
@@ -954,6 +964,7 @@ void main(void)
             }
 
             UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
+            bSetModed = TRUE;
         }
 		else if (CurD_T_N == NONE)
 		{
