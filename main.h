@@ -265,6 +265,7 @@ unsigned int A_IN_Volt=0; // PIN_RA2_NoUse Voltage, AN3
 unsigned int V_IN_Volt=0; // PIN_V_IN Voltage, AN4
 
 bit bAgoBlkLedOff;
+bit bAdAvrFast;
 
 unsigned int AnalogValidTime = 0;
 

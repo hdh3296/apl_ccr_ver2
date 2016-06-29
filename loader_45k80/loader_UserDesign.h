@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "ver2.1.2.3(TEST)", 
+                                    "ver2.2.0.5(TEST)", 
                   			};
 
 

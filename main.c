@@ -395,7 +395,30 @@ ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight)
 
 
 
+void CurGapProc(unsigned char DayNig)
+{
+	unsigned int setcur, curgap;
+	
+	setcur = sAPL[DayNig].Set_Current;	
+	
+	if (In_Current > setcur)
+	{
+		curgap = In_Current - setcur;
+	}
+	else
+	{
+		curgap = setcur - In_Current;
+	}
 
+	if (curgap > 100)
+	{
+		bAdAvrFast = TRUE;
+	}
+	else
+	{
+		bAdAvrFast = FALSE;
+	}
+}
 
 unsigned int CompareSet_InCurrent(unsigned int duty,
                                   unsigned char DayNig, unsigned int Offset)
@@ -943,9 +966,11 @@ void main(void)
 
 // CAN 처리 
 		SaveCANRxData();
-		LoadCANTxData(CanCmd);		
+		LoadCANTxData(CanCmd);	
 
 
+		CurGapProc(CurD_T_N);
+		
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
         
         if (eSETMODE) // 셋팅 모드 !!!
