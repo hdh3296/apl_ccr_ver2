@@ -549,8 +549,8 @@ ULONG GetInCurrent(ULONG CurA_IN_mV)
 {
     ULONG In_Current;
 
-    if (CurA_IN_mV >= 600)
-        In_Current = (((ULONG)CurA_IN_mV - 600) * 1000) / 60;  // (630 - 600)/60 * 1000 = 500 mA
+    if (CurA_IN_mV >= GIJUN_V)
+        In_Current = (((ULONG)CurA_IN_mV - GIJUN_V) * 1000) / 60;  // (630 - 600)/60 * 1000 = 500 mA
     else
         In_Current = 0;
 
@@ -577,6 +577,8 @@ bit ReadSetValueWhenPowerOn(void)
     sAPL[DAY].Set_DutyCycle = cF_SET_DUTYCYCLED;
     sAPL[TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
     sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
+
+	GIJUN_V = cF_SET_F_SET_GIJUN_V;
 
     ret = TRUE;
     return(ret);
@@ -633,6 +635,10 @@ void ProcReadWrite(void)
                 iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
                 FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
             }
+
+			
+			iSR_IntData(F_SET_GIJUN_V) = GIJUN_V;
+            FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
 
         }
         Bef_eSETMODE = eSETMODE;
@@ -934,6 +940,8 @@ void main(void)
     if (ret)	OutLampWhenPowerOn();
 ////////////////////////////////////////////////////////////////
 
+	bSetModeReady = TRUE;
+
 
     while (1)
     {
@@ -970,21 +978,38 @@ void main(void)
 
 
 		CurGapProc(CurD_T_N);
+
+		
 		
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
         
         if (eSETMODE) // 셋팅 모드 !!!
-        {
-            _LAMP_ON = TRUE; // LAMP ON
+        {			
+            
             if (bSetModeReady)
             {
+				bSetModeReady = FALSE;
+
+				_LAMP_ON = TRUE;
                 DutyCycle = 0;
                 OutPWM(DutyCycle);
-                bSetModeReady = FALSE;
-                //SetModeReady_Timer = 0;
+
+				GIJUN_Timer = 0;
+				do
+				{	
+					if (bAD_A_IN_mV_Upd)
+    				{
+        				bAD_A_IN_mV_Upd = FALSE;
+						GIJUN_V = AD_A_IN_mV;
+					}
+					
+					CLRWDT();
+				}while(GIJUN_Timer < 3000);
+
             }
             else
             {
+				_LAMP_ON = TRUE;
                 OutAplLamp_WhenSetMode(eSETMODE - 1);
             }
 
@@ -1056,6 +1081,8 @@ void interrupt isr(void)
         if (SetModeReady_Timer < 0xffff)
             SetModeReady_Timer++;
 
+		if (GIJUN_Timer < 0xffff) GIJUN_Timer++;
+		
         msec++;
         if (msec > 50)
         {

@@ -45,6 +45,9 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define 	DFL_SET_stDUTYCYCLE_T			0
 #define 	DFL_SET_stDUTYCYCLE_N			0
 
+#define 	DFL_SET_GIJUN_V			600
+
+
 
 
 
@@ -487,15 +490,18 @@ uint16_t Group2_Menu_Status_Set(void)
 
 
 /////////////////////////////////////////////////////////////////////
-//sub group5
+//sub 최저 기준 전압 값 
 /////////////////////////////////////////////////////////////////////
 	
 	IntType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
-	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_BAS1_VIB_TIME;
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SET_GIJUN_V;
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditStatus=NO_EDIT;
 
 	UserMenuSerialNm++;
 	sub_gr++;
+
 
 
 
@@ -1010,6 +1016,8 @@ uint16_t	DefaultValueSet(void)
 		iSR_IntData(F_SET_stDUTYCYCLE_D) = DFL_SET_stDUTYCYCLE_D;
 		iSR_IntData(F_SET_stDUTYCYCLE_T) = DFL_SET_stDUTYCYCLE_T;
 		iSR_IntData(F_SET_stDUTYCYCLE_N) = DFL_SET_stDUTYCYCLE_N;
+
+		iSR_IntData(F_SET_GIJUN_V) = DFL_SET_GIJUN_V;
  
 		FlashBlockWr(0);	 // 0 : 첫 번쨰 블락만 Write	
 	}

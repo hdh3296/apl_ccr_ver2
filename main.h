@@ -327,6 +327,10 @@ unsigned int myTestTimerTx = 0;
 
 
 unsigned char BlkMode = 0;
+unsigned int GIJUN_V = 600;
+unsigned int GIJUN_Timer = 0;
+
+
 
 
 extern  void  Initial(void);

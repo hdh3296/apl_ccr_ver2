@@ -62,7 +62,7 @@ const uint8_t GroupLineMessage[][17]={
                                     "View:DuCy_D_SVal",// 9  // group1
                                     "View:DuCy_T_SVal",// 10 
                                     "View:DuCy_N_SVal",// 11  
-                                    "BAS1:Z_X_LENGTH ",// 12  
+                                    "View:GIJUN_Volt ",// 12  
                                     "BAS1:VIB_TIME   ",// 13  
                                     "BAS1:REPEAT_CNT ",// 14  
                                     "BAS1:Not Use1   ",// 15  
@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "ver2.2.0.5(TEST)", 
+                                    "ver2.3.0.6(TEST)", 
                   			};
 
 
@@ -195,6 +195,9 @@ const uint8_t FlashMsgSel[][17]={
 #define  F_SET_stDUTYCYCLE_T	IntzData019
 #define  F_SET_stDUTYCYCLE_N	IntzData020
 
+#define  F_SET_GIJUN_V	IntzData021	
+
+
 
 
 
@@ -276,6 +279,9 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_SET_stDUTYCYCLE_D		iF_IntData(F_SET_stDUTYCYCLE_D)
 #define  cF_SET_stDUTYCYCLE_T		iF_IntData(F_SET_stDUTYCYCLE_T)
 #define  cF_SET_stDUTYCYCLE_N		iF_IntData(F_SET_stDUTYCYCLE_N)
+
+#define  cF_SET_F_SET_GIJUN_V			iF_IntData(F_SET_GIJUN_V)
+
 
 
 
