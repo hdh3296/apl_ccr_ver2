@@ -29,6 +29,10 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define     DFL_EveryOnSetN				0
 
 
+#define     DFL_bSave_GIJUN				0 // FALSE
+
+
+
 #define 	DFL_SETCURR_DAY				2000				
 #define 	DFL_SETCURR_TWL				1000	
 #define 	DFL_SETCURR_NIG				500	
@@ -45,7 +49,7 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define 	DFL_SET_stDUTYCYCLE_T			0
 #define 	DFL_SET_stDUTYCYCLE_N			0
 
-#define 	DFL_SET_GIJUN_V			600
+#define 	DFL_SET_GIJUN_V			0
 
 
 
@@ -999,7 +1003,8 @@ uint16_t	DefaultValueSet(void)
 		cSR_ByteData(F_EveryOnSetD) = DFL_EveryOnSetD;
 		cSR_ByteData(F_EveryOnSetT) = DFL_EveryOnSetT;
 		cSR_ByteData(F_EveryOnSetN) = DFL_EveryOnSetN;
-		
+
+		cSR_ByteData(F_bSave_GIJUN) = DFL_bSave_GIJUN;
 
 		iSR_IntData(F_SETCURR_DAY) = DFL_SETCURR_DAY;
 		iSR_IntData(F_SETCURR_TWL) = DFL_SETCURR_TWL;

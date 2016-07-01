@@ -579,6 +579,7 @@ bit ReadSetValueWhenPowerOn(void)
     sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
 
 	GIJUN_V = cF_SET_F_SET_GIJUN_V;
+	bSave_GIJUN = cF_bSave_GIJUN;
 
     ret = TRUE;
     return(ret);
@@ -636,10 +637,16 @@ void ProcReadWrite(void)
                 FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
             }
 
-			
-			iSR_IntData(F_SET_GIJUN_V) = GIJUN_V;
-            FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
+			if (!bSave_GIJUN)
+			{
+				bSave_GIJUN = TRUE;
+				iSR_IntData(F_SET_GIJUN_V) = GIJUN_V;
+            	FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
 
+				cSR_ByteData(F_bSave_GIJUN) = bSave_GIJUN;
+            	FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));
+				
+			}
         }
         Bef_eSETMODE = eSETMODE;
     }
@@ -909,6 +916,21 @@ void ViewCurData(void)
 	UserRam_8[ViewBlk] = bBlkLedOn;
 }
 
+void SaveGijunV(void)
+{
+	GIJUN_Timer = 0;
+	do
+	{	
+		if (bAD_A_IN_mV_Upd)
+		{
+			bAD_A_IN_mV_Upd = FALSE;
+			GIJUN_V = AD_A_IN_mV;
+		}
+		
+		CLRWDT();
+	}while(GIJUN_Timer < 3000);
+}
+
 
 ///////////////////////////
 //   메인 함수 			  //
@@ -994,18 +1016,10 @@ void main(void)
                 DutyCycle = 0;
                 OutPWM(DutyCycle);
 
-				GIJUN_Timer = 0;
-				do
-				{	
-					if (bAD_A_IN_mV_Upd)
-    				{
-        				bAD_A_IN_mV_Upd = FALSE;
-						GIJUN_V = AD_A_IN_mV;
-					}
-					
-					CLRWDT();
-				}while(GIJUN_Timer < 3000);
-
+				if (!bSave_GIJUN)
+				{
+					SaveGijunV();
+				}
             }
             else
             {

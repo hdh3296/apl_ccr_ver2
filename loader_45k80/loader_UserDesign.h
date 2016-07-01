@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "ver2.3.0.6(TEST)", 
+                                    "v2.3.1.7(TEST)  ", // 버전 정보 표시 
                   			};
 
 
@@ -178,6 +178,8 @@ const uint8_t FlashMsgSel[][17]={
 #define  F_EveryOnSetT		ByteData013
 #define  F_EveryOnSetN		ByteData014
 
+#define  F_bSave_GIJUN		ByteData015
+
 
 #define  F_SETCURR_DAY		IntzData009           			// 1
 #define  F_SETCURR_TWL		IntzData010           			// 1
@@ -262,6 +264,7 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_EveryOnSetT			cF_ByteData(F_EveryOnSetT)
 #define  cF_EveryOnSetN			cF_ByteData(F_EveryOnSetN)
 
+#define  cF_bSave_GIJUN			cF_ByteData(F_bSave_GIJUN)
 
 
 #define  cF_SETCURR_DAY			iF_IntData(F_SETCURR_DAY)
