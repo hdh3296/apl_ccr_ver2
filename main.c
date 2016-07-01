@@ -676,24 +676,44 @@ void ProcBlink(tag_CurDay CurDayNig)
 // 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.
 // 만일, 딥스위치 3번에 on 되어 있으면 2번 스위치 무시하고 외부 CAN GPS 보드 사용
 
-	bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer);
+	if (bFIRMWARE_TEST)
+	{
+		bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer);
 
-	if ((sAPL[CurDayNig].bEveryOnSet) || bFUOn)
-	{
-		bBlkLedOn = TRUE;
+		if ((sAPL[CurDayNig].bEveryOnSet) || bFUOn)
+		{
+			bBlkLedOn = TRUE;
+		}
+		else if (BlkMode == BM_Slave_BLK) // slave
+		{
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+		}
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+	    {
+	        bBlkLedOn = bBlkDutyOn;
+	    }	
 	}
-	else if (BlkMode == BM_Slave_BLK) // slave
+	else
 	{
-		bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+		if (sAPL[CurDayNig].bEveryOnSet)
+		{
+			bBlkLedOn = TRUE;
+		}
+		else if (BlkMode == BM_Slave_BLK) // slave
+		{
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+		}
+	    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다. 
+	    {
+	       	bBlkLedOn = bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
+	    }
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+	    {
+	        bBlkLedOn = bBlkDutyOn;
+	    }		
 	}
-    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다. 
-    {
-//        bBlkLedOn = bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
-    }
-	else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
-    {
-        bBlkLedOn = bBlkDutyOn;
-    }
+
+
 
 
 // Blink 에 따른 LED 상태
@@ -932,6 +952,14 @@ void SaveGijunV(void)
 }
 
 
+void IsFirmwareTest(void)
+{
+	if (_DIP_SW1 == ON_DIPSW)
+		bFIRMWARE_TEST = TRUE;
+	else
+		bFIRMWARE_TEST = FALSE;
+}
+
 ///////////////////////////
 //   메인 함수 			  //
 ///////////////////////////
@@ -969,6 +997,7 @@ void main(void)
     {
         CLRWDT();
 
+		IsFirmwareTest();
 
         Loader_Func(); // 로더 관련 함수
 		EditLoader_SetA_ByMaxSetA(); // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 

@@ -101,7 +101,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 // 깜빡임 외부에서 제어 
 #define _IN_FU		PIN_IN_BLINK // FU			
 // 딥스위치 On이면 0값이다.  	
-#define _DIP_SW1		PIN_MODE_0 // 고광도용(20만,2만,2천) / 중광도용(주간2만, 야간2천) 					
+#define _DIP_SW1		PIN_MODE_0 // 					
 #define _DIP_SW2		PIN_MODE_1 // CDS-A(주간,저녁,야간) / CDS-B(야간)					
 #define _DIP_SW3		PIN_MODE_2 // GPS 사용 (FU 미사용) / GPS 미사용 (FU 사용)					
 #define _DIP_SW4		PIN_MODE_3 // Ext_GPS 사용 / IN_GPS 사용  					
@@ -269,6 +269,8 @@ bit bAdAvrFast;
 
 unsigned int AnalogValidTime = 0;
 
+
+bit bFIRMWARE_TEST;
 
 #define WRSIZE	12
 volatile const unsigned char  arSavedBuf[WRSIZE] = {0, };
