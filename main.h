@@ -255,7 +255,7 @@ bit bFUOn = 0;
 bit bBlkDutyOn = 0;
 
 bit bChanged_DTN;
-bit bSetModed;
+bit bSettingModed;
 
 // 5000이면 5V이다.
 unsigned int SetAVoltage=0; 
@@ -283,8 +283,8 @@ unsigned char L_Duty_Cnt = 0;
 unsigned char L_Duty_Rate = 0;
 
 
-typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_TWL = 2, SETMODE_NIG = 3} tag_SETMODE;
-tag_SETMODE		eSETMODE = 0, Bef_eSETMODE = 0;
+typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_TWL = 2, SETMODE_NIG = 3, SETMODE_ZERO_VOLTAGE_CHK = 5} tag_SETMODE;
+tag_SETMODE		eSETMODE = SETMODE_NONE, Bef_eSETMODE = SETMODE_NONE;
 
 
 // Current Set
@@ -329,15 +329,25 @@ unsigned int myTestTimerTx = 0;
 
 
 unsigned char BlkMode = 0;
-unsigned int GIJUN_V;
+unsigned int ZeroVoltage;
 unsigned int GIJUN_Timer = 0;
 
 unsigned char bSave_GIJUN;
 
 unsigned int OutLampWhenPowerOnTimer_12 = 0;
 unsigned int StTimer = 0;
-unsigned char bSave_GIJUN_MODE;
-unsigned char bbSave_GIJUN;
+unsigned char bZeroVoltageSaved;
+
+
+
+#define MYMODE_INIT				0
+#define MYMODE_SETTING			1
+#define MYMODE_NORMAL			2
+#define MYMODE_NONE_CDS			3
+#define MYMODE_NONE_SETTING		4
+
+unsigned char myMode;
+
 
 
 
@@ -369,8 +379,8 @@ extern unsigned int CompareSet_InCurrent(unsigned int duty,
 extern void ChkSwTwoTouch(void);
 extern void Chk232TxErr(void);
 extern void WriteProc(void);
-extern bit ReadSetValueWhenPowerOn(void);
-extern void ProcReadWrite(void);
+extern bit ReadSettingValue_PowerOn(void);
+extern void ReadWriteSettingValue(void);
 extern void ProcGPS(void);
 
 extern void SelDipSW(void);

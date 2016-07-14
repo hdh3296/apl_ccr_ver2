@@ -122,7 +122,7 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 
 
 
-			if (bSave_GIJUN_MODE)
+			if (eSETMODE == SETMODE_ZERO_VOLTAGE_CHK)
 				SUM_CNT = 100;				
 			else if (bAdAvrFast)
 				SUM_CNT = 10;

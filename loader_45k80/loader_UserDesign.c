@@ -49,7 +49,7 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define 	DFL_SET_stDUTYCYCLE_T			0
 #define 	DFL_SET_stDUTYCYCLE_N			0
 
-#define 	DFL_SET_GIJUN_V			0
+#define 	DFL_SET_GIJUN_V			600
 
 
 

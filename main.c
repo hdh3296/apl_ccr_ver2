@@ -550,7 +550,7 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
     if (bAD_A_IN_mV_Upd)
     {
         bAD_A_IN_mV_Upd = FALSE;
-        In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
+        In_Current = (GetInCurrent(AD_A_IN_mV));	// 현재 Setting 및 In 전류 값 가져오기
 
         sAPL[Sw_DayNig].Set_DutyCycle = DutyCycle = CompareSet_InCurrent(DutyCycle, Sw_DayNig, 0);
 
@@ -562,7 +562,7 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 
 
 // 현재(실제) APL LAPM On, Off 처리
-void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
+void OutAplLamp_Nomal(tag_CurDay CurDayNig)
 {
     unsigned int i;
 
@@ -570,10 +570,10 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
     {
         
 
-		if (bChanged_DTN || bSetModed)
+		if (bChanged_DTN || bSettingModed)
 		{
 			bChanged_DTN = FALSE;
-			bSetModed = FALSE;
+			bSettingModed = FALSE;
 			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.			
 		}
 		
@@ -636,20 +636,20 @@ void Chk232TxErr(void)
 
 
 
-ULONG GetInCurrent(ULONG CurA_IN_mV)
+unsigned int GetInCurrent(unsigned int CurA_IN_mV)
 {
     ULONG In_Current;
 
-    if (CurA_IN_mV >= GIJUN_V)
-        In_Current = (((ULONG)CurA_IN_mV - GIJUN_V) * 1000) / 60;  // (630 - 600)/60 * 1000 = 500 mA
+    if (CurA_IN_mV >= ZeroVoltage)
+        In_Current = (((ULONG)CurA_IN_mV - ZeroVoltage) * 1000) / 60;  // (630 - 600)/60 * 1000 = 500 mA
     else
         In_Current = 0;
 
-    return In_Current;
+    return (unsigned int)In_Current;
 }
 
 // 저장된 값 Read(Load) /////////////////////////////////////
-bit ReadSetValueWhenPowerOn(void)
+bit ReadSettingValue_PowerOn(void)
 {
     unsigned char     i;
     static   bit     ret;
@@ -674,8 +674,8 @@ bit ReadSetValueWhenPowerOn(void)
     sAPL[TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
     sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
 
-	GIJUN_V = cF_SET_F_SET_GIJUN_V;
-	bSave_GIJUN_MODE = cF_bSave_GIJUN;
+	ZeroVoltage = cF_SET_F_SET_GIJUN_V;
+	bZeroVoltageSaved = cF_bSave_GIJUN;
 
     ret = TRUE;
     return(ret);
@@ -683,7 +683,7 @@ bit ReadSetValueWhenPowerOn(void)
 }
 
 
-void ProcReadWrite(void)
+void ReadWriteSettingValue(void)
 {
 // Read !!!
     // LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
@@ -732,14 +732,12 @@ void ProcReadWrite(void)
                 iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
                 FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
             }
-
-			if (bbSave_GIJUN)
+			else if (Bef_eSETMODE == SETMODE_ZERO_VOLTAGE_CHK)
 			{
-				bbSave_GIJUN = FALSE;
-				iSR_IntData(F_SET_GIJUN_V) = GIJUN_V;
+				iSR_IntData(F_SET_GIJUN_V) = ZeroVoltage;
 				FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
 
-				cSR_ByteData(F_bSave_GIJUN) = bSave_GIJUN_MODE;
+				cSR_ByteData(F_bSave_GIJUN) = bZeroVoltageSaved = FALSE;
 				FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));				
 			}
 
@@ -973,13 +971,13 @@ void ViewCurData(void)
 	UserRam_8[ViewBlk] = bBlkLedOn;
 }
 
-void SaveGijunV(void)
+void SaveZeroVoltage(void)
 {
 	
 	if (bAD_A_IN_mV_Upd)
 	{
 		bAD_A_IN_mV_Upd = FALSE;
-		GIJUN_V = AD_A_IN_mV;
+		ZeroVoltage = AD_A_IN_mV;
 	}
 }
 
@@ -992,6 +990,50 @@ void IsFirmwareTest(void)
 	else
 		bFIRMWARE_TEST = FALSE;
 }
+
+
+
+
+uint8_t GetUserSystemStatus(void)
+{
+	uint8_t message; 
+
+
+	if (bZeroVoltageSaved == FALSE)
+	{
+		message = 18;
+	}
+	else if (myMode == MYMODE_SETTING)
+	{
+		message = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
+	}
+	else if (myMode == MYMODE_NORMAL)
+	{
+
+		// 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
+		if (CurD_T_N == DAY) message = 2;
+		else if (CurD_T_N == TWL) message = 3;
+		else if (CurD_T_N == NIG) message = 4;
+
+	}
+	else if (myMode == MYMODE_NONE_CDS)
+	{
+		message = 8;
+	}
+	else if (myMode == MYMODE_NONE_SETTING)	
+	{
+		// 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
+		if (CurD_T_N == DAY) message = 5;
+		else if (CurD_T_N == TWL) message = 6;
+		else if (CurD_T_N == NIG) message = 7;
+	}
+
+	return message;
+
+}
+
+
+
 
 ///////////////////////////
 //   메인 함수 			  //
@@ -1018,15 +1060,17 @@ void main(void)
     TMR0IE = 1;
     SWDTEN = 1;  // Software Controlled Watchdog Timer Enable bit / 1 = Watchdog Timer is on
 
+
+	myMode = MYMODE_INIT;
+
     ret = FALSE;
-    ReadSetValueWhenPowerOn();
+    ReadSettingValue_PowerOn();
 	OutLampWhenPowerOn();
 
 ////////////////////////////////////////////////////////////////
 
 	bSetModeReady = TRUE;
-	bbSave_GIJUN = FALSE;
-	bSave_GIJUN_MODE = FALSE;
+
 
 	ZeroTimer = 0;
 	CurTotalGms = 0;
@@ -1051,7 +1095,7 @@ void main(void)
 		EditLoader_SetA_ByMaxSetA(); // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 
 
 
-		ProcReadWrite(); // 쓰기 / 읽기 처리 
+		ReadWriteSettingValue(); // 쓰기 / 읽기 처리 
 
 
 		ProcDAY_TWL_NIG(); // CDS 낮, 박명, 밤 처리          
@@ -1060,12 +1104,9 @@ void main(void)
         ProcGPS(); // GPS 시리얼 통신 및 펄스 수신 처리
 
 
-        ProcBlink(CurD_T_N); // BLink모드별 블링크 처리        
-
+        ProcBlink(CurD_T_N); // BLink모드별 블링크 처리    
 
               
-        
-
 		ViewCurData();
 		
 
@@ -1075,7 +1116,7 @@ void main(void)
 		SaveCANRxData();
 		LoadCANTxData(CanCmd);	
 
-
+		UserSystemStatus = GetUserSystemStatus();
 		
 
 		
@@ -1083,20 +1124,18 @@ void main(void)
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
         
         if (eSETMODE) // 셋팅 모드 !!!
-        {			
+        {	
+
+			myMode = MYMODE_SETTING;
             
-			OutPWM(cF_SET_stDUTYCYCLE_N);
-			if (eSETMODE == 4)
+			if (eSETMODE == SETMODE_ZERO_VOLTAGE_CHK)
 			{
 				_LAMP_ON = FALSE;
 				OutPWM(0);
-				bSave_GIJUN_MODE = TRUE;
-				SaveGijunV();				
-				bbSave_GIJUN = TRUE;
+				SaveZeroVoltage();				
 			}
-			else
+			else if (bZeroVoltageSaved)
 			{
-				bSave_GIJUN_MODE = FALSE;
 		        if (bSetModeReady)
 		        {
 					bSetModeReady = FALSE;
@@ -1109,37 +1148,28 @@ void main(void)
 		        {
 					_LAMP_ON = TRUE;
 		            OutAplLamp_WhenSetMode(eSETMODE - 1);
-		        }
-
-		        UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-		        		
+		        }       		
 			}   
-			bSetModed = TRUE;	
+			bSettingModed = TRUE;	
 
         }
 		else if (CurD_T_N == NONE)
 		{
+			myMode = MYMODE_NONE_CDS;
+			
 			_LAMP_ON = FALSE; // LAMP OFF
 			OutPWM(cF_SET_stDUTYCYCLE_N);
-			UserSystemStatus = 8;
 		}
         else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 
         {
-			bSave_GIJUN_MODE = FALSE;
-            OutAplLamp_WhenNomalMode(CurD_T_N);
+			myMode = MYMODE_NORMAL;
+			
+            OutAplLamp_Nomal(CurD_T_N);
             bSetModeReady = TRUE;
-
-            // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-            if (CurD_T_N == 0) UserSystemStatus = 2;
-            else if (CurD_T_N == 1) UserSystemStatus = 3;
-            else if (CurD_T_N == 2) UserSystemStatus = 4;
         }
         else
         {
-            // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-            if (CurD_T_N == 0) UserSystemStatus = 5;
-            else if (CurD_T_N == 1) UserSystemStatus = 6;
-            else if (CurD_T_N == 2) UserSystemStatus = 7;
+			myMode = MYMODE_NONE_SETTING;	
         }
 		
     } // end while(1)

@@ -35,7 +35,7 @@ const uint8_t StatusMessage[][17]	={
                                       	"------------    ",      // 15                               		                                  
 										"Emgency Stop    ",      // 16                               
 										"GOV Error       ",      // 17                               
-										"MotorOverheat   ",      // 18                                                                           
+										"Not ZeroCur Set ",      // 18                                                                           
                                     	};                                      
 
 // 메뉴 이름 

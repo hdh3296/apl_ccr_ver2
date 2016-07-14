@@ -49,6 +49,6 @@ bit bSettingMode = FALSE;
 extern void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle);
 extern ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurD_T_N);
 extern void OutAplLamp_WhenSetMode(tag_CurDay CurD_T_N);
-extern ULONG GetInCurrent(ULONG AD_A_IN_mV);
+extern unsigned int GetInCurrent(unsigned int AD_A_IN_mV);
 
 #endif
