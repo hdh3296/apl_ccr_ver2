@@ -243,13 +243,15 @@ bit		bNightDay = 0;
 bit		bBlkLedOn = 0;
 bit 	bBefBlk_LedOn = 0;
 
-
+bit bInGPSConnect = FALSE;
 
 unsigned int OutLampWhenPowerOnTimer = 0;
 unsigned char CDS_DayTimer = 0;
 unsigned char CDS_NightTimer = 0;
 unsigned char IN_BLK_Timer = 0;
 
+
+unsigned int Com2RxStatusTimer = 0;
 
 bit bFUOn = 0;
 bit bBlkDutyOn = 0;

@@ -228,6 +228,7 @@ bit IsBlk_DutyOn_ByTimer(void)
 
 	if (BlkMode == BM_Master_GPS_IN) // 내부 지피에스 
 	{
+
 	    if (bPPS_Edge && bPPS_On) // 1초마다 On 
 	    {
 	        bPPS_Edge = FALSE;
@@ -241,6 +242,7 @@ bit IsBlk_DutyOn_ByTimer(void)
 	            Ghour = rx_hour;
 	        }
 	    }
+		
 	}	
 	else if (BlkMode == BM_Master_GPS_EXT) // 외부 지피에스 
 	{
@@ -307,6 +309,9 @@ void ProcGpsRx2Data(void)
 
     if (Com2RxBuffer[18] == 'A') // GPS 수신 GOOD !
     {
+		bInGPSConnect = TRUE;
+		Com2RxStatusTimer = 0;
+		
         _LED_GPS = !_LED_GPS; // GPS 수신 GOOD 상태 LED
         i = (Com2RxBuffer[7] - 0x30) * 10;
         i = (Com2RxBuffer[8] - 0x30) + i;
@@ -758,8 +763,16 @@ void ProcGPS(void)
         ProcGpsRx2Data(); // 시간값을 가져온다.
     }
 
+
 // GPS Puls 체크
-    ChkGpsPPS1();
+	if (bInGPSConnect)
+	{
+    	ChkGpsPPS1();
+	}
+
+
+	if (Com2RxStatusTimer > 5000)
+		bInGPSConnect = FALSE; 
 
 }
 
@@ -1051,7 +1064,7 @@ void InitInTimer(void)
 
 	ZeroTimer = (ULONG)((ULONG)Ghour * (ULONG)3600000);
 	ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gmin  * (ULONG)60000);
-	ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gsec  * (ULONG)1000); // 시,분,초를 다 합쳐서 미리세크로 환산 한 값		 
+	ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gsec  * (ULONG)1000); // 시,분,초를 다 합쳐서 미리세크로 환산 한 값
 }
 
 
@@ -1248,6 +1261,9 @@ void interrupt isr(void)
 		{
 			myTestTimerTx = 0;			
 		}
+
+		if (Com2RxStatusTimer < 0xffff)
+			Com2RxStatusTimer++;
 
 
     }
