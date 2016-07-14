@@ -268,7 +268,7 @@ uint16_t Group1_Menu_Status_Set(void)
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
 
 	MenuStatus[UserMenuSerialNm].M_EditMsgAddr= (uint8_t *)MsgSelModeSel;
-	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=4; // °¹¼ö 
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=5; // °¹¼ö 
 
 	UserMenuSerialNm++;
 	sub_gr++;

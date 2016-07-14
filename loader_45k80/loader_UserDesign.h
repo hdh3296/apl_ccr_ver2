@@ -25,18 +25,18 @@ const uint8_t StatusMessage[][17]	={
                                      	"Day Not Set     ",      // 5                               
                                      	"Twilight Not Set",      // 6                               
                                      	"Night Not Set   ",      // 7                               
-                                     	"CDS Error       ",      //000                               
-                                     	"Right-Down      ",      //000                               
-                                     	"Down            ",      //000                               
-                                     	"Up              ",      //000
-                                     	"Basket Home     ",      //000                               
-                                     	"Inspect Stop    ",      //000                               
-                                     	"InverterStop    ",      //001                               
-                                      	"INVFloorStop    ",      //002                               		                                  
-										"Emgency Stop    ",      //003                               
-										"GOV Error       ",      //004                               
-										"MotorOverheat   ",      //005                                                                           
-                                    	};                                       
+                                     	"CDS Error       ",      // 8                              
+                                     	"Right-Down      ",      // 9                               
+                                     	"Down            ",      // 10                               
+                                     	"Up              ",      // 11
+                                     	"Init            ",      // 12                               
+                                     	"ON____          ",      // 13                               
+                                     	"___OFF          ",      // 14                               
+                                      	"------------    ",      // 15                               		                                  
+										"Emgency Stop    ",      // 16                               
+										"GOV Error       ",      // 17                               
+										"MotorOverheat   ",      // 18                                                                           
+                                    	};                                      
 
 // 메뉴 이름 
 const uint8_t GroupLineMessage[][17]={
@@ -106,8 +106,10 @@ const uint8_t MsgSelModeSel[][17]={
                                     "Running Mode  ",// 0  
                                     "Set DAY Mode  ",// 1 
                                     "Set TWL Mode  ",// 2  
-                                    "Set NIG Mode  ",//3  
+                                    "Set NIG Mode  ",// 3
+                                    "Set GIJUN     ",// 4
                   			};
+
 
 const uint8_t MsgSelEveryOnSetD[][17]={
                                     "Flashing      ",// 0  

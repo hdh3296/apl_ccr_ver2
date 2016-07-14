@@ -121,8 +121,11 @@ bit	IsUdtAd(UINT* arInPut_mV, UCHAR* arIs_AdUpd, UCHAR AdChSel)
 			SumCnt++;
 
 
-			if (bAdAvrFast)
-				SUM_CNT = 3;
+
+			if (bSave_GIJUN_MODE)
+				SUM_CNT = 100;				
+			else if (bAdAvrFast)
+				SUM_CNT = 10;
 			else if (eSETMODE) 
 				SUM_CNT = 10;
 			else 

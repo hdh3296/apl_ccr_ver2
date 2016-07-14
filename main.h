@@ -334,6 +334,11 @@ unsigned int GIJUN_Timer = 0;
 
 unsigned char bSave_GIJUN;
 
+unsigned int OutLampWhenPowerOnTimer_12 = 0;
+unsigned int StTimer = 0;
+unsigned char bSave_GIJUN_MODE;
+unsigned char bbSave_GIJUN;
+
 
 
 
@@ -372,6 +377,7 @@ extern void SelDipSW(void);
 extern bit SaveCANRxData(void);
 extern bit LoadCANTxData(unsigned char CanCmd);
 extern void ViewCurData(void);
+extern void ProcAD(void);
 
 
 

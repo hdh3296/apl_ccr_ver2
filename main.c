@@ -38,7 +38,7 @@ void    InitPort(void)
     LATA = 0xff;
     LATB = 0xff;
     LATC = 0xff;
-    LATD = 0xff;
+    LATD = 0xfe;
     LATE = 0xff;
 
     PIN_A_IN_TRIS = 1;
@@ -128,6 +128,69 @@ void LedBlinkModeInit(void)
 	    OnTime[i] = 0x0;
 	    LedCycle_Msec = 0;
 	}
+}
+
+
+
+// 딥스위치 설정에 따라서 GPS에 의한 내부 타이머를 사용하여 블링크를 할지 
+// FU에 의해서 블링크를 할지 결정 된다. 
+void ProcBlink(tag_CurDay CurDayNig)
+{
+// 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.
+// 만일, 딥스위치 3번에 on 되어 있으면 2번 스위치 무시하고 외부 CAN GPS 보드 사용
+
+	if (bFIRMWARE_TEST)
+	{
+		bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer);
+
+		if ((sAPL[CurDayNig].bEveryOnSet) || bFUOn)
+		{
+			bBlkLedOn = TRUE;
+		}
+		else if (BlkMode == BM_Slave_BLK) // slave
+		{
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+		}
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+	    {
+	        bBlkLedOn = bBlkDutyOn;
+	    }	
+	}
+	else
+	{
+		if (sAPL[CurDayNig].bEveryOnSet)
+		{
+			bBlkLedOn = TRUE;
+		}
+		else if (BlkMode == BM_Slave_BLK) // slave
+		{
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+		}
+	    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다. 
+	    {
+	       	bBlkLedOn = bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
+	    }
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+	    {
+	        bBlkLedOn = bBlkDutyOn;
+	    }		
+	}
+
+
+
+
+// Blink 에 따른 LED 상태
+    if (bBlkLedOn)		_LED_BLK = ON_LED; // Run 상태 LED On
+    else				_LED_BLK = OFF_LED; // Run 상태 LED Off
+
+// 블링크 LED 상태가 변했으면 캔 tx 
+
+	if (bBlkLedOn != bBefBlk_LedOn)
+	{
+		bBefBlk_LedOn = bBlkLedOn;
+		bCanTxAct = TRUE;
+		CanCmd = CMD_BLK_EDGE;	
+	}	
 }
 
 
@@ -370,18 +433,43 @@ void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle)
 
 // 최초 전원 On시에 셋팅된 값을 토대로 APL 램프의 불을 밝힌다.
 void OutLampWhenPowerOn(void)
-{
-    do
-    {
-        BefD_T_N = CurD_T_N = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 저장
-        DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;
-        _LAMP_ON = TRUE;
-        OutPWM(DutyCycle);
+{	
+	static unsigned char cnt_aaa = 0;
+	
+	OutLampWhenPowerOnTimer_12 = 0;
+	CurD_T_N = NONE;
+	do
+	{
+		CLRWDT();
 
-        CLRWDT();
-    }
-    while (OutLampWhenPowerOnTimer < 100);
+		BefD_T_N = CurD_T_N = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 저장       
+        if (CurD_T_N < NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
+
+		_LAMP_ON = FALSE;
+		OutPWM(20);
+		Loader_Func();
+		UserSystemStatus = 15;	
+		
+	}while((OutLampWhenPowerOnTimer_12 < 2000) || (CurD_T_N == NONE));
+
+
+	StTimer = 0;	
+	do 
+	{
+		CLRWDT();
+
+		Loader_Func();
+		UserSystemStatus = 12;	
+
+		_LAMP_ON = TRUE;
+		OutPWM(DutyCycle);
+
+		
+	}while(StTimer < 1000);	
+
+	
 }
+
 
 
 ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight)
@@ -410,7 +498,7 @@ void CurGapProc(unsigned char DayNig)
 		curgap = setcur - In_Current;
 	}
 
-	if (curgap > 100)
+	if (curgap > 20)
 	{
 		bAdAvrFast = TRUE;
 	}
@@ -480,7 +568,7 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
 
     if (bBlkLedOn) // Blink Led 가 On 일 때
     {
-        _LAMP_ON = TRUE; // LAMP ON
+        
 
 		if (bChanged_DTN || bSetModed)
 		{
@@ -497,10 +585,12 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
             if (sAPL[CurDayNig].Set_Current > JUNG_GIJUN)
                 DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
             else
-                DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 100);
+                DutyCycle = CompareSet_InCurrent(DutyCycle, CurDayNig, 0);
 
 			sAPL[CurDayNig].Set_DutyCycle = DutyCycle;
         }
+		
+		_LAMP_ON = TRUE; // LAMP ON
         OutPWM(DutyCycle);
 
 
@@ -517,6 +607,7 @@ void OutAplLamp_WhenNomalMode(tag_CurDay CurDayNig)
         if (CurDayNig == DAY) OutPWM(cF_SET_stDUTYCYCLE_D);
 		else if(CurDayNig == TWL) OutPWM(cF_SET_stDUTYCYCLE_T);
 		else if(CurDayNig == NIG) OutPWM(cF_SET_stDUTYCYCLE_N);
+		else OutPWM(cF_SET_stDUTYCYCLE_N);
     }
 }
 
@@ -565,6 +656,11 @@ bit ReadSetValueWhenPowerOn(void)
 
     ret = FALSE;
 
+	Blk_1Min_Cnt = cF_BLK_1MIN_CNT; // 1분 기준 몇 회 깜빡일지
+    Blk_DutyRate = cF_BLK_DUTYRATE; // 1회 깜빡임에 대하여 On 비율 (%)
+    if (Blk_1Min_Cnt >= 1) Blk_DutyCycle = (60000 / (Blk_1Min_Cnt)); // 1회 깜빡임 싸이클 미리세크 
+    Blk_DutyTime = (Blk_DutyCycle * Blk_DutyRate) / 100;		
+
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
     sAPL[DAY].Set_Current = cF_SETCURR_DAY;
     sAPL[TWL].Set_Current = cF_SETCURR_TWL;
@@ -579,7 +675,7 @@ bit ReadSetValueWhenPowerOn(void)
     sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
 
 	GIJUN_V = cF_SET_F_SET_GIJUN_V;
-	bSave_GIJUN = cF_bSave_GIJUN;
+	bSave_GIJUN_MODE = cF_bSave_GIJUN;
 
     ret = TRUE;
     return(ret);
@@ -637,16 +733,16 @@ void ProcReadWrite(void)
                 FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
             }
 
-			if (!bSave_GIJUN)
+			if (bbSave_GIJUN)
 			{
-				bSave_GIJUN = TRUE;
+				bbSave_GIJUN = FALSE;
 				iSR_IntData(F_SET_GIJUN_V) = GIJUN_V;
-            	FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
+				FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
 
-				cSR_ByteData(F_bSave_GIJUN) = bSave_GIJUN;
-            	FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));
-				
+				cSR_ByteData(F_bSave_GIJUN) = bSave_GIJUN_MODE;
+				FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));				
 			}
+
         }
         Bef_eSETMODE = eSETMODE;
     }
@@ -669,66 +765,7 @@ void ProcGPS(void)
 
 }
 
-// 딥스위치 설정에 따라서 GPS에 의한 내부 타이머를 사용하여 블링크를 할지 
-// FU에 의해서 블링크를 할지 결정 된다. 
-void ProcBlink(tag_CurDay CurDayNig)
-{
-// 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.
-// 만일, 딥스위치 3번에 on 되어 있으면 2번 스위치 무시하고 외부 CAN GPS 보드 사용
 
-	if (bFIRMWARE_TEST)
-	{
-		bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer);
-
-		if ((sAPL[CurDayNig].bEveryOnSet) || bFUOn)
-		{
-			bBlkLedOn = TRUE;
-		}
-		else if (BlkMode == BM_Slave_BLK) // slave
-		{
-			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
-		}
-		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
-	    {
-	        bBlkLedOn = bBlkDutyOn;
-	    }	
-	}
-	else
-	{
-		if (sAPL[CurDayNig].bEveryOnSet)
-		{
-			bBlkLedOn = TRUE;
-		}
-		else if (BlkMode == BM_Slave_BLK) // slave
-		{
-			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
-		}
-	    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다. 
-	    {
-	       	bBlkLedOn = bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
-	    }
-		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
-	    {
-	        bBlkLedOn = bBlkDutyOn;
-	    }		
-	}
-
-
-
-
-// Blink 에 따른 LED 상태
-    if (bBlkLedOn)		_LED_BLK = ON_LED; // Run 상태 LED On
-    else				_LED_BLK = OFF_LED; // Run 상태 LED Off
-
-// 블링크 LED 상태가 변했으면 캔 tx 
-
-	if (bBlkLedOn != bBefBlk_LedOn)
-	{
-		bBefBlk_LedOn = bBlkLedOn;
-		bCanTxAct = TRUE;
-		CanCmd = CMD_BLK_EDGE;	
-	}	
-}
 
 // CDS 낮, 저녁, 밤 체크 기능
 void ProcDAY_TWL_NIG(void)
@@ -938,18 +975,14 @@ void ViewCurData(void)
 
 void SaveGijunV(void)
 {
-	GIJUN_Timer = 0;
-	do
-	{	
-		if (bAD_A_IN_mV_Upd)
-		{
-			bAD_A_IN_mV_Upd = FALSE;
-			GIJUN_V = AD_A_IN_mV;
-		}
-		
-		CLRWDT();
-	}while(GIJUN_Timer < 3000);
+	
+	if (bAD_A_IN_mV_Upd)
+	{
+		bAD_A_IN_mV_Upd = FALSE;
+		GIJUN_V = AD_A_IN_mV;
+	}
 }
+
 
 
 void IsFirmwareTest(void)
@@ -986,16 +1019,31 @@ void main(void)
     SWDTEN = 1;  // Software Controlled Watchdog Timer Enable bit / 1 = Watchdog Timer is on
 
     ret = FALSE;
-    ret = ReadSetValueWhenPowerOn();
-    if (ret)	OutLampWhenPowerOn();
+    ReadSetValueWhenPowerOn();
+	OutLampWhenPowerOn();
+
 ////////////////////////////////////////////////////////////////
 
 	bSetModeReady = TRUE;
+	bbSave_GIJUN = FALSE;
+	bSave_GIJUN_MODE = FALSE;
 
+	ZeroTimer = 0;
+	CurTotalGms = 0;
+	Gms60000 = 0;
+	Ghour	= 0;
+	Gmin	= 0;
+	Gsec	= 0;		 
+	Gm1 	= 301;
 
     while (1)
     {
         CLRWDT();
+
+		
+		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
+		CurGapProc(CurD_T_N);
+		ProcAD(); // AD 처리   
 
 		IsFirmwareTest();
 
@@ -1015,7 +1063,7 @@ void main(void)
         ProcBlink(CurD_T_N); // BLink모드별 블링크 처리        
 
 
-        ProcAD(); // AD 처리         
+              
         
 
 		ViewCurData();
@@ -1028,7 +1076,7 @@ void main(void)
 		LoadCANTxData(CanCmd);	
 
 
-		CurGapProc(CurD_T_N);
+		
 
 		
 		
@@ -1037,35 +1085,47 @@ void main(void)
         if (eSETMODE) // 셋팅 모드 !!!
         {			
             
-            if (bSetModeReady)
-            {
-				bSetModeReady = FALSE;
+			OutPWM(cF_SET_stDUTYCYCLE_N);
+			if (eSETMODE == 4)
+			{
+				_LAMP_ON = FALSE;
+				OutPWM(0);
+				bSave_GIJUN_MODE = TRUE;
+				SaveGijunV();				
+				bbSave_GIJUN = TRUE;
+			}
+			else
+			{
+				bSave_GIJUN_MODE = FALSE;
+		        if (bSetModeReady)
+		        {
+					bSetModeReady = FALSE;
 
-				_LAMP_ON = TRUE;
-                DutyCycle = 0;
-                OutPWM(DutyCycle);
+					_LAMP_ON = TRUE;
+		            DutyCycle = 0;
+		            OutPWM(DutyCycle);
+		        }
+		        else
+		        {
+					_LAMP_ON = TRUE;
+		            OutAplLamp_WhenSetMode(eSETMODE - 1);
+		        }
 
-				if (!bSave_GIJUN)
-				{
-					SaveGijunV();
-				}
-            }
-            else
-            {
-				_LAMP_ON = TRUE;
-                OutAplLamp_WhenSetMode(eSETMODE - 1);
-            }
+		        UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
+		        		
+			}   
+			bSetModed = TRUE;	
 
-            UserSystemStatus = 1; // 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-            bSetModed = TRUE;
         }
 		else if (CurD_T_N == NONE)
 		{
-			OutPWM(0);
+			_LAMP_ON = FALSE; // LAMP OFF
+			OutPWM(cF_SET_stDUTYCYCLE_N);
 			UserSystemStatus = 8;
 		}
         else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 
         {
+			bSave_GIJUN_MODE = FALSE;
             OutAplLamp_WhenNomalMode(CurD_T_N);
             bSetModeReady = TRUE;
 
@@ -1106,8 +1166,12 @@ void interrupt isr(void)
         Com1SerialTime++;
         Com2SerialTime++;
 
-        if (OutLampWhenPowerOnTimer < 1000)
+        if (OutLampWhenPowerOnTimer < 0xffff)
             OutLampWhenPowerOnTimer++;
+		if (OutLampWhenPowerOnTimer_12 < 0xffff)
+        	OutLampWhenPowerOnTimer_12++;
+		if (StTimer < 0xffff)
+        	StTimer++;			
 
         if (AnalogValidTime < 200)
             AnalogValidTime++;
