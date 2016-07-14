@@ -435,9 +435,9 @@ void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle)
 void OutLampWhenPowerOn(void)
 {	
 	static unsigned char cnt_aaa = 0;
-	
-	OutLampWhenPowerOnTimer_12 = 0;
+
 	CurD_T_N = NONE;
+	OutLampWhenPowerOnTimer_12 = 0;	
 	do
 	{
 		CLRWDT();
@@ -450,7 +450,7 @@ void OutLampWhenPowerOn(void)
 		Loader_Func();
 		UserSystemStatus = 15;	
 		
-	}while((OutLampWhenPowerOnTimer_12 < 2000) || (CurD_T_N == NONE));
+	}while((OutLampWhenPowerOnTimer_12 < 200) || (CurD_T_N == NONE));
 
 
 	StTimer = 0;	
@@ -458,8 +458,8 @@ void OutLampWhenPowerOn(void)
 	{
 		CLRWDT();
 
-		Loader_Func();
-		UserSystemStatus = 12;	
+		//Loader_Func();
+		//UserSystemStatus = 12;	
 
 		_LAMP_ON = TRUE;
 		OutPWM(DutyCycle);
@@ -737,7 +737,7 @@ void ReadWriteSettingValue(void)
 				iSR_IntData(F_SET_GIJUN_V) = ZeroVoltage;
 				FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
 
-				cSR_ByteData(F_bSave_GIJUN) = bZeroVoltageSaved = FALSE;
+				cSR_ByteData(F_bSave_GIJUN) = bZeroVoltageSaved = TRUE;
 				FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));				
 			}
 
@@ -1033,6 +1033,26 @@ uint8_t GetUserSystemStatus(void)
 }
 
 
+void InitInTimer(void)
+{
+	unsigned long tmp; 
+	
+	Ghour	= 0;
+
+	tmp = Blk_DutyTime / 60000;
+	Gmin	= (unsigned char)tmp;
+
+	tmp = Blk_DutyTime % 60000;
+	Gsec = (unsigned char)(tmp / 1000);
+
+	tmp = tmp % 1000;
+	Gm1 = (unsigned int)(tmp);
+
+
+	ZeroTimer = (ULONG)((ULONG)Ghour * (ULONG)3600000);
+	ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gmin  * (ULONG)60000);
+	ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gsec  * (ULONG)1000); // 시,분,초를 다 합쳐서 미리세크로 환산 한 값		 
+}
 
 
 ///////////////////////////
@@ -1066,19 +1086,10 @@ void main(void)
     ret = FALSE;
     ReadSettingValue_PowerOn();
 	OutLampWhenPowerOn();
-
 ////////////////////////////////////////////////////////////////
 
-	bSetModeReady = TRUE;
+	InitInTimer();
 
-
-	ZeroTimer = 0;
-	CurTotalGms = 0;
-	Gms60000 = 0;
-	Ghour	= 0;
-	Gmin	= 0;
-	Gsec	= 0;		 
-	Gm1 	= 301;
 
     while (1)
     {
@@ -1116,10 +1127,7 @@ void main(void)
 		SaveCANRxData();
 		LoadCANTxData(CanCmd);	
 
-		UserSystemStatus = GetUserSystemStatus();
-		
-
-		
+		UserSystemStatus = GetUserSystemStatus();		
 		
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
         
@@ -1136,9 +1144,9 @@ void main(void)
 			}
 			else if (bZeroVoltageSaved)
 			{
-		        if (bSetModeReady)
+		        if (bSetModeReady == FALSE)
 		        {
-					bSetModeReady = FALSE;
+					bSetModeReady = TRUE;
 
 					_LAMP_ON = TRUE;
 		            DutyCycle = 0;
@@ -1153,24 +1161,30 @@ void main(void)
 			bSettingModed = TRUE;	
 
         }
-		else if (CurD_T_N == NONE)
+		else
 		{
-			myMode = MYMODE_NONE_CDS;
+			bSetModeReady = FALSE;
 			
-			_LAMP_ON = FALSE; // LAMP OFF
-			OutPWM(cF_SET_stDUTYCYCLE_N);
+			if (CurD_T_N == NONE)
+			{
+				myMode = MYMODE_NONE_CDS;
+				
+				_LAMP_ON = FALSE; // LAMP OFF
+				OutPWM(cF_SET_stDUTYCYCLE_N);
+			}
+	        else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 (동작 모드) 
+	        {
+				myMode = MYMODE_NORMAL;
+				
+	            OutAplLamp_Nomal(CurD_T_N);
+	            
+	        }
+	        else
+	        {
+				myMode = MYMODE_NONE_SETTING;	
+	        }			
 		}
-        else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 
-        {
-			myMode = MYMODE_NORMAL;
-			
-            OutAplLamp_Nomal(CurD_T_N);
-            bSetModeReady = TRUE;
-        }
-        else
-        {
-			myMode = MYMODE_NONE_SETTING;	
-        }
+
 		
     } // end while(1)
 }

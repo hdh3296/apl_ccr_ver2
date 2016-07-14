@@ -35,7 +35,7 @@ const uint8_t StatusMessage[][17]	={
                                       	"------------    ",      // 15                               		                                  
 										"Emgency Stop    ",      // 16                               
 										"GOV Error       ",      // 17                               
-										"Not ZeroCur Set ",      // 18                                                                           
+										"Not Zero_Cur Set",      // 18                                                                           
                                     	};                                      
 
 // 메뉴 이름 
@@ -62,7 +62,7 @@ const uint8_t GroupLineMessage[][17]={
                                     "View:DuCy_D_SVal",// 9  // group1
                                     "View:DuCy_T_SVal",// 10 
                                     "View:DuCy_N_SVal",// 11  
-                                    "View:GIJUN_Volt ",// 12  
+                                    "View:ZeroCur_mV ",// 12  
                                     "BAS1:VIB_TIME   ",// 13  
                                     "BAS1:REPEAT_CNT ",// 14  
                                     "BAS1:Not Use1   ",// 15  
@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "v2.4.0.8        ", // 버전 정보 표시 
+                                    "v2.5.0.9        ", // 버전 정보 표시 
                   			};
 
 
@@ -107,7 +107,7 @@ const uint8_t MsgSelModeSel[][17]={
                                     "Set DAY Mode  ",// 1 
                                     "Set TWL Mode  ",// 2  
                                     "Set NIG Mode  ",// 3
-                                    "Set GIJUN     ",// 4
+                                    "Set Zero_Cur  ",// 4
                   			};
 
 
