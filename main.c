@@ -476,7 +476,7 @@ void OutLampWhenPowerOn(void)
 		Loader_Func();
 		UserSystemStatus = 15;	
 		
-	}while((OutLampWhenPowerOnTimer_12 < 200) || (CurD_T_N >= NONE));
+	}while(OutLampWhenPowerOnTimer_12 < 300);
 
 
 	StTimer = 0;	
