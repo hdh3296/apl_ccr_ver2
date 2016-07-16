@@ -448,10 +448,10 @@ void OutLampWhenPowerOn(void)
 	CurD_T_N = NONE;	
 	CAN_RcvBuf[1] = CurD_T_N;
 	cRxCurD_T_N = CurD_T_N;
+	
 	do
 	{
 		CLRWDT();
-
 		
 		ProcDAY_TWL_NIG();
 		BefD_T_N = CurD_T_N; 
@@ -461,8 +461,12 @@ void OutLampWhenPowerOn(void)
 		SaveCANRxData();
 		if (CurD_T_N < NONE)
 		{
-			CanCmd = CMD_PWON;
-			LoadCANTxData(CanCmd);
+			if (myAdr == MASTER)
+			{
+				bCanTxAct = TRUE;
+				CanCmd = CMD_PWON;
+				LoadCANTxData(CanCmd);
+			}
 		}
 		
         if (CurD_T_N < NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
@@ -482,8 +486,13 @@ void OutLampWhenPowerOn(void)
 
 		SelDipSW();
 		SaveCANRxData();
-		CanCmd = CMD_PWON;
-		LoadCANTxData(CanCmd);	
+		if (myAdr == MASTER)
+		{
+			bCanTxAct = TRUE;
+			CanCmd = CMD_PWON;
+			LoadCANTxData(CanCmd);
+		}
+
 
 		_LAMP_ON = TRUE;
 		OutPWM(DutyCycle);
