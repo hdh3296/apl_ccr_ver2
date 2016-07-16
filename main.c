@@ -443,11 +443,28 @@ void OutLampWhenPowerOn(void)
 
 	CurD_T_N = NONE;
 	OutLampWhenPowerOnTimer_12 = 0;	
+	CanCmd = CMD_NONE;
+
+	CurD_T_N = NONE;	
+	CAN_RcvBuf[1] = CurD_T_N;
+	cRxCurD_T_N = CurD_T_N;
 	do
 	{
 		CLRWDT();
 
-		BefD_T_N = CurD_T_N = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 저장       
+		
+		ProcDAY_TWL_NIG();
+		BefD_T_N = CurD_T_N; 
+		bChanged_DTN = FALSE;
+
+		SelDipSW();
+		SaveCANRxData();
+		if (CurD_T_N < NONE)
+		{
+			CanCmd = CMD_PWON;
+			LoadCANTxData(CanCmd);
+		}
+		
         if (CurD_T_N < NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
 
 		_LAMP_ON = FALSE;
@@ -455,7 +472,7 @@ void OutLampWhenPowerOn(void)
 		Loader_Func();
 		UserSystemStatus = 15;	
 		
-	}while((OutLampWhenPowerOnTimer_12 < 200) || (CurD_T_N == NONE));
+	}while((OutLampWhenPowerOnTimer_12 < 200) || (CurD_T_N >= NONE));
 
 
 	StTimer = 0;	
@@ -463,8 +480,10 @@ void OutLampWhenPowerOn(void)
 	{
 		CLRWDT();
 
-		//Loader_Func();
-		//UserSystemStatus = 12;	
+		SelDipSW();
+		SaveCANRxData();
+		CanCmd = CMD_PWON;
+		LoadCANTxData(CanCmd);	
 
 		_LAMP_ON = TRUE;
 		OutPWM(DutyCycle);
@@ -912,7 +931,8 @@ bit SaveCANRxData(void)
 		}
 		else // 슬레이브 
 		{
-			if ((cRxCMD == CMD_BLK_EDGE) || (cRxCMD == CMD_TIMER_1SEC))
+			if ((cRxCMD == CMD_BLK_EDGE) || (cRxCMD == CMD_TIMER_1SEC)
+				|| (cRxCMD == CMD_PWON))
 			{
 				cRxCurD_T_N = CAN_RcvBuf[1]; // 낮,박명,밤 상태 
 				cRxBlkLedOn	= CAN_RcvBuf[2]; // 블링크(플래싱)시의 램프 On 상태 
@@ -925,6 +945,7 @@ bit SaveCANRxData(void)
 				if (cRxCMD == CMD_TIMER_1SEC) byr1Sec_TimerUpd = TRUE;
 				
 				_LED_CAN_RX = !_LED_CAN_RX;
+				
 				return TRUE;
 			}
 		}

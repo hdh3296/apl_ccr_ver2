@@ -197,8 +197,10 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define MASTER		0
 #define SLAVE		1
 #define CMD_EXTGPS	0
-#define CMD_TIMER_1SEC	1
+#define CMD_TIMER_1SEC		1
 #define CMD_BLK_EDGE		2
+#define CMD_PWON			3
+#define CMD_NONE			100
 
 unsigned    int		msec = 0;
 
@@ -309,7 +311,7 @@ unsigned int bef_MaxSetA_NIG = 0;
 
 // CAN 수신 저장 변수 
 unsigned char cRxCMD = 0xff;
-unsigned char cRxCurD_T_N = 0;
+unsigned char cRxCurD_T_N;
 unsigned char cRxBlkLedOn = 0;
 unsigned char cRxDReserve0 = 0;
 unsigned char cRxDReserve1 = 0;
@@ -390,7 +392,7 @@ extern bit SaveCANRxData(void);
 extern bit LoadCANTxData(unsigned char CanCmd);
 extern void ViewCurData(void);
 extern void ProcAD(void);
-
+extern void ProcDAY_TWL_NIG(void);
 
 
 #endif
