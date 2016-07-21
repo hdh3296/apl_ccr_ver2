@@ -1250,7 +1250,6 @@ void interrupt isr(void)
         bBlkDutyOn = IsBlk_DutyOn_ByTimer(); // GPS(내,외) Timer 또는 내부 Timer에 의한 Blink Duty On 여부 
 
 
-        Com1SerialTime++;
         Com2SerialTime++;
 
         if (OutLampWhenPowerOnTimer < 0xffff)
@@ -1328,31 +1327,6 @@ void interrupt isr(void)
     }
 
     if (!CREN2)	CREN2 = 1;
-
-
-    if ((RC1IE) && (RC1IF))
-    {
-        RC1IF = 0;
-//        Com1_Rx();
-    }
-
-    if ((TX1IE) && (TX1IF))
-    {
-        TX1IF = 0;
-//        Com1_Tx();
-    }
-
-
-    if (OERR1)
-    {
-        TXEN1 = 0;
-        TXEN1 = 1;
-        SPEN1 = 0;
-        SPEN1 = 1;
-        CREN1 = 0;
-    }
-
-    if (!CREN1)	CREN1 = 1;
 
 
     if (ADIF)
