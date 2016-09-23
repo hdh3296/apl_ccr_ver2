@@ -155,7 +155,7 @@ void Com2_Rx(void)
 					Com2Xor=(buf);
 //					XorCal(buf);
                 }
-                else if( (Com2RxCurCnt == 3) && (buf == 'P')){
+                else if( (Com2RxCurCnt == 3) && ((buf == 'P') || (buf == 'N'))){
 					XorCal(buf);
                 }
                 else if( (Com2RxCurCnt == 4) && (buf == 'R')){
