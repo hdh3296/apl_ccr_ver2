@@ -20,7 +20,7 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define		DFL_VERSION					0							//version
 
 #define		DFL_DUTY_CNT				40
-#define		DFL_DUTY_RATE				50
+#define		DFL_DUTY_RATE				25
 
 #define     DFL_SETMODE_SEL				0
 
@@ -35,7 +35,7 @@ Menu_Status	MenuStatus[MAX_MENU];
 
 #define 	DFL_SETCURR_DAY				2000				
 #define 	DFL_SETCURR_TWL				1000	
-#define 	DFL_SETCURR_NIG				500	
+#define 	DFL_SETCURR_NIG				100	
 
 #define 	DFL_MSETCURR_DAY			5000				
 #define 	DFL_MSETCURR_TWL			4000	
