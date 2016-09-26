@@ -61,7 +61,7 @@ void    InitPort(void)
     PIN_MODE_2_TRIS = 0;
     PIN_MODE_3_TRIS = 0;
     PIN_MODE_4_TRIS = 1;
-    PIN_RC5_NoUse_TRIS = 1;
+    PIN_LED_RUN4_TRIS = 0;
     PIN_TX_232_TRIS = 0;
     PIN_RX_232_TRIS = 1;
 
@@ -71,7 +71,7 @@ void    InitPort(void)
     PIN_LED_RUN2_TRIS = 0;
     PIN_PWM_TRIS = 0;
     PIN_LED_RUN3_TRIS = 0;
-    PIN_LED_RUN4_TRIS = 0;
+	PIN_RD6_NoUse_TRIS = 1;    
     PIN_TX_DP_TRIS = 1;
 
     PIN_1PPS_TRIS = 1;

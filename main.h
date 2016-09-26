@@ -30,7 +30,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_MODE_2 				RC2	
 #define PIN_MODE_3 				RC3	
 #define PIN_MODE_4	 			RC4	
-#define PIN_RC5_NoUse	 		RC5	
+#define PIN_LED_RUN4	 		RC5	
 #define PIN_TX_232	 			RC6	// CCP3/CK1/TX1/CANTX	
 #define PIN_RX_232	 			RC7	// CANRX/RX1/DT1/CCP4
 
@@ -40,7 +40,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_LED_RUN2 			RD3
 #define PIN_PWM 				RD4
 #define PIN_LED_RUN3 			RD5
-#define PIN_LED_RUN4 			RD6	// 통신 TX2 
+#define PIN_RC5_NoUse 			RD6	// 통신 TX2 
 #define PIN_TX_DP 				RD7	// 통신 RX2
 
 #define PIN_1PPS 				RE0
@@ -70,7 +70,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_MODE_2_TRIS 		TRISC2 	// in	
 #define PIN_MODE_3_TRIS 		TRISC3	// in
 #define PIN_MODE_4_TRIS	 		TRISC4	// in 
-#define PIN_RC5_NoUse_TRIS		TRISC5	//
+#define PIN_LED_RUN4_TRIS 		TRISC5	//
 #define PIN_TX_232_TRIS	 		TRISC6	// out
 #define PIN_RX_232_TRIS	 		TRISC7	// in
 
@@ -80,7 +80,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_LED_RUN2_TRIS 		TRISD3	// out
 #define PIN_PWM_TRIS 			TRISD4	// out
 #define PIN_LED_RUN3_TRIS 		TRISD5	// out
-#define PIN_LED_RUN4_TRIS 		TRISD6	// out
+#define PIN_RD6_NoUse_TRIS 		TRISD6	// out
 #define PIN_TX_DP_TRIS 			TRISD7  // in	
 
 #define PIN_1PPS_TRIS 			TRISE0	// in
