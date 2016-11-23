@@ -353,12 +353,16 @@ const uint8_t FlashMsgSel[][17]={
 #define		viewSET_DUTYCYCLE		0
 #define		viewIn_Current			1
 #define		viewCurDAY_TWL_NIG		2	
-#define		ReverseTime0_16			3	
-#define		ReverseTime1_16			4
+
+
+
 
 #define		ViewZeroTimer			0
 
 #define		ViewBlk			0
+#define		gpsGhour	1
+#define		gpsGmin		2
+#define		gpsGsec		3
 
 
 #define		VARIABLE_16_END  		5

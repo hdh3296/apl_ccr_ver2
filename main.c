@@ -1010,8 +1010,15 @@ void ViewCurData(void)
 	UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
 	UserRam_16[viewIn_Current]	  = In_Current;
 	UserRam_16[viewCurDAY_TWL_NIG] = CurD_T_N;
+	
+	
+
 	UserRam_32[ViewZeroTimer] = CurTotalGms; 
 	UserRam_8[ViewBlk] = bBlkLedOn;
+
+	UserRam_8[gpsGhour] = Ghour;
+	UserRam_8[gpsGmin] = Gmin;
+	UserRam_8[gpsGsec] = Gsec;	
 }
 
 void SaveZeroVoltage(void)
