@@ -71,7 +71,7 @@ void    InitPort(void)
     PIN_LED_RUN2_TRIS = 0;
     PIN_PWM_TRIS = 0;
     PIN_LED_RUN3_TRIS = 0;
-	PIN_RD6_NoUse_TRIS = 1;    
+	PIN_LOAD_ON_TRIS = 0;    
     PIN_TX_DP_TRIS = 1;
 
     PIN_1PPS_TRIS = 1;
@@ -88,6 +88,11 @@ void    InitPort(void)
     _LED_CAN_RX = 1;
     _LED_BLK = 1;// APL Lamp On 듀티 LED
     _LED_GPS = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED
+    
+
+	_LOAD_ON = 1; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.  
+
+
 }
 
 
@@ -228,14 +233,17 @@ bit IsBlk_DutyOn_ByTimer(void)
 
 	if (BlkMode == BM_Master_GPS_IN) // 내부 지피에스 
 	{
-
-	    if (bPPS_Edge && bPPS_On) // 1초마다 On 
+		
+		if(GPSTxTimer < 3000)	GPSTxTimer++;
+	    if (bPPS_Edge && bPPS_On && (GPSTxTimer > 2000)) // 1초마다 On 
 	    {
 	        bPPS_Edge = FALSE;
 	        if (rx_sec == 0) // 1분 후 
 	        {
+				GPSTxTimer = 0;
 				// 내부 GPS 수신 시간 값을 시간 관련 변수에 저장 한다. 
-				// 시간 관련 변수들은 내부 타이머에 의하여 갱신 되는 변수들이며, 직접적으로 램프 On 사이클을 작동하기 위하여 사용되어 지는 변수이다. 
+				// 시간 관련 변수들은 내부 타이머에 의하여 갱신 되는 변수들이며, 
+				// 직접적으로 램프 On 사이클을 작동하기 위하여 사용되어 지는 변수이다. 
 	            Gm1 = 0; // 999 ms 로 변경(즉시, 다음에서 내부 타이머에 의하여 999 + 1 = 1000 이 된다.) 
 	            Gsec = rx_sec; // 현재 59초, Gps Rx 시간 값들을 차례로 저장
 	            Gmin = rx_min;
