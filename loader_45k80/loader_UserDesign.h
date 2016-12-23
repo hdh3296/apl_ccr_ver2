@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "v2.7.1.19       ", // 버전 정보 표시 
+                                    "v2.8.0.20       ", // 버전 정보 표시 
                   			};
 
 

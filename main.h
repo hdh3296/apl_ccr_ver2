@@ -40,12 +40,12 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_LED_RUN2 			RD3
 #define PIN_PWM 				RD4
 #define PIN_LED_RUN3 			RD5
-#define PIN_LOAD_ON 			RD6	// 통신 TX2 
+#define PIN_RD6_x 				RD6	// 통신 TX2 
 #define PIN_TX_DP 				RD7	// 통신 RX2
 
 #define PIN_1PPS 				RE0
 #define PIN_RE1_NoUse 			RE1	
-#define PIN_RE2_NoUse 			RE2
+#define PIN_LOAD_ON 			RE2
 #define PIN_MCLR				RE3
 
 
@@ -80,12 +80,12 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_LED_RUN2_TRIS 		TRISD3	// out
 #define PIN_PWM_TRIS 			TRISD4	// out
 #define PIN_LED_RUN3_TRIS 		TRISD5	// out
-#define PIN_LOAD_ON_TRIS 		TRISD6	// out
+#define PIN_RD6_x_TRIS 			TRISD6	// out
 #define PIN_TX_DP_TRIS 			TRISD7  // in	
 
 #define PIN_1PPS_TRIS 			TRISE0	// in
 #define PIN_RE1_NoUse_TRIS 		TRISE1	//
-#define PIN_RE2_NoUse_TRIS 		TRISE2	//
+#define PIN_LOAD_ON_TRIS 		TRISE2	//
 
 
 
@@ -129,17 +129,13 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _NoUse1			PIN_RA2_NoUse 				
 #define _NoUse2			PIN_RA3_NoUse 					
 #define _NoUse3			PIN_RA5_NoUse
-#define _LOAD_ON		PIN_LOAD_ON	
-#define _NoUse5			PIN_RE1_NoUse 				
-#define _NoUse6			PIN_RE2_NoUse 
+			
+#define _NoUse5			PIN_RE1_NoUse  
 #define _NoUse7			PIN_RB5_NoUse 
 
+#define _LOAD_ON		PIN_LOAD_ON
 
-// 미사용(이전) Q??추후 삭제 
-#define _SW_SET_HI		_NoUse1
-#define _SW_SET_LO		_NoUse2
-#define _VR1_SET_HI		_NoUse3
-#define _VR2_SET_LO		_LOAD_ON
+
 
 
 

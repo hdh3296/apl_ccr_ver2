@@ -71,12 +71,12 @@ void    InitPort(void)
     PIN_LED_RUN2_TRIS = 0;
     PIN_PWM_TRIS = 0;
     PIN_LED_RUN3_TRIS = 0;
-	PIN_LOAD_ON_TRIS = 0;    
+	PIN_RD6_x_TRIS = 0;    
     PIN_TX_DP_TRIS = 1;
 
     PIN_1PPS_TRIS = 1;
     PIN_RE1_NoUse_TRIS = 1;
-    PIN_RE2_NoUse_TRIS = 1;
+    PIN_LOAD_ON_TRIS = 0;
 
 
     // APL LAMP 제어
@@ -90,7 +90,7 @@ void    InitPort(void)
     _LED_GPS = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED
     
 
-	_LOAD_ON = 1; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.  
+	_LOAD_ON = 0; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.  
 
 
 }
@@ -1113,6 +1113,22 @@ void InitInTimer(void)
 }
 
 
+void out_Load_on(void)
+{
+	if (bBlkLedOn)
+	{
+		if (In_Current >= 100) // 현재 입력 전류 값이 100 mA 이상이면 
+		{
+			_LOAD_ON = 1;
+		}
+	}
+	else
+	{
+		_LOAD_ON = 0;
+	}
+}
+
+
 ///////////////////////////
 //   메인 함수 			  //
 ///////////////////////////
@@ -1242,6 +1258,8 @@ void main(void)
 				myMode = MYMODE_NONE_SETTING;	
 	        }			
 		}
+
+		out_Load_on();
 
 		
     } // end while(1)
