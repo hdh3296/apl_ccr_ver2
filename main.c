@@ -1115,11 +1115,15 @@ void InitInTimer(void)
 
 void out_Load_on(void)
 {
-	if (bBlkLedOn)
+	if (_LAMP_ON)
 	{
-		if (In_Current >= 100) // 현재 입력 전류 값이 100 mA 이상이면 
+		if (In_Current > 200) // 현재 입력 전류 값이 100 mA 이상이면 
 		{
 			_LOAD_ON = 1;
+		}
+		else if (In_Current < 50)
+		{
+			_LOAD_ON= 0;
 		}
 	}
 	else
@@ -1177,7 +1181,9 @@ void main(void)
 		IsFirmwareTest();
 
         Loader_Func(); // 로더 관련 함수
-		EditLoader_SetA_ByMaxSetA(); // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 
+        
+        // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 
+		EditLoader_SetA_ByMaxSetA(); 
 
 
 		ReadWriteSettingValue(); // 쓰기 / 읽기 처리 

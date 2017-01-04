@@ -35,7 +35,7 @@ Menu_Status	MenuStatus[MAX_MENU];
 
 #define 	DFL_SETCURR_DAY				2000				
 #define 	DFL_SETCURR_TWL				1000	
-#define 	DFL_SETCURR_NIG				100	
+#define 	DFL_SETCURR_NIG				300	
 
 #define 	DFL_MSETCURR_DAY			5000				
 #define 	DFL_MSETCURR_TWL			4000	
@@ -282,6 +282,8 @@ uint16_t Group1_Menu_Status_Set(void)
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SETCURR_DAY; // 셋팅값 낮 
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
 
+	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;	
+
 	UserMenuSerialNm++;
 	sub_gr++;
 
@@ -294,6 +296,8 @@ uint16_t Group1_Menu_Status_Set(void)
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SETCURR_TWL; // 셋팅값 박명  
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
 
+	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;
+
 	UserMenuSerialNm++;
 	sub_gr++;
 
@@ -304,6 +308,8 @@ uint16_t Group1_Menu_Status_Set(void)
 	IntType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_SETCURR_NIG; // 셋팅값 밤
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;
 
 	UserMenuSerialNm++;
 	sub_gr++;
