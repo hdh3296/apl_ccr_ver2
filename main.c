@@ -1021,12 +1021,14 @@ void ViewCurData(void)
 	
 	
 
-	UserRam_32[ViewZeroTimer] = CurTotalGms; 
+	UserRam_32[ViewZeroTimer] = CurTotalGms;
+	
+	UserRam_8[viewLOAD_ON] = _LOAD_ON; 
 	UserRam_8[ViewBlk] = bBlkLedOn;
-
 	UserRam_8[gpsGhour] = Ghour;
 	UserRam_8[gpsGmin] = Gmin;
 	UserRam_8[gpsGsec] = Gsec;	
+	
 }
 
 void SaveZeroVoltage(void)
@@ -1198,7 +1200,7 @@ void main(void)
         ProcBlink(CurD_T_N); // BLink모드별 블링크 처리    
 
               
-		ViewCurData();
+		ViewCurData(); // 현재 데이타 모니터링 
 		
 
 		SelDipSW();

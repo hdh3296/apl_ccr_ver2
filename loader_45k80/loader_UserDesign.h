@@ -89,7 +89,7 @@ const uint8_t GroupLineMessage[][17]={
 
 
 const uint8_t myVersion[][17]={
-                                    "v2.8.1.23       ", // 버전 정보 표시 
+                                    "v2.9.0.24       ", // 버전 정보 표시 
                   			};
 
 
@@ -359,10 +359,12 @@ const uint8_t FlashMsgSel[][17]={
 
 #define		ViewZeroTimer			0
 
-#define		ViewBlk			0
-#define		gpsGhour	1
-#define		gpsGmin		2
-#define		gpsGsec		3
+#define		viewLOAD_ON	0
+#define		ViewBlk	    1
+#define		gpsGhour	2
+#define		gpsGmin		3
+#define		gpsGsec		4
+
 
 
 #define		VARIABLE_16_END  		5

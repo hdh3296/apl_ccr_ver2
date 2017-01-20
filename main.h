@@ -133,7 +133,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _NoUse5			PIN_RE1_NoUse  
 #define _NoUse7			PIN_RB5_NoUse 
 
-#define _LOAD_ON		PIN_LOAD_ON
+#define _LOAD_ON		PIN_LOAD_ON // 실제 전류가 출력되는 모니터링하기 위한 용도 
 
 
 

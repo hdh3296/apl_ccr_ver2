@@ -70,10 +70,13 @@ void   LdDataTx(void)
 	Com1TxBuffer[42]=0;
 
     for(i=0;i<36;i++){
-        if(New485Ladder[i+0] > 0x80)    	Com1TxBuffer[2+i]=New485Ladder[i+0] - 0x80;
-        else                            	Com1TxBuffer[2+i]=New485Ladder[i+0];
+        if(New485Ladder[i+0] > 0x80) 
+			Com1TxBuffer[2+i]=New485Ladder[i+0] - 0x80;
+        else                            	
+			Com1TxBuffer[2+i]=New485Ladder[i+0];
 
-        if(New485Ladder[i+0] == 0)    	    Com1TxBuffer[2+i]=New485Ladder[i+0]=' ';
+        if(New485Ladder[i+0] == 0)    	    
+			Com1TxBuffer[2+i]=New485Ladder[i+0]=' ';
     }
 
 	TxImportExportChk();
