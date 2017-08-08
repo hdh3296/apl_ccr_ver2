@@ -1,6 +1,6 @@
 
 #include        "loader_45k80_main.h"
-
+#include		"..\main.h"
 
 #define     ASCTOHEX(x) ((x <= '9') ? (x - '0') : (x - '7')) 
 
@@ -183,6 +183,13 @@ void  LoaderDataWriteToMe(void)
 			i=(SrcAdrBlk * BACKUP_COM_BLK)/FLASH_ONE_BLOCK_SIZE;
 			i=i-1;
 			FlashBlockWr(i); 
+
+			// 2017.08.08 : zero voltage 값만 wrtie 하지 않는다. 
+			iSR_IntData(F_SET_GIJUN_V) = ZeroVoltage;
+			FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
+			cSR_ByteData(F_bSave_GIJUN) = bZeroVoltageSaved;
+			FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));
+		
 		}
 	}
 
@@ -227,6 +234,7 @@ uint16_t	RxImportExportChk(void)
 		if((Com1RxBuffer[0]  == ACK) && (Com1RxBuffer[1]  == 'r')	&& (Com1RxBuffer[2]  == 'F')){
 			SaveVerify=0x55;
 			LoaderDataWriteToMe();
+			
 			SaveVerify=0;
 			Com1RxBuffer[0]  = 'n';
  			Com1RxBuffer[1]  = 'n';

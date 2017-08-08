@@ -786,6 +786,9 @@ void ReadWriteSettingValue(void)
         Bef_eSETMODE = eSETMODE;
     }
 
+
+		
+
 }
 
 
@@ -1138,7 +1141,7 @@ void out_Load_on(void)
 ///////////////////////////
 //   메인 함수 			  //
 ///////////////////////////
-
+//unsigned char testbuf[LONG_SIZE] = {0,}
 void main(void)
 {
     unsigned char i;
@@ -1174,6 +1177,8 @@ void main(void)
     while (1)
     {
         CLRWDT();
+
+//		for(i=0; i<LONG_SIZE; i++) testbuf[i] = information[i];
 
 		
 		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
