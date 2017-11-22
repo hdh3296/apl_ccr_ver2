@@ -124,6 +124,7 @@
 extern 	void			Ladder485Init(void);
 extern 	uint16_t		NewFlashData(void);
 extern	void  			Three_Dig_Dsp(uint32_t val,uint16_t dp);
+extern	void  Nine_Dig_Dsp_ext(uint32_t val_h, uint32_t val_m, uint32_t val_s, uint16_t dp);
 extern	void 			Five_Dig_Dsp(uint32_t val,uint16_t dp);
 extern	void 			Ten_Dig_Dsp(uint32_t val,uint16_t dp);
 

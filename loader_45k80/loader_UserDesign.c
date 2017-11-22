@@ -1119,7 +1119,18 @@ uint16_t DefaultDisplay(void)
             break;
         case    1: // 캐릭터 타입 메모리 디스플레이 
 			Nm_Display(); 
-			Three_Dig_Dsp((uint32_t)UserRam_8[CurKeyPoint],0);     
+			 
+			if (CurKeyPoint == 2){
+				Nine_Dig_Dsp_ext( (uint32_t)UserRam_8[CurKeyPoint], 
+								  (uint32_t)UserRam_8[CurKeyPoint+1],
+								  (uint32_t)UserRam_8[CurKeyPoint+2],
+								  0 
+								 );
+			}
+			else{
+				Three_Dig_Dsp((uint32_t)UserRam_8[CurKeyPoint], 0);   
+			}
+			
             break;
         case    2: // 인테저 타입 메모리 디스플레이 
 			Nm_Display();

@@ -138,7 +138,7 @@ void  Two_Dig_Dsp(uint32_t val,uint16_t dp)
 }
 
 
-void  Three_Dig_Dsp(uint32_t val,uint16_t dp)
+void  Three_Dig_Dsp(uint32_t val, uint16_t dp)
 {
 		
 	Decimal_Sort(val);
@@ -148,6 +148,8 @@ void  Three_Dig_Dsp(uint32_t val,uint16_t dp)
 
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
 }
+
+
 
 
 void   Four_Dig_Dsp(uint32_t val,uint16_t dp)
@@ -254,6 +256,38 @@ void Ten_Dig_Dsp(uint32_t val,uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+9] = arabianm[9];                     
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
 }
+
+
+void  Nine_Dig_Dsp_ext(uint32_t val_h, uint32_t val_m, uint32_t val_s, uint16_t dp)
+{
+
+	arabianm[0] = (uint8_t)((val_h / (uint32_t)10) + '0');                     
+	arabianm[1] = (uint8_t)((val_h % (uint32_t)10) + '0'); 
+	
+	arabianm[3] = (uint8_t)((val_m / (uint32_t)10) + '0');                     
+	arabianm[4] = (uint8_t)((val_m % (uint32_t)10) + '0'); 
+
+	arabianm[6] = (uint8_t)((val_s / (uint32_t)10) + '0');                     
+	arabianm[7] = (uint8_t)((val_s % (uint32_t)10) + '0'); 	
+
+	
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+0] = arabianm[0];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+1] = arabianm[1];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+2] = ':';                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+3] = arabianm[3];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+4] = arabianm[4];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+5] = ':';                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+6] = arabianm[6];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+7] = arabianm[7];                     
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+8] = '(';    
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+9] = 'O';
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+10] = 'R';
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+11] = 'G';
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+12] = ')';   
+	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
+
+}
+
 
 
 
