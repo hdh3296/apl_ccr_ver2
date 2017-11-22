@@ -119,6 +119,7 @@ uint16_t ByteType_DIGIT_EDIT_Set(uint16_t main_gr,uint16_t sub_gr,uint16_t divid
 {
 	MenuStatus[UserMenuSerialNm].M_EditGroupNm=main_gr;
 	MenuStatus[UserMenuSerialNm].M_EditSubNm=sub_gr;
+	
 	MenuStatus[UserMenuSerialNm].M_EditCursor=0;
     MenuStatus[UserMenuSerialNm].M_EditStatus=DIGIT_EDIT;
     MenuStatus[UserMenuSerialNm].M_EditStart=3;
@@ -139,6 +140,7 @@ uint16_t IntType_DIGIT_EDIT_Set(uint16_t main_gr,uint16_t sub_gr,uint16_t divide
 {
 	MenuStatus[UserMenuSerialNm].M_EditGroupNm=main_gr;
 	MenuStatus[UserMenuSerialNm].M_EditSubNm=sub_gr;
+	
 	MenuStatus[UserMenuSerialNm].M_EditCursor=0;
     MenuStatus[UserMenuSerialNm].M_EditStatus=DIGIT_EDIT;
     MenuStatus[UserMenuSerialNm].M_EditStart=3;

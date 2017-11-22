@@ -24,7 +24,7 @@
 
 
 
-
+unsigned int pps_edge_none_chk_timer;
 
 
 void    InitPort(void)
@@ -115,7 +115,10 @@ void ChkGpsPPS1(void)
         }
         bPPS_On = TRUE;
 
-		_LED_PPS = ON_LED;
+		if (pps_edge_none_chk_timer > 3000 )
+			_LED_PPS = OFF_LED;
+		else
+			_LED_PPS = ON_LED;
     }
     else
     {
@@ -238,9 +241,13 @@ bit IsBlk_DutyOn_ByTimer(void)
 	{
 		
 		if(GPSTxTimer < 3000)	GPSTxTimer++;
+		
 	    if (bPPS_Edge && bPPS_On && (GPSTxTimer > 2000)) // 1초마다 On 
 	    {
 	        bPPS_Edge = FALSE;
+
+			pps_edge_none_chk_timer = 0;
+			
 	        if (rx_sec == 0) // 1분 후 
 	        {
 				GPSTxTimer = 0;
@@ -1176,6 +1183,8 @@ void main(void)
 	InitInTimer();
 
 
+	pps_edge_none_chk_timer = 0;
+
     while (1)
     {
         CLRWDT();
@@ -1342,6 +1351,7 @@ void interrupt isr(void)
 		if (Com2RxStatusTimer < 0xffff)
 			Com2RxStatusTimer++;
 
+		if (pps_edge_none_chk_timer < 0xffff) pps_edge_none_chk_timer++;
 
     }
 
