@@ -87,7 +87,7 @@ void    InitPort(void)
     _LED_CAN_TX = 1;
     _LED_CAN_RX = 1;
     _LED_BLK = 1;// APL Lamp On 듀티 LED
-    _LED_GPS = 1;// GPS RX2 수신시, 'A' 데이타 수신 상태 LED
+    _LED_PPS = 1;
     
 
 	_LOAD_ON = 0; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.  
@@ -114,10 +114,13 @@ void ChkGpsPPS1(void)
             bPPS_Edge = TRUE;
         }
         bPPS_On = TRUE;
+
+		_LED_PPS = ON_LED;
     }
     else
     {
         bPPS_On = FALSE;
+		_LED_PPS = OFF_LED;
     }
 }
 
@@ -320,7 +323,6 @@ void ProcGpsRx2Data(void)
 		bInGPSConnect = TRUE;
 		Com2RxStatusTimer = 0;
 		
-        _LED_GPS = !_LED_GPS; // GPS 수신 GOOD 상태 LED
         i = (Com2RxBuffer[7] - 0x30) * 10;
         i = (Com2RxBuffer[8] - 0x30) + i;
         rx_hour = i;

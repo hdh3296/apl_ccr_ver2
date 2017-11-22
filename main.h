@@ -30,7 +30,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define PIN_MODE_2 				RC2	
 #define PIN_MODE_3 				RC3	
 #define PIN_MODE_4	 			RC4	
-#define PIN_LED_RUN4	 		RC5	
+#define PIN_LED_RUN4	 		RC5		// gps pps 신호 상태 LED  
 #define PIN_TX_232	 			RC6	// CCP3/CK1/TX1/CANTX	
 #define PIN_RX_232	 			RC7	// CANRX/RX1/DT1/CCP4
 
@@ -117,7 +117,7 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 #define _LED_BLK 		PIN_LED_RUN1 // APL Lamp On 듀티 LED 				
 #define _LED_CAN_TX 	PIN_LED_RUN2 // GPS RX2 수신시, 'A' 데이타 수신 상태 LED 			
 #define _LED_CAN_RX		PIN_LED_RUN3 // 	CAN Tx 상태 	
-#define _LED_GPS 		PIN_LED_RUN4 // CAN Tx 상태 <<< 현재 시리얼 Tx핀으로 설정 되어 있어서 사용 보류 	
+#define _LED_PPS 		PIN_LED_RUN4 // CAN Tx 상태 <<< 현재 시리얼 Tx핀으로 설정 되어 있어서 사용 보류 	
 // GPS
 #define _RX_GPS			PIN_TX_DP // 통신 RX2
 #define _PPS_GPS		PIN_1PPS 				
