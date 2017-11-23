@@ -151,19 +151,7 @@ void  Three_Dig_Dsp(uint32_t val, uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+1] = arabianm[8];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+2] = arabianm[9];                     
 
-	switch	(ThisSelMenuNm){
-		case	4:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'B'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'P';
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 10] = 'M';		
-			break;
 
-		case	5:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = '%'; 
-			break;
-				
-
-	}
 
 	
 
@@ -182,23 +170,7 @@ void   Four_Dig_Dsp(uint32_t val,uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+2] = arabianm[8];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+3] = arabianm[9];     
 
-	switch	(ThisSelMenuNm){		
-		case	7:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;
-
-		case	8:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;
-			
-		case	9:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;		
-
-	}		
+		
 
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt, dp);
 }
@@ -213,23 +185,7 @@ void Five_Dig_Dsp(uint32_t val,uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+3] = arabianm[8];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+4] = arabianm[9];   
 
-	switch	(ThisSelMenuNm){				
-		case	10:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;
-
-		case	11:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;
-			
-		case	12:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'A'; 
-			break;			
-
-	}	
+	
 
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
 }
@@ -411,6 +367,59 @@ uint16_t  DigitStringMessage(void)
 
 
 
+void display_unit(void)
+{
+	/* user그룹   4,5, 7,8,9, 10,11,12 메뉴의 값에 단위 표시해라 
+
+		단위 표시 자리수 시작값은 메뉴 값의 맨 앞자리가 인덱스 0 이다. 
+	*/
+
+	switch	(ThisSelMenuNm){
+		case	4:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = 'B'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'P';
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'M';		
+			break;
+
+		case	5:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = '%'; 
+			break;				
+	
+		case	7:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			break;
+
+		case	8:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			break;
+			
+		case	9:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			break;		
+
+			
+		case	10:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
+			break;
+
+		case	11:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
+			break;
+			
+		case	12:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
+			break;			
+
+	}
+
+}
+
 void  Integer_Digit(void)
 {
 
@@ -461,6 +470,9 @@ void  Integer_Digit(void)
 		CurMenuStatus.M_EditDigitShiftCnt=10;
 		Ten_Dig_Dsp(ThisDigitData,CurMenuStatus.M_EditDivide);
 	}
+
+	display_unit();
+	
 
     DigitStringMessage();
 	BitOnOffMessage( (uint8_t)ThisDigitData);
