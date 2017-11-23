@@ -27,6 +27,7 @@
 unsigned int pps_edge_none_chk_timer;
 
 
+
 void    InitPort(void)
 {
     TRISA = 0xff;
@@ -115,10 +116,16 @@ void ChkGpsPPS1(void)
         }
         bPPS_On = TRUE;
 
-		if (pps_edge_none_chk_timer > 3000 )
+		// pps 상태값이 설정 시간 동안 오지 않으면
+		// led off 상태를 유지 한다. 
+		if (pps_edge_none_chk_timer > 3000 ){
+			b_gps_in_successed = FALSE;
 			_LED_PPS = OFF_LED;
-		else
+		}
+		else{
+			b_gps_in_successed = TRUE;
 			_LED_PPS = ON_LED;
+		}
     }
     else
     {
@@ -1184,6 +1191,7 @@ void main(void)
 
 
 	pps_edge_none_chk_timer = 0;
+	b_gps_in_successed = FALSE;
 
     while (1)
     {

@@ -350,6 +350,7 @@ unsigned char myMode;
 
 unsigned int	GPSTxTimer = 0;
 
+bit b_gps_in_successed;
 
 
 

@@ -2,7 +2,7 @@
 
 
 #include        "loader_45k80_main.h"
-
+#include		"..\main.h"
 //////////////////////////////////////
 //////////////////////////////////////
 //////////////////////////////////////
@@ -335,12 +335,31 @@ void  Nine_Dig_Dsp_ext(uint32_t val_h, uint32_t val_m, uint32_t val_s, uint16_t 
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+4] = arabianm[4];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+5] = ':';                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+6] = arabianm[6];                     
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+7] = arabianm[7];                     
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+8] = '(';    
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+9] = 'O';
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+10] = 'R';
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+11] = 'G';
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+12] = ')';   
+	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+7] = arabianm[7]; 
+
+	if (b_gps_in_successed)
+	{
+		
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+8] 	= '(';	
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+9] 	= 'O';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+10] = 'R';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+11] = 'G';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+12] = ')';  
+
+	}
+	else{
+		
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+8] 	= '(';	
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+9] 	= '.';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+10]	= '.';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+11] = '.';
+		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+12] = ')';  
+
+		
+	}
+	
+	
+	
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
 
 }
