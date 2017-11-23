@@ -1121,9 +1121,9 @@ uint16_t DefaultDisplay(void)
 			Nm_Display(); 
 			 
 			if (CurKeyPoint == 2){
-				Nine_Dig_Dsp_ext( (uint32_t)UserRam_8[CurKeyPoint], 
-								  (uint32_t)UserRam_8[CurKeyPoint+1],
-								  (uint32_t)UserRam_8[CurKeyPoint+2],
+				Nine_Dig_Dsp_ext( (uint32_t)UserRam_8[gpsGhour], 
+								  (uint32_t)UserRam_8[gpsGmin],
+								  (uint32_t)UserRam_8[gpsGsec],
 								  0 
 								 );
 			}

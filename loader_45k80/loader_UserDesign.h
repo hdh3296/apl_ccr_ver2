@@ -361,9 +361,10 @@ const uint8_t FlashMsgSel[][17]={
 
 #define		viewLOAD_ON	0
 #define		ViewBlk	    1
-#define		gpsGhour	2
-#define		gpsGmin		3
-#define		gpsGsec		4
+#define		GPS_H_M_S   2
+#define		gpsGhour	3
+#define		gpsGmin		4
+#define		gpsGsec		5
 
 
 
