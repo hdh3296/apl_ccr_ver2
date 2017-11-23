@@ -98,7 +98,7 @@ uint16_t  Decimal_Sort(uint32_t val)
 
 
 
-uint16_t  Deciml_Dsp(uint16_t total_dig,uint16_t dp)
+uint16_t  Deciml_Dsp(uint16_t total_dig, uint16_t dp)
 {
     uint16_t i,j;
     uint8_t tempbuf[10];
@@ -106,17 +106,22 @@ uint16_t  Deciml_Dsp(uint16_t total_dig,uint16_t dp)
 	if(dp == 0)			return(0);
 	if(dp >= total_dig)	return(0);
 
-	for(i=0;i<total_dig;i++){
-		tempbuf[i]=New485Ladder[SECONDLINE_BASE+ CurMenuStatus.M_EditStart+i];                       
+	for(i=0; i<total_dig; i++){
+		tempbuf[i]=New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + i];                       
 	}
 
 
 	j=(total_dig-dp);
-	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+j]='.';            
+	New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + j]='.';            
            
-	for(i=j;i<total_dig;i++){
-		New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+i+1]=tempbuf[i];                       
+	for(i=j; i<total_dig; i++){
+		New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + i + 1] = tempbuf[i];                       
 	}
+
+
+
+
+	
 	return(0);
 }
 
@@ -146,6 +151,13 @@ void  Three_Dig_Dsp(uint32_t val, uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+1] = arabianm[8];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+2] = arabianm[9];                     
 
+	if (ThisSelMenuNm == 4)
+	{
+		New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 8] = 'B'; 
+		New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 9] = 'P';
+		New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 10] = 'M';
+	}
+
 	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
 }
 
@@ -161,7 +173,7 @@ void   Four_Dig_Dsp(uint32_t val,uint16_t dp)
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+2] = arabianm[8];                     
 	New485Ladder[SECONDLINE_BASE+CurMenuStatus.M_EditStart+3] = arabianm[9];                     
 
-	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt,dp);
+	Deciml_Dsp(CurMenuStatus.M_EditDigitShiftCnt, dp);
 }
 
 

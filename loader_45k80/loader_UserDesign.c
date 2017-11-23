@@ -1130,6 +1130,9 @@ uint16_t DefaultDisplay(void)
 			else{
 				Three_Dig_Dsp((uint32_t)UserRam_8[CurKeyPoint], 0);   
 			}
+
+			
+				
 			
             break;
         case    2: // 인테저 타입 메모리 디스플레이 
