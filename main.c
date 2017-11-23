@@ -25,7 +25,7 @@
 
 
 unsigned int pps_edge_none_chk_timer;
-
+bit	b_gps_first_received;
 
 
 void    InitPort(void)
@@ -118,13 +118,15 @@ void ChkGpsPPS1(void)
 
 		// pps 상태값이 설정 시간 동안 오지 않으면
 		// led off 상태를 유지 한다. 
-		if (pps_edge_none_chk_timer > 3000 ){
+		if (pps_edge_none_chk_timer > 3000 ){	
 			b_gps_in_successed = FALSE;
 			_LED_PPS = OFF_LED;
 		}
 		else{
 			b_gps_in_successed = TRUE;
 			_LED_PPS = ON_LED;
+
+			b_gps_first_received = TRUE;
 		}
     }
     else
@@ -1033,6 +1035,8 @@ bit LoadCANTxData(unsigned char CanCmd)
 
 void ViewCurData(void)
 {
+	unsigned char hour;
+
 	// 현재 변수 값을 로더에서 보기 위하여 ram 영역 변수에 현재 변수 값들을 저장하고 있다. <<<
 	UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
 	UserRam_16[viewIn_Current]	  = In_Current;
@@ -1044,7 +1048,19 @@ void ViewCurData(void)
 	
 	UserRam_8[viewLOAD_ON] = _LOAD_ON; 
 	UserRam_8[ViewBlk] = bBlkLedOn;
-	UserRam_8[gpsGhour] = Ghour;
+
+	// 최초 전원 겼을 때 gps 신호를 최초 1번 받았으면 
+	// 시간 + 9 해준다. 
+	// 전원이 꺼질 때까지 이 처리는 유효하다. 
+	hour = Ghour;
+	if (b_gps_first_received)
+	{
+		hour += 9;
+		if (hour >= 24)
+			hour -= 24;	
+	}
+
+	UserRam_8[gpsGhour] = hour;
 	UserRam_8[gpsGmin] = Gmin;
 	UserRam_8[gpsGsec] = Gsec;	
 	
@@ -1192,6 +1208,7 @@ void main(void)
 
 	pps_edge_none_chk_timer = 0;
 	b_gps_in_successed = FALSE;
+	b_gps_first_received = FALSE;
 
     while (1)
     {
