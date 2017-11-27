@@ -292,11 +292,19 @@ unsigned int L_MAX_Current_Day = 0;
 unsigned int L_MAX_Current_Evening = 0;
 unsigned int L_MAX_Current_Night = 0;
 
-// blink Duty 시간 변수들 
-UCHAR	Blk_1Min_Cnt = 0;  // 1분당  LED ON 횟수
-UCHAR  	Blk_DutyRate = 0;	// 1 cycle에 대하여 ON 비율(%) = 펄스폭과 같은 말 
-ULONG  	Blk_DutyCycle = 0; // 1회 깜빡일때의 시간 
-ULONG	Blk_DutyTime = 0; // Lamp Blink에서의 On 주기 시간(ms) 	
+
+typedef struct{
+
+	// flashing(blink ON) Duty 시간 변수들 
+	UCHAR	onCnt_BPM;				// 1분당	 LED ON 횟수
+	UCHAR	duty_rate; 				// 1 cycle에 대하여 ON 비율(%) = 펄스폭과 같은 말 
+	ULONG	duty_msec; 			// Lamp Blink에서의 On 주기 시간(ms)		
+	ULONG	cycle_msec; 	// 1회 깜빡일때의 시간 
+
+} Flashing;
+	
+Flashing	flashing = {0,};
+
 
 ULONG 	Multip[3] = {0,};	
 
@@ -381,8 +389,8 @@ extern unsigned int CompareSet_InCurrent(unsigned int duty,
 extern void ChkSwTwoTouch(void);
 extern void Chk232TxErr(void);
 extern void WriteProc(void);
-extern bit ReadSettingValue_PowerOn(void);
-extern void ReadWriteSettingValue(void);
+extern bit read_settingValue_when_powerOn(void);
+extern void read_write_settingValue(void);
 extern void ProcGPS(void);
 
 extern void SelDipSW(void);

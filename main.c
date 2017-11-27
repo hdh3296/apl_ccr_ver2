@@ -312,9 +312,9 @@ bit IsBlk_DutyOn_ByTimer(void)
     }
     // 현재 시간값을 msec 단위로 환산하여 플래싱 싸이클 값으로 나눈 나머지로 현재 램프를 On할지 Off할지 여부를 알 수 있다.
     CurTotalGms = ZeroTimer + (ULONG)Gm1;
-    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)Blk_DutyCycle);
+    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing.cycle_msec);
 
-    if (Gms60000 < Blk_DutyTime)
+    if (Gms60000 < flashing.duty_msec)
     {
         bBlk_DutyOn = TRUE; // APL LAMP ON
     }
@@ -708,17 +708,21 @@ unsigned int GetInCurrent(unsigned int CurA_IN_mV)
 }
 
 // 저장된 값 Read(Load) /////////////////////////////////////
-bit ReadSettingValue_PowerOn(void)
+bit read_settingValue_when_powerOn(void)
 {
     unsigned char     i;
     static   bit     ret;
 
     ret = FALSE;
 
-	Blk_1Min_Cnt = cF_BLK_1MIN_CNT; // 1분 기준 몇 회 깜빡일지
-    Blk_DutyRate = cF_BLK_DUTYRATE; // 1회 깜빡임에 대하여 On 비율 (%)
-    if (Blk_1Min_Cnt >= 1) Blk_DutyCycle = (60000 / (Blk_1Min_Cnt)); // 1회 깜빡임 싸이클 미리세크 
-    Blk_DutyTime = (Blk_DutyCycle * Blk_DutyRate) / 100;		
+	flashing.onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
+    flashing.duty_rate = cF_DAY_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
+
+	// 1회 깜빡이는 시간 계산 (msec)
+    if (flashing.onCnt_BPM >= 1) 
+		flashing.cycle_msec = (60000 / flashing.onCnt_BPM);  
+
+	flashing.duty_msec = (flashing.cycle_msec * flashing.duty_rate) / 100;		
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
     sAPL[DAY].Set_Current = cF_SETCURR_DAY;
@@ -742,15 +746,18 @@ bit ReadSettingValue_PowerOn(void)
 }
 
 
-void ReadWriteSettingValue(void)
+void read_write_settingValue(void)
 {
 // Read !!!
     // LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
     // Lamp Blink에서의 On 주기 시간(msec)
-    Blk_1Min_Cnt = cF_BLK_1MIN_CNT; // 1분 기준 몇 회 깜빡일지
-    Blk_DutyRate = cF_BLK_DUTYRATE; // 1회 깜빡임에 대하여 On 비율 (%)
-    if (Blk_1Min_Cnt >= 1) Blk_DutyCycle = (60000 / (Blk_1Min_Cnt)); // 1회 깜빡임 싸이클 미리세크 
-    Blk_DutyTime = (Blk_DutyCycle * Blk_DutyRate) / 100;
+    flashing.onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; // 1분 기준 몇 회 깜빡일지
+    flashing.duty_rate = cF_DAY_FLASHING_DUTY_RATE; // 1회 깜빡임에 대하여 On 비율 (%)
+    
+    if (flashing.onCnt_BPM >= 1) 
+		flashing.cycle_msec = (60000 / flashing.onCnt_BPM); // 1회 깜빡임 싸이클 미리세크 
+
+	flashing.duty_msec = (flashing.cycle_msec * flashing.duty_rate) / 100;
 
     // 각 V_IN 셋팅 값
     sAPL[DAY].Set_Current = cF_SETCURR_DAY;
@@ -878,7 +885,7 @@ void ProcAD(void)
 
 
 // 낮, 박명, 밤 셋팅 최대치를 MAX 셋팅 값에 따라 로더에서 제한 설정 하기 위하여 만든 함수이다.
-void Loader_ValueSetEdit_sub(unsigned char ch, unsigned int iValue)
+void edit_setValue_by_maxSetValue_sub(unsigned char ch, unsigned int iValue)
 {
     unsigned int i;
 
@@ -892,24 +899,26 @@ void Loader_ValueSetEdit_sub(unsigned char ch, unsigned int iValue)
 
 }
 
-// 낮, 박명, 밤 셋팅 최대치를 MAX 셋팅 값에 따라 설정값 제한하기 위하여 만든 함수이다. 
-void EditLoader_SetA_ByMaxSetA(void)
+
+void edit_setValue_by_maxSetValue(void)
 {
+	/* 낮, 박명, 밤 셋팅 최대치를 MAX 셋팅 값에 따른 설정값 최대치 제한하기 */
+
     if (bef_MaxSetA_DAY != cF_MaxSetA_DAY ) 
     {
-        Loader_ValueSetEdit_sub(7, cF_MaxSetA_DAY);
+        edit_setValue_by_maxSetValue_sub(setValueMenu.day, cF_MaxSetA_DAY);
         bef_MaxSetA_DAY = cF_MaxSetA_DAY;
     }
 
     if (bef_MaxSetA_TWL != cF_MaxSetA_TWL)
     {
-        Loader_ValueSetEdit_sub(8, cF_MaxSetA_TWL);
+        edit_setValue_by_maxSetValue_sub(setValueMenu.twl, cF_MaxSetA_TWL);
         bef_MaxSetA_TWL = cF_MaxSetA_TWL;
     }
 
     if (bef_MaxSetA_NIG != cF_MaxSetA_NIG)
     {
-        Loader_ValueSetEdit_sub(9, cF_MaxSetA_NIG);
+        edit_setValue_by_maxSetValue_sub(setValueMenu.nig, cF_MaxSetA_NIG);
         bef_MaxSetA_NIG = cF_MaxSetA_NIG;
     }
 }
@@ -1134,10 +1143,10 @@ void InitInTimer(void)
 	
 	Ghour	= 0;
 
-	tmp = Blk_DutyTime / 60000;
+	tmp = flashing.duty_msec / 60000;
 	Gmin	= (unsigned char)tmp;
 
-	tmp = Blk_DutyTime % 60000;
+	tmp = flashing.duty_msec % 60000;
 	Gsec = (unsigned char)(tmp / 1000);
 
 	tmp = tmp % 1000;
@@ -1199,7 +1208,9 @@ void main(void)
 	myMode = MYMODE_INIT;
 
     ret = FALSE;
-    ReadSettingValue_PowerOn();
+
+	read_settingValue_when_powerOn();
+
 	OutLampWhenPowerOn();
 ////////////////////////////////////////////////////////////////
 
@@ -1226,10 +1237,10 @@ void main(void)
         Loader_Func(); // 로더 관련 함수
         
         // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 
-		EditLoader_SetA_ByMaxSetA(); 
+		edit_setValue_by_maxSetValue(); 
 
 
-		ReadWriteSettingValue(); // 쓰기 / 읽기 처리 
+		read_write_settingValue(); // 쓰기 / 읽기 처리 
 
 
 		ProcDAY_TWL_NIG(); // CDS 낮, 박명, 밤 처리          

@@ -44,22 +44,26 @@ const uint8_t GroupLineMessage[][17]={
                                     "USER:Display Sel",// 2 
                                     "USER:Initial    ",// 3  
                                     "USER:Read/Write ",// 4  
-                                    "USER:FlashingCNT",// 5  
-                                    "USER:FlashingRat",// 6  
-                                    "USER:SEL SETMODE",// 6 
-                                    "USER:SET VAL DAY",// 7  
-                                    "USER:SET VAL TWL",// 8 
-                                    "USER:SET VAL NIG",// 8 
-                                    "USER:Max SET DAY",// 7  
-                                    "USER:Max SET TWL",// 8 
-                                    "USER:Max SET NIG",// 8 
-                                    "USER:EveryOn DAY",// 7  
-                                    "USER:EveryOn TWL",// 8 
-                                    "USER:EveryOn NIG",// 8 
-                                    "USER:SDutycycleD",// 8 
-                                    "USER:SDutycycleT",// 8 
-                                    "USER:SDutycycleN",// 8 
-                                    "View:DuCy_D_SVal",// 9  // group1
+                                    "USER:DayFlashCNT",// 5  
+                                    "USER:DayFlashRat",// 6  
+                                    "USER:TwlFlashCNT",// 7  
+                                    "USER:TwlFlashRat",// 8
+                                    "USER:NigFlashCNT",// 9  
+                                    "USER:NigFlashRat",// 10
+                                    "USER:SEL SETMODE",//  
+                                    "USER:SET VAL DAY",//   
+                                    "USER:SET VAL TWL",//  
+                                    "USER:SET VAL NIG",//  
+                                    "USER:Max SET DAY",//   
+                                    "USER:Max SET TWL",//  
+                                    "USER:Max SET NIG",//  
+                                    "USER:EveryOn DAY",//   
+                                    "USER:EveryOn TWL",//  
+                                    "USER:EveryOn NIG",//  
+                                    "USER:SDutycycleD",//  
+                                    "USER:SDutycycleT",//  
+                                    "USER:SDutycycleN",//  
+                                    "View:DuCy_D_SVal",//   // group1
                                     "View:DuCy_T_SVal",// 10 
                                     "View:DuCy_N_SVal",// 11  
                                     "View:ZeroCur_mV ",// 12  
@@ -164,54 +168,42 @@ const uint8_t FlashMsgSel[][17]={
 
 /////////////////////////////////////////////////////////////////////
 ////////////////////memory address set//////////////////////////////
-// 저장할 번지 
+// 저장할 번지 지정 
 #define  F_VERSION			ByteData001 					// 1
 #define  F_WORK_MODE		ByteData002        				// 1
 #define  F_DEFAULT_DSP		ByteData003           			// 1
 #define  F_FLASH_COPY		ByteData004           			// 1
 #define  F_INITIAL			ByteData008           			// 1
-
-#define  F_DUTY_CNT			ByteData009           			// 1
-#define  F_DUTY_RATE		ByteData010           			// 1
-
+#define  F_DAY_DUTY_CNT			ByteData009           			// 1
+#define  F_DAY_DUTY_RATE		ByteData010           			// 1
 #define  F_SETMODE_SEL		ByteData011
-
 #define  F_EveryOnSetD		ByteData012
 #define  F_EveryOnSetT		ByteData013
 #define  F_EveryOnSetN		ByteData014
-
 #define  F_bSave_GIJUN		ByteData015
+#define  F_TWL_DUTY_CNT			ByteData016           			// 1
+#define  F_TWL_DUTY_RATE		ByteData017           			// 1
+#define  F_NIG_DUTY_CNT			ByteData018           			// 1
+#define  F_NIG_DUTY_RATE		ByteData019           			// 1
 
 
-#define  F_SETCURR_DAY		IntzData009           			// 1
-#define  F_SETCURR_TWL		IntzData010           			// 1
-#define  F_SETCURR_NIG		IntzData011           			// 1
-
-#define  F_MSETCURR_DAY		IntzData012           			// 1
-#define  F_MSETCURR_TWL		IntzData013           			// 1
-#define  F_MSETCURR_NIG		IntzData014           			// 1
-
-#define  F_SET_DUTYCYCLED	IntzData015           			
-#define  F_SET_DUTYCYCLET	IntzData016	
-#define  F_SET_DUTYCYCLEN	IntzData017	
-
-#define  F_SET_stDUTYCYCLE_D	IntzData018	
-#define  F_SET_stDUTYCYCLE_T	IntzData019
-#define  F_SET_stDUTYCYCLE_N	IntzData020
-
-#define  F_SET_GIJUN_V	IntzData021	
-
-
-
+#define  F_SETCURR_DAY			IntzData011           			// 1
+#define  F_SETCURR_TWL			IntzData012           			// 1
+#define  F_SETCURR_NIG			IntzData013           			// 1
+#define  F_MSETCURR_DAY			IntzData014           			// 1
+#define  F_MSETCURR_TWL			IntzData015           			// 1
+#define  F_MSETCURR_NIG			IntzData016           			// 1
+#define  F_SET_DUTYCYCLED		IntzData017           			
+#define  F_SET_DUTYCYCLET		IntzData018	
+#define  F_SET_DUTYCYCLEN		IntzData019	
+#define  F_SET_stDUTYCYCLE_D	IntzData020	
+#define  F_SET_stDUTYCYCLE_T	IntzData021
+#define  F_SET_stDUTYCYCLE_N	IntzData022
+#define  F_SET_GIJUN_V			IntzData023	
 
 
 
-
-
-
-
-
-
+// not use
 #define  F_BAS1_X_LENGTH	IntzData051           			// 1
 #define  F_BAS1_Z_LENGTH	IntzData052           			// 1
 #define  F_BAS1_X_Z_LENGTH	IntzData053           			// 1
@@ -257,8 +249,14 @@ const uint8_t FlashMsgSel[][17]={
 #define  cF_FLASH_COPY			cF_ByteData(F_FLASH_COPY)
 #define  cF_INITIAL				cF_ByteData(F_INITIAL)
 
-#define  cF_BLK_1MIN_CNT			cF_ByteData(F_DUTY_CNT)
-#define  cF_BLK_DUTYRATE			cF_ByteData(F_DUTY_RATE)
+#define  cF_DAY_FLASHING_CNT_BPM	cF_ByteData(F_DAY_DUTY_CNT)
+#define  cF_DAY_FLASHING_DUTY_RATE	cF_ByteData(F_DAY_DUTY_RATE)
+#define  cF_TWL_FLASHING_CNT_BPM	cF_ByteData(F_TWL_DUTY_CNT)
+#define  cF_TWL_FLASHING_DUTY_RATE	cF_ByteData(F_TWL_DUTY_RATE)
+#define  cF_NIG_FLASHING_CNT_BPM	cF_ByteData(F_NIG_DUTY_CNT)
+#define  cF_NIG_FLASHING_DUTY_RATE	cF_ByteData(F_NIG_DUTY_RATE)
+
+
 
 #define  cF_SETMODE_SEL			cF_ByteData(F_SETMODE_SEL)
 

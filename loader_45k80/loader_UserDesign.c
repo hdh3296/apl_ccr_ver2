@@ -19,8 +19,15 @@ Menu_Status	MenuStatus[MAX_MENU];
 #define		DFL_SETUP					0x55						//default val 85
 #define		DFL_VERSION					0							//version
 
-#define		DFL_DUTY_CNT				40
-#define		DFL_DUTY_RATE				25
+#define		DFL_DAY_DUTY_CNT				40
+#define		DFL_DAT_DUTY_RATE				25
+#define		DFL_TWL_DUTY_CNT				40
+#define		DFL_TWL_DUTY_RATE				25
+#define		DFL_NIG_DUTY_CNT				40
+#define		DFL_NIG_DUTY_RATE				25
+
+
+
 
 #define     DFL_SETMODE_SEL				0
 
@@ -234,31 +241,81 @@ uint16_t Group1_Menu_Status_Set(void)
 	sub_gr++;
 */
 
+
+
+///////////
+///////////
 /////////////////////////////////////////////////////////////////////
-//sub Menu µàÆ¼ ¼ö 
-/////////////////////////////////////////////////////////////////////
-	
+//sub Menu : DAY µàÆ¼ ¼ö 
+/////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
-	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DUTY_CNT; // µàÆ¼ ¼ö 
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DAY_DUTY_CNT; // µàÆ¼ ¼ö 
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
 
 	UserMenuSerialNm++;
 	sub_gr++;
-
-
-
 /////////////////////////////////////////////////////////////////////
-//sub Menu µàÆ¼ ºñ 
-/////////////////////////////////////////////////////////////////////
-	
+//sub Menu : DAY µàÆ¼ ºñ 
+/////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
-	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DUTY_RATE; // µàÆ¼ ºñ 
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DAY_DUTY_RATE; // µàÆ¼ ºñ 
 	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
 
 	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=100; // ÃÖ´ë°ª 
 
 	UserMenuSerialNm++;
 	sub_gr++;
+
+
+/////////////////////////////////////////////////////////////////////
+//sub Menu : TWL µàÆ¼ ¼ö 
+/////////////////////////////////////////////////////////////////////	
+	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_TWL_DUTY_CNT; // µàÆ¼ ¼ö 
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	UserMenuSerialNm++;
+	sub_gr++;	
+/////////////////////////////////////////////////////////////////////
+//sub Menu : TWL µàÆ¼ ºñ 
+/////////////////////////////////////////////////////////////////////	
+	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_TWL_DUTY_RATE; // µàÆ¼ ºñ 
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=100; // ÃÖ´ë°ª 
+
+	UserMenuSerialNm++;
+	sub_gr++;	
+
+
+/////////////////////////////////////////////////////////////////////
+//sub Menu : NIG µàÆ¼ ¼ö 
+/////////////////////////////////////////////////////////////////////	
+	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_NIG_DUTY_CNT; // µàÆ¼ ¼ö 
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	UserMenuSerialNm++;
+	sub_gr++;		
+/////////////////////////////////////////////////////////////////////
+//sub Menu : NIG µàÆ¼ ºñ 
+/////////////////////////////////////////////////////////////////////	
+	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
+	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_NIG_DUTY_RATE; // µàÆ¼ ºñ 
+	MenuStatus[UserMenuSerialNm].M_EditGroupMsgAddr= (uint8_t *)GroupLineMessage[UserMenuSerialNm];
+
+	MenuStatus[UserMenuSerialNm].M_EditDigitMaxValue=100; // ÃÖ´ë°ª 
+
+	UserMenuSerialNm++;
+	sub_gr++;
+
+////////////////
+////////////////
+
+
+
+
 
 
 
@@ -276,6 +333,8 @@ uint16_t Group1_Menu_Status_Set(void)
 	sub_gr++;
 
 
+
+
 /////////////////////////////////////////////////////////////////////
 //sub Menu ¼ÂÆÃ°ª ³· 
 /////////////////////////////////////////////////////////////////////
@@ -286,9 +345,10 @@ uint16_t Group1_Menu_Status_Set(void)
 
 	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;	
 
+	setValueMenu.day = UserMenuSerialNm;
 	UserMenuSerialNm++;
 	sub_gr++;
-
+	
 
 /////////////////////////////////////////////////////////////////////
 //sub Menu ¼ÂÆÃ°ª ¹Ú¸í 
@@ -300,8 +360,10 @@ uint16_t Group1_Menu_Status_Set(void)
 
 	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;
 
+	setValueMenu.twl = UserMenuSerialNm;
 	UserMenuSerialNm++;
 	sub_gr++;
+	
 
 /////////////////////////////////////////////////////////////////////
 //sub Menu ¼ÂÆÃ°ª ¹ã
@@ -313,9 +375,9 @@ uint16_t Group1_Menu_Status_Set(void)
 
 	MenuStatus[UserMenuSerialNm].M_EditDigitMinValue=300;
 
+	setValueMenu.nig = UserMenuSerialNm;
 	UserMenuSerialNm++;
 	sub_gr++;
-
 
 /////////////////////////////////////////////////////////////////////
 //sub Menu 	max ¼ÂÆÃ°ª ³· 
@@ -996,15 +1058,20 @@ uint16_t Group10_Menu_Status_Set(void)
 
 
 
-uint16_t	DefaultValueSet(void)
+uint16_t	set_defaultValue(void)
 {
 	if(cF_INITIAL == DFL_SETUP)	return(0);
 	else{
-		cSR_ByteData(F_VERSION)=DFL_VERSION;
-		cSR_ByteData(F_INITIAL)=DFL_SETUP; // ÃÊ±âÈ­ °ª 
+		cSR_ByteData(F_VERSION) = DFL_VERSION;
+		cSR_ByteData(F_INITIAL) = DFL_SETUP; // ÃÊ±âÈ­ °ª 
 
-		cSR_ByteData(F_DUTY_CNT) = DFL_DUTY_CNT;
-		cSR_ByteData(F_DUTY_RATE) = DFL_DUTY_RATE;
+		cSR_ByteData(F_DAY_DUTY_CNT) = DFL_DAY_DUTY_CNT;
+		cSR_ByteData(F_DAY_DUTY_RATE) = DFL_DAT_DUTY_RATE;
+		cSR_ByteData(F_TWL_DUTY_CNT) = DFL_TWL_DUTY_CNT;
+		cSR_ByteData(F_TWL_DUTY_RATE) = DFL_TWL_DUTY_RATE;
+		cSR_ByteData(F_NIG_DUTY_CNT) = DFL_NIG_DUTY_CNT;
+		cSR_ByteData(F_NIG_DUTY_RATE) = DFL_NIG_DUTY_RATE;		
+
 		
 		cSR_ByteData(F_SETMODE_SEL) = DFL_SETMODE_SEL;
 		
@@ -1053,7 +1120,7 @@ uint16_t Menu_Status_Set(void)
 	Group9_Menu_Status_Set();
 	Group10_Menu_Status_Set();
 
-	DefaultValueSet();
+	set_defaultValue();
 
 	return(0);
 }

@@ -33,7 +33,13 @@ extern	uint8_t	LoaderBitAreaSram1;
 #define  bImportData        GET_BITFIELD(&LoaderBitAreaSram1).bit1
 
 
-	
+typedef struct{
+	unsigned char	day;
+	unsigned char 	twl;
+	unsigned char 	nig;
+} MySetValueMenuNum;
+
+MySetValueMenuNum		setValueMenu = {0,};	
 
 
 

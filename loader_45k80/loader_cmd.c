@@ -383,35 +383,54 @@ void display_unit(void)
 
 		case	5:
 			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = '%'; 
-			break;				
-	
+			break;
+		
+		case	6:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = 'B'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'P';
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'M';		
+			break;
+
 		case	7:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = '%'; 
 			break;
-
+		
 		case	8:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = 'B'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'P';
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'M';		
 			break;
-			
+
 		case	9:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 4] = '%'; 
+			break;		
+	
+		case	11:
 			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
 			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
-			break;		
-
-			
-		case	10:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
 			break;
 
-		case	11:
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
-			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
-			break;
-			
 		case	12:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			break;
+			
+		case	13:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 5] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'A'; 
+			break;
+			
+		case	14:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
+			break;
+
+		case	15:
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
+			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
+			break;
+			
+		case	16:
 			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 6] = 'm'; 
 			New485Ladder[SECONDLINE_BASE + CurMenuStatus.M_EditStart + 7] = 'A'; 
 			break;			
