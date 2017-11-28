@@ -283,8 +283,15 @@ unsigned char L_Duty_Cnt = 0;
 unsigned char L_Duty_Rate = 0;
 
 
-typedef enum{SETMODE_NONE = 0, SETMODE_DAY = 1, SETMODE_TWL = 2, SETMODE_NIG = 3, SETMODE_ZERO_VOLTAGE_CHK = 4} tag_SETMODE;
-tag_SETMODE		eSETMODE = SETMODE_NONE, Bef_eSETMODE = SETMODE_NONE;
+typedef enum{	SETMODE_NONE = 0, 
+				SETMODE_DAY  = 1, 
+				SETMODE_TWL  = 2, 
+				SETMODE_NIG  = 3, 
+				SETMODE_ZERO_VOLTAGE_CHK = 4 
+} SetMode;
+
+SetMode		eSETMODE = SETMODE_NONE, 
+			Bef_eSETMODE = SETMODE_NONE;
 
 
 // Current Set
@@ -295,7 +302,7 @@ unsigned int L_MAX_Current_Night = 0;
 
 typedef struct{
 
-	// flashing(blink ON) Duty 시간 변수들 
+	// flashing[0](blink ON) Duty 시간 변수들 
 	UCHAR	onCnt_BPM;				// 1분당	 LED ON 횟수
 	UCHAR	duty_rate; 				// 1 cycle에 대하여 ON 비율(%) = 펄스폭과 같은 말 
 	ULONG	duty_msec; 			// Lamp Blink에서의 On 주기 시간(ms)		
@@ -303,7 +310,7 @@ typedef struct{
 
 } Flashing;
 	
-Flashing	flashing = {0,};
+Flashing	flashing[3] ={{0,},};
 
 
 ULONG 	Multip[3] = {0,};	

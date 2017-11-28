@@ -312,9 +312,9 @@ bit IsBlk_DutyOn_ByTimer(void)
     }
     // 현재 시간값을 msec 단위로 환산하여 플래싱 싸이클 값으로 나눈 나머지로 현재 램프를 On할지 Off할지 여부를 알 수 있다.
     CurTotalGms = ZeroTimer + (ULONG)Gm1;
-    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing.cycle_msec);
+    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing[CurD_T_N].cycle_msec);
 
-    if (Gms60000 < flashing.duty_msec)
+    if (Gms60000 < flashing[CurD_T_N].duty_msec)
     {
         bBlk_DutyOn = TRUE; // APL LAMP ON
     }
@@ -707,6 +707,37 @@ unsigned int GetInCurrent(unsigned int CurA_IN_mV)
     return (unsigned int)In_Current;
 }
 
+
+void read_flashingSetValues(void)
+{
+	flashing[DAY].onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
+    flashing[DAY].duty_rate = cF_DAY_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
+	// 1회 깜빡이는 시간 계산 (msec)
+    if (flashing[DAY].onCnt_BPM >= 1) 
+		flashing[DAY].cycle_msec = (60000 / flashing[DAY].onCnt_BPM);  
+
+	flashing[DAY].duty_msec = (flashing[DAY].cycle_msec * flashing[DAY].duty_rate) / 100;		
+
+
+	flashing[TWL].onCnt_BPM = cF_TWL_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
+    flashing[TWL].duty_rate = cF_TWL_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
+	// 1회 깜빡이는 시간 계산 (msec)
+    if (flashing[TWL].onCnt_BPM >= 1) 
+		flashing[TWL].cycle_msec = (60000 / flashing[TWL].onCnt_BPM);  
+
+	flashing[TWL].duty_msec = (flashing[TWL].cycle_msec * flashing[TWL].duty_rate) / 100;
+
+
+	flashing[NIG].onCnt_BPM = cF_NIG_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
+    flashing[NIG].duty_rate = cF_NIG_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
+	// 1회 깜빡이는 시간 계산 (msec)
+    if (flashing[NIG].onCnt_BPM >= 1) 
+		flashing[NIG].cycle_msec = (60000 / flashing[NIG].onCnt_BPM);  
+
+	flashing[NIG].duty_msec = (flashing[NIG].cycle_msec * flashing[NIG].duty_rate) / 100;
+
+}
+
 // 저장된 값 Read(Load) /////////////////////////////////////
 bit read_settingValue_when_powerOn(void)
 {
@@ -715,14 +746,9 @@ bit read_settingValue_when_powerOn(void)
 
     ret = FALSE;
 
-	flashing.onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
-    flashing.duty_rate = cF_DAY_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
 
-	// 1회 깜빡이는 시간 계산 (msec)
-    if (flashing.onCnt_BPM >= 1) 
-		flashing.cycle_msec = (60000 / flashing.onCnt_BPM);  
-
-	flashing.duty_msec = (flashing.cycle_msec * flashing.duty_rate) / 100;		
+	read_flashingSetValues();
+	
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
     sAPL[DAY].Set_Current = cF_SETCURR_DAY;
@@ -749,15 +775,8 @@ bit read_settingValue_when_powerOn(void)
 void read_write_settingValue(void)
 {
 // Read !!!
-    // LED 깜빡이는 1싸이클에 대하여 ON 듀티 시간(msec) 값을 구한다.
-    // Lamp Blink에서의 On 주기 시간(msec)
-    flashing.onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; // 1분 기준 몇 회 깜빡일지
-    flashing.duty_rate = cF_DAY_FLASHING_DUTY_RATE; // 1회 깜빡임에 대하여 On 비율 (%)
-    
-    if (flashing.onCnt_BPM >= 1) 
-		flashing.cycle_msec = (60000 / flashing.onCnt_BPM); // 1회 깜빡임 싸이클 미리세크 
 
-	flashing.duty_msec = (flashing.cycle_msec * flashing.duty_rate) / 100;
+	read_flashingSetValues();
 
     // 각 V_IN 셋팅 값
     sAPL[DAY].Set_Current = cF_SETCURR_DAY;
@@ -1137,16 +1156,16 @@ uint8_t GetUserSystemStatus(void)
 }
 
 
-void InitInTimer(void)
+void initial_zeroTimer(unsigned char d_t_n)
 {
 	unsigned long tmp; 
 	
 	Ghour	= 0;
 
-	tmp = flashing.duty_msec / 60000;
+	tmp = flashing[d_t_n].duty_msec / 60000;
 	Gmin	= (unsigned char)tmp;
 
-	tmp = flashing.duty_msec % 60000;
+	tmp = flashing[d_t_n].duty_msec % 60000;
 	Gsec = (unsigned char)(tmp / 1000);
 
 	tmp = tmp % 1000;
@@ -1214,7 +1233,7 @@ void main(void)
 	OutLampWhenPowerOn();
 ////////////////////////////////////////////////////////////////
 
-	InitInTimer();
+	initial_zeroTimer(DAY);
 
 
 	pps_edge_none_chk_timer = 0;
