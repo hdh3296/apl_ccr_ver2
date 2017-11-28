@@ -312,9 +312,9 @@ bit IsBlk_DutyOn_ByTimer(void)
     }
     // 현재 시간값을 msec 단위로 환산하여 플래싱 싸이클 값으로 나눈 나머지로 현재 램프를 On할지 Off할지 여부를 알 수 있다.
     CurTotalGms = ZeroTimer + (ULONG)Gm1;
-    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing[CurD_T_N].period_msec);
+    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)myFlashing[CurD_T_N].period_msec);
 
-    if (Gms60000 < flashing[CurD_T_N].duty_msec)
+    if (Gms60000 < myFlashing[CurD_T_N].duty_msec)
     {
         bBlk_DutyOn = TRUE; // APL LAMP ON
     }
@@ -708,7 +708,7 @@ unsigned int GetInCurrent(unsigned int CurA_IN_mV)
 }
 
 
-void read_flashingSetValues(void)
+void read_flashingSetValues(Flashing flashing[])
 {
 	/* flashing 관련 설정 값들 가져오기 
 		결론적으로 1회 flashing cycle에 대하여
@@ -722,30 +722,31 @@ void read_flashingSetValues(void)
 	*/
 	
 	unsigned char i;
+	unsigned char pulse_per_6000msec, duty_rate;
 	
 	for (i=0; i<3; i++){
 		
 		switch (i){
 			case 0:				
-				flashing[i].count_60msec = cF_DAY_FLASHING_CNT_BPM; 	
-				flashing[i].duty_rate = cF_DAY_FLASHING_DUTY_RATE;
+				pulse_per_6000msec = cF_DAY_FLASHING_COUNT_6000MSEC; 	
+				duty_rate = cF_DAY_FLASHING_DUTY_RATE;
 				break;
 				
 			case 1:
-				flashing[i].count_60msec = cF_TWL_FLASHING_CNT_BPM; 	
-				flashing[i].duty_rate = cF_TWL_FLASHING_DUTY_RATE;
+				pulse_per_6000msec = cF_TWL_FLASHING_COUNT_6000MSEC; 	
+				duty_rate = cF_TWL_FLASHING_DUTY_RATE;
 				break;
 				
 			case 2:
-				flashing[i].count_60msec = cF_NIG_FLASHING_CNT_BPM; 	
-				flashing[i].duty_rate = cF_NIG_FLASHING_DUTY_RATE;
+				pulse_per_6000msec = cF_NIG_FLASHING_COUNT_6000MSEC; 	
+				duty_rate = cF_NIG_FLASHING_DUTY_RATE;
 				break;
 		}		 	
 
-	    if (flashing[i].count_60msec >= 1) 
-			flashing[i].period_msec = (60000 / flashing[i].count_60msec);  
+	    if ( pulse_per_6000msec >= 1 ) 
+			flashing[i].period_msec = 60000 / pulse_per_6000msec;  
 
-		flashing[i].duty_msec = (flashing[i].period_msec * flashing[i].duty_rate) / 100;			
+		flashing[i].duty_msec = ( flashing[i].period_msec * duty_rate ) / 100;			
 	}
 
 
@@ -760,7 +761,7 @@ bit read_settingValue_when_powerOn(void)
     ret = FALSE;
 
 
-	read_flashingSetValues();
+	read_flashingSetValues(myFlashing);
 	
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
@@ -789,7 +790,7 @@ void read_write_settingValue(void)
 {
 // Read !!!
 
-	read_flashingSetValues();
+	read_flashingSetValues(myFlashing);
 
     // 각 V_IN 셋팅 값
     sAPL[DTN_DAY].Set_Current = cF_SETCURR_DAY;
@@ -1175,10 +1176,10 @@ void initial_zeroTimer(unsigned char d_t_n)
 	
 	Ghour	= 0;
 
-	tmp = flashing[d_t_n].duty_msec / 60000;
+	tmp = myFlashing[d_t_n].duty_msec / 60000;
 	Gmin	= (unsigned char)tmp;
 
-	tmp = flashing[d_t_n].duty_msec % 60000;
+	tmp = myFlashing[d_t_n].duty_msec % 60000;
 	Gsec = (unsigned char)(tmp / 1000);
 
 	tmp = tmp % 1000;
