@@ -246,7 +246,7 @@ uint16_t Group1_Menu_Status_Set(void)
 ///////////
 ///////////
 /////////////////////////////////////////////////////////////////////
-//sub Menu : DAY µàÆ¼ ¼ö 
+//sub Menu : DTN_DAY µàÆ¼ ¼ö 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DAY_DUTY_CNT; // µàÆ¼ ¼ö 
@@ -255,7 +255,7 @@ uint16_t Group1_Menu_Status_Set(void)
 	UserMenuSerialNm++;
 	sub_gr++;
 /////////////////////////////////////////////////////////////////////
-//sub Menu : DAY µàÆ¼ ºñ 
+//sub Menu : DTN_DAY µàÆ¼ ºñ 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_DAY_DUTY_RATE; // µàÆ¼ ºñ 
@@ -268,7 +268,7 @@ uint16_t Group1_Menu_Status_Set(void)
 
 
 /////////////////////////////////////////////////////////////////////
-//sub Menu : TWL µàÆ¼ ¼ö 
+//sub Menu : DTN_TWL µàÆ¼ ¼ö 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_TWL_DUTY_CNT; // µàÆ¼ ¼ö 
@@ -277,7 +277,7 @@ uint16_t Group1_Menu_Status_Set(void)
 	UserMenuSerialNm++;
 	sub_gr++;	
 /////////////////////////////////////////////////////////////////////
-//sub Menu : TWL µàÆ¼ ºñ 
+//sub Menu : DTN_TWL µàÆ¼ ºñ 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_TWL_DUTY_RATE; // µàÆ¼ ºñ 
@@ -290,7 +290,7 @@ uint16_t Group1_Menu_Status_Set(void)
 
 
 /////////////////////////////////////////////////////////////////////
-//sub Menu : NIG µàÆ¼ ¼ö 
+//sub Menu : DTN_NIG µàÆ¼ ¼ö 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_NIG_DUTY_CNT; // µàÆ¼ ¼ö 
@@ -299,7 +299,7 @@ uint16_t Group1_Menu_Status_Set(void)
 	UserMenuSerialNm++;
 	sub_gr++;		
 /////////////////////////////////////////////////////////////////////
-//sub Menu : NIG µàÆ¼ ºñ 
+//sub Menu : DTN_NIG µàÆ¼ ºñ 
 /////////////////////////////////////////////////////////////////////	
 	ByteType_DIGIT_EDIT_Set(main_gr,sub_gr,DIVIDE_0);
 	MenuStatus[UserMenuSerialNm].M_EditFlashAddr=F_NIG_DUTY_RATE; // µàÆ¼ ºñ 

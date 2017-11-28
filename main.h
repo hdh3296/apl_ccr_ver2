@@ -303,10 +303,10 @@ unsigned int L_MAX_Current_Night = 0;
 typedef struct{
 
 	// flashing[0](blink ON) Duty 시간 변수들 
-	UCHAR	onCnt_BPM;				// 1분당	 LED ON 횟수
-	UCHAR	duty_rate; 				// 1 cycle에 대하여 ON 비율(%) = 펄스폭과 같은 말 
-	ULONG	duty_msec; 			// Lamp Blink에서의 On 주기 시간(ms)		
-	ULONG	cycle_msec; 	// 1회 깜빡일때의 시간 
+	UCHAR	count_60msec;	// 1분당	 LED ON(flashing) 횟수
+	UCHAR	duty_rate; 		// LED duty rate 
+	ULONG	duty_msec; 		// LED duty 시간(msec)		
+	ULONG	period_msec; 	// LED 주기 (msec) 
 
 } Flashing;
 	

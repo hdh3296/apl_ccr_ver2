@@ -154,7 +154,7 @@ void LedBlinkModeInit(void)
 
 // 딥스위치 설정에 따라서 GPS에 의한 내부 타이머를 사용하여 블링크를 할지 
 // FU에 의해서 블링크를 할지 결정 된다. 
-void ProcBlink(tag_CurDay CurDayNig)
+void ProcBlink(Day_Twilight_Night CurDayNig)
 {
 // 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.
 // 만일, 딥스위치 3번에 on 되어 있으면 2번 스위치 무시하고 외부 CAN GPS 보드 사용
@@ -312,7 +312,7 @@ bit IsBlk_DutyOn_ByTimer(void)
     }
     // 현재 시간값을 msec 단위로 환산하여 플래싱 싸이클 값으로 나눈 나머지로 현재 램프를 On할지 Off할지 여부를 알 수 있다.
     CurTotalGms = ZeroTimer + (ULONG)Gm1;
-    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing[CurD_T_N].cycle_msec);
+    Gms60000 = (UINT)((ZeroTimer + (ULONG)Gm1) % (ULONG)flashing[CurD_T_N].period_msec);
 
     if (Gms60000 < flashing[CurD_T_N].duty_msec)
     {
@@ -400,21 +400,21 @@ unsigned char GetDAY_TWL_NIG(void)
     if (_DIP_SW2 == ON_DIPSW)
     {
         if ((bCDS_Day) && (bCDS_Night))
-            ret = TWL;
+            ret = DTN_TWL;
         else if (bCDS_Day)
-            ret = DAY;
+            ret = DTN_DAY;
         else if (bCDS_Night)
-            ret = NIG;
+            ret = DTN_NIG;
         else
-            ret = NONE;
+            ret = DTN_NONE;
     }
     // 중광도용 (낮 / 밤)
     else
     {
         if (bCDS_Night)
-            ret = NIG;
+            ret = DTN_NIG;
         else
-            ret = DAY;
+            ret = DTN_DAY;
     }
 
     return ret;
@@ -467,11 +467,11 @@ void OutLampWhenPowerOn(void)
 {	
 	static unsigned char cnt_aaa = 0;
 
-	CurD_T_N = NONE;
+	CurD_T_N = DTN_NONE;
 	OutLampWhenPowerOnTimer_12 = 0;	
 	CanCmd = CMD_NONE;
 
-	CurD_T_N = NONE;	
+	CurD_T_N = DTN_NONE;	
 	CAN_RcvBuf[1] = CurD_T_N;
 	cRxCurD_T_N = CurD_T_N;
 	
@@ -485,7 +485,7 @@ void OutLampWhenPowerOn(void)
 
 		SelDipSW();
 		SaveCANRxData();
-		if (CurD_T_N < NONE)
+		if (CurD_T_N < DTN_NONE)
 		{
 			if (myAdr == MASTER)
 			{
@@ -495,7 +495,7 @@ void OutLampWhenPowerOn(void)
 			}
 		}
 		
-        if (CurD_T_N < NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
+        if (CurD_T_N < DTN_NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
 
 		_LAMP_ON = FALSE;
 		OutPWM(20);
@@ -604,7 +604,7 @@ unsigned int CompareSet_InCurrent(unsigned int duty,
 
 
 // 셋팅 스위치 눌렀을 때 APL 램프 셋팅
-void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
+void OutAplLamp_WhenSetMode(Day_Twilight_Night Sw_DayNig)
 {
     if (bAD_A_IN_mV_Upd)
     {
@@ -621,7 +621,7 @@ void OutAplLamp_WhenSetMode(tag_CurDay Sw_DayNig)
 
 
 // 현재(실제) APL LAPM On, Off 처리
-void OutAplLamp_Nomal(tag_CurDay CurDayNig)
+void OutAplLamp_Nomal(Day_Twilight_Night CurDayNig)
 {
     unsigned int i;
 
@@ -663,9 +663,9 @@ void OutAplLamp_Nomal(tag_CurDay CurDayNig)
         }
 
         _LAMP_ON = FALSE; // LAMP OFF
-        if (CurDayNig == DAY) OutPWM(cF_SET_stDUTYCYCLE_D);
-		else if(CurDayNig == TWL) OutPWM(cF_SET_stDUTYCYCLE_T);
-		else if(CurDayNig == NIG) OutPWM(cF_SET_stDUTYCYCLE_N);
+        if (CurDayNig == DTN_DAY) OutPWM(cF_SET_stDUTYCYCLE_D);
+		else if(CurDayNig == DTN_TWL) OutPWM(cF_SET_stDUTYCYCLE_T);
+		else if(CurDayNig == DTN_NIG) OutPWM(cF_SET_stDUTYCYCLE_N);
 		else OutPWM(cF_SET_stDUTYCYCLE_N);
     }
 }
@@ -710,31 +710,44 @@ unsigned int GetInCurrent(unsigned int CurA_IN_mV)
 
 void read_flashingSetValues(void)
 {
-	flashing[DAY].onCnt_BPM = cF_DAY_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
-    flashing[DAY].duty_rate = cF_DAY_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
-	// 1회 깜빡이는 시간 계산 (msec)
-    if (flashing[DAY].onCnt_BPM >= 1) 
-		flashing[DAY].cycle_msec = (60000 / flashing[DAY].onCnt_BPM);  
+	/* flashing 관련 설정 값들 가져오기 
+		결론적으로 1회 flashing cycle에 대하여
+		duty(flashing = led on)되는 시간(msec)값을 가져오는게 목적이다. 
+		
+		즉, duty cycle 변수 값과 
+			period 변수 값 을 얻어오기 위한 함수이다.
 
-	flashing[DAY].duty_msec = (flashing[DAY].cycle_msec * flashing[DAY].duty_rate) / 100;		
+		※	duty cycle(= duty) : period(T)에 대한 on 비율(%)을 일반적으로 일컫는다. 
+			Period(T)		   : 주기 
+	*/
+	
+	unsigned char i;
+	
+	for (i=0; i<3; i++){
+		
+		switch (i){
+			case 0:				
+				flashing[i].count_60msec = cF_DAY_FLASHING_CNT_BPM; 	
+				flashing[i].duty_rate = cF_DAY_FLASHING_DUTY_RATE;
+				break;
+				
+			case 1:
+				flashing[i].count_60msec = cF_TWL_FLASHING_CNT_BPM; 	
+				flashing[i].duty_rate = cF_TWL_FLASHING_DUTY_RATE;
+				break;
+				
+			case 2:
+				flashing[i].count_60msec = cF_NIG_FLASHING_CNT_BPM; 	
+				flashing[i].duty_rate = cF_NIG_FLASHING_DUTY_RATE;
+				break;
+		}		 	
 
+	    if (flashing[i].count_60msec >= 1) 
+			flashing[i].period_msec = (60000 / flashing[i].count_60msec);  
 
-	flashing[TWL].onCnt_BPM = cF_TWL_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
-    flashing[TWL].duty_rate = cF_TWL_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
-	// 1회 깜빡이는 시간 계산 (msec)
-    if (flashing[TWL].onCnt_BPM >= 1) 
-		flashing[TWL].cycle_msec = (60000 / flashing[TWL].onCnt_BPM);  
+		flashing[i].duty_msec = (flashing[i].period_msec * flashing[i].duty_rate) / 100;			
+	}
 
-	flashing[TWL].duty_msec = (flashing[TWL].cycle_msec * flashing[TWL].duty_rate) / 100;
-
-
-	flashing[NIG].onCnt_BPM = cF_NIG_FLASHING_CNT_BPM; 	// 1분 기준 몇 회 깜빡일지
-    flashing[NIG].duty_rate = cF_NIG_FLASHING_DUTY_RATE; 	// 1회 깜빡임에 대하여 On 비율 (%)
-	// 1회 깜빡이는 시간 계산 (msec)
-    if (flashing[NIG].onCnt_BPM >= 1) 
-		flashing[NIG].cycle_msec = (60000 / flashing[NIG].onCnt_BPM);  
-
-	flashing[NIG].duty_msec = (flashing[NIG].cycle_msec * flashing[NIG].duty_rate) / 100;
 
 }
 
@@ -751,17 +764,17 @@ bit read_settingValue_when_powerOn(void)
 	
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
-    sAPL[DAY].Set_Current = cF_SETCURR_DAY;
-    sAPL[TWL].Set_Current = cF_SETCURR_TWL;
-    sAPL[NIG].Set_Current = cF_SETCURR_NIG;
+    sAPL[DTN_DAY].Set_Current = cF_SETCURR_DAY;
+    sAPL[DTN_TWL].Set_Current = cF_SETCURR_TWL;
+    sAPL[DTN_NIG].Set_Current = cF_SETCURR_NIG;
 
-    sAPL[DAY].Max_Current = cF_MaxSetA_DAY;
-    sAPL[TWL].Max_Current = cF_MaxSetA_TWL;
-    sAPL[NIG].Max_Current = cF_MaxSetA_NIG;
+    sAPL[DTN_DAY].Max_Current = cF_MaxSetA_DAY;
+    sAPL[DTN_TWL].Max_Current = cF_MaxSetA_TWL;
+    sAPL[DTN_NIG].Max_Current = cF_MaxSetA_NIG;
 
-    sAPL[DAY].Set_DutyCycle = cF_SET_DUTYCYCLED;
-    sAPL[TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
-    sAPL[NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
+    sAPL[DTN_DAY].Set_DutyCycle = cF_SET_DUTYCYCLED;
+    sAPL[DTN_TWL].Set_DutyCycle = cF_SET_DUTYCYCLET;
+    sAPL[DTN_NIG].Set_DutyCycle = cF_SET_DUTYCYCLEN;
 
 	ZeroVoltage = cF_SET_F_SET_GIJUN_V;
 	bZeroVoltageSaved = cF_bSave_GIJUN;
@@ -779,22 +792,22 @@ void read_write_settingValue(void)
 	read_flashingSetValues();
 
     // 각 V_IN 셋팅 값
-    sAPL[DAY].Set_Current = cF_SETCURR_DAY;
-    sAPL[TWL].Set_Current = cF_SETCURR_TWL;
-    sAPL[NIG].Set_Current = cF_SETCURR_NIG;
+    sAPL[DTN_DAY].Set_Current = cF_SETCURR_DAY;
+    sAPL[DTN_TWL].Set_Current = cF_SETCURR_TWL;
+    sAPL[DTN_NIG].Set_Current = cF_SETCURR_NIG;
 
-    sAPL[DAY].Max_Current = cF_MaxSetA_DAY;
-    sAPL[TWL].Max_Current = cF_MaxSetA_TWL;
-    sAPL[NIG].Max_Current = cF_MaxSetA_NIG;
+    sAPL[DTN_DAY].Max_Current = cF_MaxSetA_DAY;
+    sAPL[DTN_TWL].Max_Current = cF_MaxSetA_TWL;
+    sAPL[DTN_NIG].Max_Current = cF_MaxSetA_NIG;
 
 
     // 셋팅모드인지 아닌지에 대한 변수와 현재 볼륨값 변수를 만들자.
     // 셋팅 모드 선택
     eSETMODE = cF_SETMODE_SEL;
 
-    sAPL[DAY].bEveryOnSet = cF_EveryOnSetD;
-    sAPL[TWL].bEveryOnSet = cF_EveryOnSetT;
-    sAPL[NIG].bEveryOnSet = cF_EveryOnSetN;
+    sAPL[DTN_DAY].bEveryOnSet = cF_EveryOnSetD;
+    sAPL[DTN_TWL].bEveryOnSet = cF_EveryOnSetT;
+    sAPL[DTN_NIG].bEveryOnSet = cF_EveryOnSetN;
 
 // Write !!!
     // Set_DutyCycle 값
@@ -868,7 +881,7 @@ void ProcDAY_TWL_NIG(void)
 	if (myAdr == SLAVE) // slave
     	CurD_T_N = cRxCurD_T_N;
    	else 		
-		CurD_T_N = GetDAY_TWL_NIG(); // NONE, DAY , TWL , NIG 값 가져온다.
+		CurD_T_N = GetDAY_TWL_NIG(); // DTN_NONE, DTN_DAY , DTN_TWL , DTN_NIG 값 가져온다.
 
 // 낮, 밤이 바뀔 때 처리
     if (CurD_T_N != BefD_T_N)
@@ -1134,9 +1147,9 @@ uint8_t GetUserSystemStatus(void)
 	{
 
 		// 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-		if (CurD_T_N == DAY) message = 2;
-		else if (CurD_T_N == TWL) message = 3;
-		else if (CurD_T_N == NIG) message = 4;
+		if (CurD_T_N == DTN_DAY) message = 2;
+		else if (CurD_T_N == DTN_TWL) message = 3;
+		else if (CurD_T_N == DTN_NIG) message = 4;
 
 	}
 	else if (myMode == MYMODE_NONE_CDS)
@@ -1146,9 +1159,9 @@ uint8_t GetUserSystemStatus(void)
 	else if (myMode == MYMODE_NONE_SETTING)	
 	{
 		// 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
-		if (CurD_T_N == DAY) message = 5;
-		else if (CurD_T_N == TWL) message = 6;
-		else if (CurD_T_N == NIG) message = 7;
+		if (CurD_T_N == DTN_DAY) message = 5;
+		else if (CurD_T_N == DTN_TWL) message = 6;
+		else if (CurD_T_N == DTN_NIG) message = 7;
 	}
 
 	return message;
@@ -1233,7 +1246,7 @@ void main(void)
 	OutLampWhenPowerOn();
 ////////////////////////////////////////////////////////////////
 
-	initial_zeroTimer(DAY);
+	initial_zeroTimer(DTN_DAY);
 
 
 	pps_edge_none_chk_timer = 0;
@@ -1318,7 +1331,7 @@ void main(void)
 		{
 			bSetModeReady = FALSE;
 			
-			if (CurD_T_N == NONE)
+			if (CurD_T_N == DTN_NONE)
 			{
 				myMode = MYMODE_NONE_CDS;
 				
