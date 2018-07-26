@@ -1,7 +1,7 @@
 
-// "640 byte(=64 * 10 ) 플레시 확보해 놓는다."  or  "160 long = (64/4) * 10"  
+// "640 byte(=64 * 10 ) 플레시 확보해 놓는다."  or  "160 long = (64/4) * 10"
 #define	MAX_FLASH_BLOCK_NM		1 // --> 버그 : 특정 개수 이상 블락 개수를 설정하면 Write 시 문제 생긴다.
-// 전체 메뉴 갯수(현재 상태 제외)  
+// 전체 메뉴 갯수(현재 상태 제외)
 #define	MAX_MENU			50
 
 #ifndef	__LOADER_USERDESIGN
@@ -15,85 +15,85 @@ extern	uint16_t DefaultDisplay(void);
 /////////////////////////////////////////////////////////////////////
 ////////////////////user message  set//////////////////////////////
 
-// 상태 메시지  
+// 상태 메시지
 const uint8_t StatusMessage[][17]	={
-                                     	"Wait_Ready      ",      // 0                              
-                                     	"Now Setting     ",      // 1                               
-                                     	"Day Running     ",      // 2                               
-                                     	"Twilight Running",      // 3                               
-                                     	"Night Running   ",      // 4                               
-                                     	"Day Not Set     ",      // 5                               
-                                     	"Twilight Not Set",      // 6                               
-                                     	"Night Not Set   ",      // 7                               
-                                     	"CDS Error       ",      // 8                              
-                                     	"Right-Down      ",      // 9                               
-                                     	"Down            ",      // 10                               
+                                     	"Wait_Ready      ",      // 0
+                                     	"Now Setting     ",      // 1
+                                     	"Day Running     ",      // 2
+                                     	"Twilight Running",      // 3
+                                     	"Night Running   ",      // 4
+                                     	"Day Not Set     ",      // 5
+                                     	"Twilight Not Set",      // 6
+                                     	"Night Not Set   ",      // 7
+                                     	"CDS Error       ",      // 8
+                                     	"Right-Down      ",      // 9
+                                     	"Down            ",      // 10
                                      	"Up              ",      // 11
-                                     	"Init            ",      // 12                               
-                                     	"ON____          ",      // 13                               
-                                     	"___OFF          ",      // 14                               
-                                      	"------------    ",      // 15                               		                                  
-										"Emgency Stop    ",      // 16                               
-										"GOV Error       ",      // 17                               
-										"Not Zero_Cur Set",      // 18                                                                           
-                                    	};                                      
+                                     	"Init            ",      // 12
+                                     	"ON____          ",      // 13
+                                     	"___OFF          ",      // 14
+                                      	"------------    ",      // 15
+										"Emgency Stop    ",      // 16
+										"GOV Error       ",      // 17
+										"Not Zero_Cur Set",      // 18
+                                    	};
 
-// 메뉴 이름 
+// 메뉴 이름
 const uint8_t GroupLineMessage[][17]={
                                     "USER:Version    ",// 1  // group0
-                                    "USER:Display Sel",// 2 
-                                    "USER:Initial    ",// 3  
-                                    "USER:Read/Write ",// 4  
-                                    "USER:DayFlashCNT",// 5  
-                                    "USER:DayFlashRat",// 6  
-                                    "USER:TwlFlashCNT",// 7  
+                                    "USER:Display Sel",// 2
+                                    "USER:Initial    ",// 3
+                                    "USER:Read/Write ",// 4
+                                    "USER:DayFlashCNT",// 5
+                                    "USER:DayFlashRat",// 6
+                                    "USER:TwlFlashCNT",// 7
                                     "USER:TwlFlashRat",// 8
-                                    "USER:NigFlashCNT",// 9  
+                                    "USER:NigFlashCNT",// 9
                                     "USER:NigFlashRat",// 10
-                                    "USER:SEL SETMODE",//  
-                                    "USER:SET VAL DAY",//   
-                                    "USER:SET VAL TWL",//  
-                                    "USER:SET VAL NIG",//  
-                                    "USER:Max SET DAY",//   
-                                    "USER:Max SET TWL",//  
-                                    "USER:Max SET NIG",//  
-                                    "USER:EveryOn DAY",//   
-                                    "USER:EveryOn TWL",//  
-                                    "USER:EveryOn NIG",//  
-                                    "USER:SDutycycleD",//  
-                                    "USER:SDutycycleT",//  
-                                    "USER:SDutycycleN",//  
+                                    "USER:SEL SETMODE",//
+                                    "USER:SET VAL DAY",//
+                                    "USER:SET VAL TWL",//
+                                    "USER:SET VAL NIG",//
+                                    "USER:Max SET DAY",//
+                                    "USER:Max SET TWL",//
+                                    "USER:Max SET NIG",//
+                                    "USER:EveryOn DAY",//
+                                    "USER:EveryOn TWL",//
+                                    "USER:EveryOn NIG",//
+                                    "USER:SDutycycleD",//
+                                    "USER:SDutycycleT",//
+                                    "USER:SDutycycleN",//
                                     "View:DuCy_D_SVal",//   // group1
-                                    "View:DuCy_T_SVal",// 10 
-                                    "View:DuCy_N_SVal",// 11  
-                                    "View:ZeroCur_mV ",// 12  
-                                    "BAS1:VIB_TIME   ",// 13  
-                                    "BAS1:REPEAT_CNT ",// 14  
-                                    "BAS1:Not Use1   ",// 15  
-                                    "BAS1:Not Use2   ",// 16 
+                                    "View:DuCy_T_SVal",// 10
+                                    "View:DuCy_N_SVal",// 11
+                                    "View:ZeroCur_mV ",// 12
+                                    "BAS1:VIB_TIME   ",// 13
+                                    "BAS1:REPEAT_CNT ",// 14
+                                    "BAS1:Not Use1   ",// 15
+                                    "BAS1:Not Use2   ",// 16
                                     "BAS2:X_LENGTH   ",// 17  //group2
-                                    "BAS2:Z_LENGTH   ",// 18 
-                                    "BAS2:X_Z_LENGTH ",// 19  
-                                    "BAS2:Z_X_LENGTH ",// 20  
-                                    "BAS2:VIB_TIME   ",// 21  
-                                    "BAS2:REPEAT_CNT ",// 22  
-                                    "BAS2:Not Use1   ",// 23  
-                                    "BAS2:Not Use2   ",// 24 
+                                    "BAS2:Z_LENGTH   ",// 18
+                                    "BAS2:X_Z_LENGTH ",// 19
+                                    "BAS2:Z_X_LENGTH ",// 20
+                                    "BAS2:VIB_TIME   ",// 21
+                                    "BAS2:REPEAT_CNT ",// 22
+                                    "BAS2:Not Use1   ",// 23
+                                    "BAS2:Not Use2   ",// 24
                                     "BAS3:X_LENGTH   ",// 25  // group3
-                                    "BAS3:Z_LENGTH   ",// 26 
-                                    "BAS3:X_Z_LENGTH ",// 27  
-                                    "BAS3:Z_X_LENGTH ",// 28  
-                                    "BAS3:VIB_TIME   ",// 29  
-                                    "BAS3:REPEAT_CNT ",// 30  
-                                    "BAS3:Not Use1   ",// 31  
-                                    "BAS3:Not Use2   ",// 32 
+                                    "BAS3:Z_LENGTH   ",// 26
+                                    "BAS3:X_Z_LENGTH ",// 27
+                                    "BAS3:Z_X_LENGTH ",// 28
+                                    "BAS3:VIB_TIME   ",// 29
+                                    "BAS3:REPEAT_CNT ",// 30
+                                    "BAS3:Not Use1   ",// 31
+                                    "BAS3:Not Use2   ",// 32
 
                                     "Running Basket  ",// 0   // default group
                   			};
 
 
 const uint8_t myVersion[][17]={
-                                    "v2.13.0.28      ", // 버전 정보 표시 
+                                    "v2.13.1.29      ", // 버전 정보 표시
                   			};
 
 
@@ -101,33 +101,33 @@ const uint8_t myVersion[][17]={
 
 const uint8_t  DefaultMsg[][17] ={
                                     	"APL CCR         ",// 0
-										"APL CCR         "							
+										"APL CCR         "
 										};
 
 
 
 const uint8_t MsgSelModeSel[][17]={
-                                    "Running Mode  ",// 0  
-                                    "Set DAY Mode  ",// 1 
-                                    "Set TWL Mode  ",// 2  
+                                    "Running Mode  ",// 0
+                                    "Set DAY Mode  ",// 1
+                                    "Set TWL Mode  ",// 2
                                     "Set NIG Mode  ",// 3
                                     "Set Zero_Cur  ",// 4
                   			};
 
 
 const uint8_t MsgSelEveryOnSetD[][17]={
-                                    "Flashing      ",// 0  
-                                    "Every On      ",// 1 
+                                    "Flashing      ",// 0
+                                    "Every On      ",// 1
                   			};
 
 const uint8_t MsgSelEveryOnSetT[][17]={
-                                    "Flashing      ",// 0  
-                                    "Every On      ",// 1 
+                                    "Flashing      ",// 0
+                                    "Every On      ",// 1
                   			};
 
 const uint8_t MsgSelEveryOnSetN[][17]={
-                                    "Flashing      ",// 0  
-                                    "Every On      ",// 1 
+                                    "Flashing      ",// 0
+                                    "Every On      ",// 1
                   			};
 
 
@@ -135,32 +135,32 @@ const uint8_t MsgSelEveryOnSetN[][17]={
 
 
 const uint8_t DefaultMsgSel[][17]={
-                                    "Cur Status    ",// 0  
-                                    "c-Mem Display ",// 1 
-                                    "i-Mem Display ",// 2  
-                                    "l-Mem Display ",// 3        
-                                    "Not Use4      ",// 4  
-                                    "Not Use5      ",// 5  
-                                    "Not Use6      ",// 6  
-                                    "Not Use7      ",// 7 
-                                    "Not Use8      ",// 8 
-                                    "Not Use9      ",// 9 
-                                    "Not Use10     ",// 10 
+                                    "Cur Status    ",// 0
+                                    "c-Mem Display ",// 1
+                                    "i-Mem Display ",// 2
+                                    "l-Mem Display ",// 3
+                                    "Not Use4      ",// 4
+                                    "Not Use5      ",// 5
+                                    "Not Use6      ",// 6
+                                    "Not Use7      ",// 7
+                                    "Not Use8      ",// 8
+                                    "Not Use9      ",// 9
+                                    "Not Use10     ",// 10
                   			};
 
-// Flash Read / Write 
+// Flash Read / Write
 const uint8_t FlashMsgSel[][17]={
-                                    "Rd/Wr Ready.. ",// 0  
-                                    "Read :To Load ",// 1 
-                                    "Write:To Main ",// 2  
-                                    "Not Use2      ",// 3  
-                                    "Not Use3      ",// 4  
-                                    "Not Use4      ",// 5  
-                                    "Not Use5      ",// 6  
-                                    "Not Use6      ",// 7  
-                                    "Not Use7      ",// 8 
-                                    "Not Use8      ",// 9 
-                                    "Not Use9      ",// 9 
+                                    "Rd/Wr Ready.. ",// 0
+                                    "Read :To Load ",// 1
+                                    "Write:To Main ",// 2
+                                    "Not Use2      ",// 3
+                                    "Not Use3      ",// 4
+                                    "Not Use4      ",// 5
+                                    "Not Use5      ",// 6
+                                    "Not Use6      ",// 7
+                                    "Not Use7      ",// 8
+                                    "Not Use8      ",// 9
+                                    "Not Use9      ",// 9
                   			};
 
 
@@ -168,7 +168,7 @@ const uint8_t FlashMsgSel[][17]={
 
 /////////////////////////////////////////////////////////////////////
 ////////////////////memory address set//////////////////////////////
-// 저장할 번지 지정 
+// 저장할 번지 지정
 #define  F_VERSION			ByteData001 					// 1
 #define  F_WORK_MODE		ByteData002        				// 1
 #define  F_DEFAULT_DSP		ByteData003           			// 1
@@ -193,13 +193,13 @@ const uint8_t FlashMsgSel[][17]={
 #define  F_MSETCURR_DAY			IntzData014           			// 1
 #define  F_MSETCURR_TWL			IntzData015           			// 1
 #define  F_MSETCURR_NIG			IntzData016           			// 1
-#define  F_SET_DUTYCYCLED		IntzData017           			
-#define  F_SET_DUTYCYCLET		IntzData018	
-#define  F_SET_DUTYCYCLEN		IntzData019	
-#define  F_SET_stDUTYCYCLE_D	IntzData020	
+#define  F_SET_DUTYCYCLED		IntzData017
+#define  F_SET_DUTYCYCLET		IntzData018
+#define  F_SET_DUTYCYCLEN		IntzData019
+#define  F_SET_stDUTYCYCLE_D	IntzData020
 #define  F_SET_stDUTYCYCLE_T	IntzData021
 #define  F_SET_stDUTYCYCLE_N	IntzData022
-#define  F_SET_GIJUN_V			IntzData023	
+#define  F_SET_GIJUN_V			IntzData023
 
 
 
@@ -242,7 +242,7 @@ const uint8_t FlashMsgSel[][17]={
 
 
 
-// 번지 변수 명을 정의 하였다. 
+// 번지 변수 명을 정의 하였다.
 #define  cF_VERSION				cF_ByteData(F_VERSION)
 #define  cF_WORK_MODE			cF_ByteData(F_WORK_MODE)
 #define  cF_DEFAULT_DSP			cF_ByteData(F_DEFAULT_DSP)
@@ -332,14 +332,14 @@ const uint8_t FlashMsgSel[][17]={
 ////////////////////////////////////////////////////////
 /////////////sram memory set- char type/////////////////
 ////////////////////////////////////////////////////////
-#define		UpButtonTime_8	0  	
-#define		msec100_8	1  	
-#define		sec1_8				2  	
-#define		MotorSeq_8			3  	
-#define		BasketNm_8			4  	
-#define		RepeateCounter_8	5  	
-#define		LeftRightCurpt_8	6  	
-#define		UpDownCurpt_8		7  	
+#define		UpButtonTime_8	0
+#define		msec100_8	1
+#define		sec1_8				2
+#define		MotorSeq_8			3
+#define		BasketNm_8			4
+#define		RepeateCounter_8	5
+#define		LeftRightCurpt_8	6
+#define		UpDownCurpt_8		7
 
 #define		VARIABLE_8_END  	8
 
@@ -350,7 +350,7 @@ const uint8_t FlashMsgSel[][17]={
 /////////////////////////////////////////////////////////////////
 #define		viewSET_DUTYCYCLE		0
 #define		viewIn_Current			1
-#define		viewCurDAY_TWL_NIG		2	
+#define		viewCurDAY_TWL_NIG		2
 
 
 

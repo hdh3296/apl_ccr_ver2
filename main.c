@@ -72,7 +72,7 @@ void    InitPort(void)
     PIN_LED_RUN2_TRIS = 0;
     PIN_PWM_TRIS = 0;
     PIN_LED_RUN3_TRIS = 0;
-	PIN_RD6_x_TRIS = 0;    
+	PIN_RD6_x_TRIS = 0;
     PIN_TX_DP_TRIS = 1;
 
     PIN_1PPS_TRIS = 1;
@@ -89,9 +89,9 @@ void    InitPort(void)
     _LED_CAN_RX = 1;
     _LED_BLK = 1;// APL Lamp On 듀티 LED
     _LED_PPS = 1;
-    
 
-	_LOAD_ON = 0; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.  
+
+	_LOAD_ON = 0; // APL 램프 출력 정상인지 아닌지를 판단해서 ON, OFF 하여 준다.
 
 
 }
@@ -117,8 +117,8 @@ void ChkGpsPPS1(void)
         bPPS_On = TRUE;
 
 		// pps 상태값이 설정 시간 동안 오지 않으면
-		// led off 상태를 유지 한다. 
-		if (pps_edge_none_chk_timer > 3000 ){	
+		// led off 상태를 유지 한다.
+		if (pps_edge_none_chk_timer > 3000 ){
 			b_gps_in_successed = FALSE;
 			_LED_PPS = OFF_LED;
 		}
@@ -152,8 +152,8 @@ void LedBlinkModeInit(void)
 
 
 
-// 딥스위치 설정에 따라서 GPS에 의한 내부 타이머를 사용하여 블링크를 할지 
-// FU에 의해서 블링크를 할지 결정 된다. 
+// 딥스위치 설정에 따라서 GPS에 의한 내부 타이머를 사용하여 블링크를 할지
+// FU에 의해서 블링크를 할지 결정 된다.
 void ProcBlink(Day_Twilight_Night CurDayNig)
 {
 // 딥스위치 2번에 따라 Blink를 GPS Time에 의해 할자 FU BLK입력에 의해 할지 결정된다.
@@ -169,12 +169,12 @@ void ProcBlink(Day_Twilight_Night CurDayNig)
 		}
 		else if (BlkMode == BM_Slave_BLK) // slave
 		{
-			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다.
 		}
-		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다.
 	    {
 	        bBlkLedOn = bBlkDutyOn;
-	    }	
+	    }
 	}
 	else
 	{
@@ -184,16 +184,16 @@ void ProcBlink(Day_Twilight_Night CurDayNig)
 		}
 		else if (BlkMode == BM_Slave_BLK) // slave
 		{
-			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다. 
+			bBlkLedOn = cRxBlkLedOn; // 마스터로부터 CAN 수신된 블링크 값에 의해 블링크 된다.
 		}
-	    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다. 
+	    else if (BlkMode == BM_Master_FU) // FU : _IN_FU 입력 상태에 따라서 블링크가 결정 된다.
 	    {
 	       	bBlkLedOn = bFUOn = IsInput_ON(_IN_FU, &IN_BLK_Timer); // 여기에서 입력 값 On, Off 판별 ;
 	    }
-		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다. 
+		else // GPS(내부 또는 외부) 또는 내부 타이머에 의해 블링크가 결정 된다.
 	    {
 	        bBlkLedOn = bBlkDutyOn;
-	    }		
+	    }
 	}
 
 
@@ -203,33 +203,33 @@ void ProcBlink(Day_Twilight_Night CurDayNig)
     if (bBlkLedOn)		_LED_BLK = ON_LED; // Run 상태 LED On
     else				_LED_BLK = OFF_LED; // Run 상태 LED Off
 
-// 블링크 LED 상태가 변했으면 캔 tx 
+// 블링크 LED 상태가 변했으면 캔 tx
 
 	if (bBlkLedOn != bBefBlk_LedOn)
 	{
 		bBefBlk_LedOn = bBlkLedOn;
 		bCanTxAct = TRUE;
-		CanCmd = CMD_BLK_EDGE;	
-	}	
+		CanCmd = CMD_BLK_EDGE;
+	}
 }
 
 
-// 지피에스 또는 내부 타이머에 의해 램프 온 결정 
+// 지피에스 또는 내부 타이머에 의해 램프 온 결정
 // 외부 지피에스 사용시 : 내부 지피에스 디세이블, 캔 1분만다 수신
-// 내부 지페이스 사용시 : 232시리얼 수신, PPS에 수신 
-// 내부 타이머 작동 
+// 내부 지페이스 사용시 : 232시리얼 수신, PPS에 수신
+// 내부 타이머 작동
 bit IsBlk_DutyOn_ByTimer(void)
 {
     static bit bBlk_DutyOn;
 
-// 내부 타이머에 의하여 시,분,초 변수 업데이트 
+// 내부 타이머에 의하여 시,분,초 변수 업데이트
     Gm1++; // Timer에 의한 1ms 마다 증가
     // ms 가 1000(1초)이면 시간 값(초,분,시)을 1씩 증가 시킨다.
     if (Gm1 >= 1000)
     {
         Gm1 = 0;
         Gsec++;
-		if (Gsec >= 60) 
+		if (Gsec >= 60)
         {
             Gsec = 0;
             Gmin++;
@@ -246,32 +246,32 @@ bit IsBlk_DutyOn_ByTimer(void)
     }
 
 
-	if (BlkMode == BM_Master_GPS_IN) // 내부 지피에스 
+	if (BlkMode == BM_Master_GPS_IN) // 내부 지피에스
 	{
-		
+
 		if(GPSTxTimer < 3000)	GPSTxTimer++;
-		
-	    if (bPPS_Edge && bPPS_On && (GPSTxTimer > 2000)) // 1초마다 On 
+
+	    if (bPPS_Edge && bPPS_On && (GPSTxTimer > 2000)) // 1초마다 On
 	    {
 	        bPPS_Edge = FALSE;
 
 			pps_edge_none_chk_timer = 0;
-			
-	        if (rx_sec == 0) // 1분 후 
+
+	        if (rx_sec == 0) // 1분 후
 	        {
 				GPSTxTimer = 0;
-				// 내부 GPS 수신 시간 값을 시간 관련 변수에 저장 한다. 
-				// 시간 관련 변수들은 내부 타이머에 의하여 갱신 되는 변수들이며, 
-				// 직접적으로 램프 On 사이클을 작동하기 위하여 사용되어 지는 변수이다. 
-	            Gm1 = 0; // 999 ms 로 변경(즉시, 다음에서 내부 타이머에 의하여 999 + 1 = 1000 이 된다.) 
+				// 내부 GPS 수신 시간 값을 시간 관련 변수에 저장 한다.
+				// 시간 관련 변수들은 내부 타이머에 의하여 갱신 되는 변수들이며,
+				// 직접적으로 램프 On 사이클을 작동하기 위하여 사용되어 지는 변수이다.
+	            Gm1 = 0; // 999 ms 로 변경(즉시, 다음에서 내부 타이머에 의하여 999 + 1 = 1000 이 된다.)
 	            Gsec = rx_sec; // 현재 59초, Gps Rx 시간 값들을 차례로 저장
 	            Gmin = rx_min;
 	            Ghour = rx_hour;
 	        }
 	    }
-		
-	}	
-	else if (BlkMode == BM_Master_GPS_EXT) // 외부 지피에스 
+
+	}
+	else if (BlkMode == BM_Master_GPS_EXT) // 외부 지피에스
 	{
 		if (bExtGpsUpd)
 		{
@@ -279,36 +279,36 @@ bit IsBlk_DutyOn_ByTimer(void)
 
 			Ghour	= cRxHour;
 	        Gmin 	= cRxMin;
-			Gsec 	= cRxSec;        
-			Gm1		= 0;			
+			Gsec 	= cRxSec;
+			Gm1		= 0;
 		}
 	}
-	else if (BlkMode == BM_Slave_BLK)  
+	else if (BlkMode == BM_Slave_BLK)
 	{
 		if (byr1Sec_TimerUpd)	// 1초 다마 캔 수신 타이머
 		{
 			byr1Sec_TimerUpd = FALSE;
-		
+
 			Ghour	= cRxHour;
 			Gmin	= cRxMin;
-			Gsec	= cRxSec;		 
+			Gsec	= cRxSec;
 			Gm1 	= 0;
-		} 
+		}
 	}
 
 
 
 // 현재 시간값을 msec 단위로 변환하여 플래싱 On인지 Off 인지 여부를 판단한다.
-    // ms 값이 0 일때 시간,분,초 값을 msec값으로 환산 
-    // Gm1은 미리세크 이고 0이 되는 순간은 1000미리세크 될 때이면 이때는 1초가 될 때이다. 
-    if (Gm1 == 0) // 1초 
+    // ms 값이 0 일때 시간,분,초 값을 msec값으로 환산
+    // Gm1은 미리세크 이고 0이 되는 순간은 1000미리세크 될 때이면 이때는 1초가 될 때이다.
+    if (Gm1 == 0) // 1초
     {
-		bCanTxAct = TRUE; // 1초 마다 Tx 
+		bCanTxAct = TRUE; // 1초 마다 Tx
 		CanCmd = CMD_TIMER_1SEC;
-		
+
         ZeroTimer = (ULONG)((ULONG)Ghour * (ULONG)3600000);
         ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gmin  * (ULONG)60000);
-        ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gsec  * (ULONG)1000); // 시,분,초를 다 합쳐서 미리세크로 환산 한 값          
+        ZeroTimer = ZeroTimer + (ULONG)((ULONG)Gsec  * (ULONG)1000); // 시,분,초를 다 합쳐서 미리세크로 환산 한 값
     }
     // 현재 시간값을 msec 단위로 환산하여 플래싱 싸이클 값으로 나눈 나머지로 현재 램프를 On할지 Off할지 여부를 알 수 있다.
     CurTotalGms = ZeroTimer + (ULONG)Gm1;
@@ -338,7 +338,7 @@ void ProcGpsRx2Data(void)
     {
 		bInGPSConnect = TRUE;
 		Com2RxStatusTimer = 0;
-		
+
         i = (Com2RxBuffer[7] - 0x30) * 10;
         i = (Com2RxBuffer[8] - 0x30) + i;
         rx_hour = i;
@@ -464,23 +464,23 @@ void ReadVal(volatile const UCHAR* SavedBuf, UINT* pSetA_Volt, UINT* pDutyCycle)
 
 // 최초 전원 On시에 셋팅된 값을 토대로 APL 램프의 불을 밝힌다.
 void OutLampWhenPowerOn(void)
-{	
+{
 	static unsigned char cnt_aaa = 0;
 
 	CurD_T_N = DTN_NONE;
-	OutLampWhenPowerOnTimer_12 = 0;	
+	OutLampWhenPowerOnTimer_12 = 0;
 	CanCmd = CMD_NONE;
 
-	CurD_T_N = DTN_NONE;	
+	CurD_T_N = DTN_NONE;
 	CAN_RcvBuf[1] = CurD_T_N;
 	cRxCurD_T_N = CurD_T_N;
-	
+
 	do
 	{
 		CLRWDT();
-		
+
 		ProcDAY_TWL_NIG();
-		BefD_T_N = CurD_T_N; 
+		BefD_T_N = CurD_T_N;
 		bChanged_DTN = FALSE;
 
 		SelDipSW();
@@ -494,19 +494,19 @@ void OutLampWhenPowerOn(void)
 				LoadCANTxData(CanCmd);
 			}
 		}
-		
-        if (CurD_T_N < DTN_NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;		
+
+        if (CurD_T_N < DTN_NONE) DutyCycle = sAPL[CurD_T_N].Set_DutyCycle;
 
 		_LAMP_ON = FALSE;
 		OutPWM(20);
 		Loader_Func();
-		UserSystemStatus = 15;	
-		
+		UserSystemStatus = 15;
+
 	}while(OutLampWhenPowerOnTimer_12 < 300);
 
 
-	StTimer = 0;	
-	do 
+	StTimer = 0;
+	do
 	{
 		CLRWDT();
 
@@ -523,10 +523,10 @@ void OutLampWhenPowerOn(void)
 		_LAMP_ON = TRUE;
 		OutPWM(DutyCycle);
 
-		
-	}while(StTimer < 1000);	
 
-	
+	}while(StTimer < 1000);
+
+
 }
 
 
@@ -545,9 +545,9 @@ ULONG GetSetCurrent(unsigned int set_mV, unsigned char CurDayNight)
 void CurGapProc(unsigned char DayNig)
 {
 	unsigned int setcur, curgap;
-	
-	setcur = sAPL[DayNig].Set_Current;	
-	
+
+	setcur = sAPL[DayNig].Set_Current;
+
 	if (In_Current > setcur)
 	{
 		curgap = In_Current - setcur;
@@ -627,15 +627,15 @@ void OutAplLamp_Nomal(Day_Twilight_Night CurDayNig)
 
     if (bBlkLedOn) // Blink Led 가 On 일 때
     {
-        
+
 
 		if (bChanged_DTN || bSettingModed)
 		{
 			bChanged_DTN = FALSE;
 			bSettingModed = FALSE;
-			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.			
+			DutyCycle = sAPL[CurDayNig].Set_DutyCycle; // 저장된 듀티 값이 현재 듀티 값에 보내진다.
 		}
-		
+
         if (bAD_A_IN_mV_Upd)
         {
             bAD_A_IN_mV_Upd = FALSE;
@@ -648,7 +648,7 @@ void OutAplLamp_Nomal(Day_Twilight_Night CurDayNig)
 
 			sAPL[CurDayNig].Set_DutyCycle = DutyCycle;
         }
-		
+
 		_LAMP_ON = TRUE; // LAMP ON
         OutPWM(DutyCycle);
 
@@ -710,43 +710,43 @@ unsigned int GetInCurrent(unsigned int CurA_IN_mV)
 
 void read_flashingSetValues(Flashing flashing[])
 {
-	/* flashing 관련 설정 값들 가져오기 
+	/* flashing 관련 설정 값들 가져오기
 		결론적으로 1회 flashing cycle에 대하여
-		duty(flashing = led on)되는 시간(msec)값을 가져오는게 목적이다. 
-		
-		즉, duty cycle 변수 값과 
+		duty(flashing = led on)되는 시간(msec)값을 가져오는게 목적이다.
+
+		즉, duty cycle 변수 값과
 			period 변수 값 을 얻어오기 위한 함수이다.
 
-		※	duty cycle(= duty) : period(T)에 대한 on 비율(%)을 일반적으로 일컫는다. 
-			Period(T)		   : 주기 
+		※	duty cycle(= duty) : period(T)에 대한 on 비율(%)을 일반적으로 일컫는다.
+			Period(T)		   : 주기
 	*/
-	
+
 	unsigned char i;
 	unsigned char pulse_per_6000msec, duty_rate;
-	
+
 	for (i=0; i<3; i++){
-		
+
 		switch (i){
-			case 0:				
-				pulse_per_6000msec = cF_DAY_FLASHING_COUNT_6000MSEC; 	
+			case 0:
+				pulse_per_6000msec = cF_DAY_FLASHING_COUNT_6000MSEC;
 				duty_rate = cF_DAY_FLASHING_DUTY_RATE;
 				break;
-				
+
 			case 1:
-				pulse_per_6000msec = cF_TWL_FLASHING_COUNT_6000MSEC; 	
+				pulse_per_6000msec = cF_TWL_FLASHING_COUNT_6000MSEC;
 				duty_rate = cF_TWL_FLASHING_DUTY_RATE;
 				break;
-				
+
 			case 2:
-				pulse_per_6000msec = cF_NIG_FLASHING_COUNT_6000MSEC; 	
+				pulse_per_6000msec = cF_NIG_FLASHING_COUNT_6000MSEC;
 				duty_rate = cF_NIG_FLASHING_DUTY_RATE;
 				break;
-		}		 	
+		}
 
-	    if ( pulse_per_6000msec >= 1 ) 
-			flashing[i].period_msec = 60000 / pulse_per_6000msec;  
+	    if ( pulse_per_6000msec >= 1 )
+			flashing[i].period_msec = 60000 / pulse_per_6000msec;
 
-		flashing[i].duty_msec = ( flashing[i].period_msec * duty_rate ) / 100;			
+		flashing[i].duty_msec = ( flashing[i].period_msec * duty_rate ) / 100;
 	}
 
 
@@ -762,7 +762,7 @@ bit read_settingValue_when_powerOn(void)
 
 
 	read_flashingSetValues(myFlashing);
-	
+
 
     // 낮, 저녁, 밤의 저장된 셋팅전압, 전류, 듀티값을 얻어온다.
     sAPL[DTN_DAY].Set_Current = cF_SETCURR_DAY;
@@ -788,6 +788,7 @@ bit read_settingValue_when_powerOn(void)
 
 void read_write_settingValue(void)
 {
+	uint16_t BlockPt;
 // Read !!!
 
 	read_flashingSetValues(myFlashing);
@@ -812,41 +813,37 @@ void read_write_settingValue(void)
 
 // Write !!!
     // Set_DutyCycle 값
-    if (eSETMODE != Bef_eSETMODE)
-    {
-        if (Bef_eSETMODE)
-        {
-            if (Bef_eSETMODE == SETMODE_DAY)
-            {
+    if (eSETMODE != Bef_eSETMODE) {
+        if (Bef_eSETMODE) {
+            if (Bef_eSETMODE == SETMODE_DAY) {
+				BlockPt = (F_SET_DUTYCYCLED / FLASH_ONE_BLOCK_SIZE);
+				FlashBlockRd(BlockPt);
                 iSR_IntData(F_SET_DUTYCYCLED) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-                FlashBlockWr((F_SET_DUTYCYCLED / FLASH_ONE_BLOCK_SIZE));
-            }
-            else if (Bef_eSETMODE == SETMODE_TWL)
-            {
-                iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-                FlashBlockWr((F_SET_DUTYCYCLET / FLASH_ONE_BLOCK_SIZE));
-            }
-            else if (Bef_eSETMODE == SETMODE_NIG)
-            {
-                iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
-                FlashBlockWr((F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE));
-            }
-			else if (Bef_eSETMODE == SETMODE_ZERO_VOLTAGE_CHK)
-			{
+				FlashBlockWr(BlockPt);
+			} else if (Bef_eSETMODE == SETMODE_TWL) {
+				BlockPt = (F_SET_DUTYCYCLET / FLASH_ONE_BLOCK_SIZE);
+				FlashBlockRd(BlockPt);
+				iSR_IntData(F_SET_DUTYCYCLET) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+				FlashBlockWr(BlockPt);
+            } else if (Bef_eSETMODE == SETMODE_NIG) {
+				BlockPt = (F_SET_DUTYCYCLEN / FLASH_ONE_BLOCK_SIZE);
+				FlashBlockRd(BlockPt);
+				iSR_IntData(F_SET_DUTYCYCLEN) = sAPL[Bef_eSETMODE - 1].Set_DutyCycle;
+				FlashBlockWr(BlockPt);
+            } else if (Bef_eSETMODE == SETMODE_ZERO_VOLTAGE_CHK) {
+				BlockPt = (F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE);
+				FlashBlockRd(BlockPt);
 				iSR_IntData(F_SET_GIJUN_V) = ZeroVoltage;
-				FlashBlockWr((F_SET_GIJUN_V / FLASH_ONE_BLOCK_SIZE));
+				FlashBlockWr(BlockPt);
 
+				BlockPt = (F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE);
+				FlashBlockRd(BlockPt);
 				cSR_ByteData(F_bSave_GIJUN) = bZeroVoltageSaved = TRUE;
-				FlashBlockWr((F_bSave_GIJUN / FLASH_ONE_BLOCK_SIZE));				
+				FlashBlockWr(BlockPt);
 			}
-
         }
         Bef_eSETMODE = eSETMODE;
     }
-
-
-		
-
 }
 
 
@@ -869,7 +866,7 @@ void ProcGPS(void)
 
 
 	if (Com2RxStatusTimer > 5000)
-		bInGPSConnect = FALSE; 
+		bInGPSConnect = FALSE;
 
 }
 
@@ -881,7 +878,7 @@ void ProcDAY_TWL_NIG(void)
 // CDS 값을 읽어셔 표현
 	if (myAdr == SLAVE) // slave
     	CurD_T_N = cRxCurD_T_N;
-   	else 		
+   	else
 		CurD_T_N = GetDAY_TWL_NIG(); // DTN_NONE, DTN_DAY , DTN_TWL , DTN_NIG 값 가져온다.
 
 // 낮, 밤이 바뀔 때 처리
@@ -937,7 +934,7 @@ void edit_setValue_by_maxSetValue(void)
 {
 	/* 낮, 박명, 밤 셋팅 최대치를 MAX 셋팅 값에 따른 설정값 최대치 제한하기 */
 
-    if (bef_MaxSetA_DAY != cF_MaxSetA_DAY ) 
+    if (bef_MaxSetA_DAY != cF_MaxSetA_DAY )
     {
         edit_setValue_by_maxSetValue_sub(setValueMenu.day, cF_MaxSetA_DAY);
         bef_MaxSetA_DAY = cF_MaxSetA_DAY;
@@ -958,28 +955,28 @@ void edit_setValue_by_maxSetValue(void)
 
 
 void SelDipSW(void)
-{	
+{
 // 딥스위치5번 On이면 Slave, off이면 Master
 // <<< ?? 최초 전원 온시에만 셋팅 가능하도록 변경할까?
 		if (_DIP_SW5 == ON_DIPSW)	myAdr = SLAVE; // slave
-		else						myAdr = MASTER; // master			
+		else						myAdr = MASTER; // master
 
-// 블링크 모드 선택 
-		if (myAdr == MASTER) // 마스터 
+// 블링크 모드 선택
+		if (myAdr == MASTER) // 마스터
 		{
-			if (_DIP_SW3 == OFF_DIPSW) // FU 모드 
+			if (_DIP_SW3 == OFF_DIPSW) // FU 모드
 			{
 				BlkMode = BM_Master_FU;
 			}
-			else // GPS 모드 
+			else // GPS 모드
 			{
-				if (_DIP_SW4 == OFF_DIPSW)	BlkMode = BM_Master_GPS_IN; 	// 내부 GPS 모드 
-				else 						BlkMode = BM_Master_GPS_EXT; // 외부 GPS 모드 
-			}		
+				if (_DIP_SW4 == OFF_DIPSW)	BlkMode = BM_Master_GPS_IN; 	// 내부 GPS 모드
+				else 						BlkMode = BM_Master_GPS_EXT; // 외부 GPS 모드
+			}
 		}
-		else // 슬레이브 
+		else // 슬레이브
 		{
-			BlkMode = BM_Slave_BLK; 
+			BlkMode = BM_Slave_BLK;
 		}
 }
 
@@ -987,35 +984,35 @@ void SelDipSW(void)
 // CAN Rx 상태 LED 처리
 bit SaveCANRxData(void)
 {
-	
+
 	if (bCAN_RxGood)
 	{
 		bCAN_RxGood = FALSE;
 
-		cRxCMD = CAN_RcvBuf[0]; // cmd 
+		cRxCMD = CAN_RcvBuf[0]; // cmd
 
-		if (myAdr == MASTER) // 마스터 
-		{	
-			// 외부 지피에스 캔으로 수신된 경우 
+		if (myAdr == MASTER) // 마스터
+		{
+			// 외부 지피에스 캔으로 수신된 경우
 			if ((BlkMode == BM_Master_GPS_EXT) && (cRxCMD == CMD_EXTGPS))
 			{
 				cRxHour 	= CAN_RcvBuf[5]; // 시
 				cRxMin		= CAN_RcvBuf[6]; // 분
 				cRxSec		= CAN_RcvBuf[7]; // 초
-				
+
 				bExtGpsUpd = TRUE;
 
 				_LED_CAN_RX = !_LED_CAN_RX;
 				return TRUE;
 			}
 		}
-		else // 슬레이브 
+		else // 슬레이브
 		{
 			if ((cRxCMD == CMD_BLK_EDGE) || (cRxCMD == CMD_TIMER_1SEC)
 				|| (cRxCMD == CMD_PWON))
 			{
-				cRxCurD_T_N = CAN_RcvBuf[1]; // 낮,박명,밤 상태 
-				cRxBlkLedOn	= CAN_RcvBuf[2]; // 블링크(플래싱)시의 램프 On 상태 
+				cRxCurD_T_N = CAN_RcvBuf[1]; // 낮,박명,밤 상태
+				cRxBlkLedOn	= CAN_RcvBuf[2]; // 블링크(플래싱)시의 램프 On 상태
 				cRxDReserve0= CAN_RcvBuf[3];
 				cRxDReserve1= CAN_RcvBuf[4];
 				cRxHour 	= CAN_RcvBuf[5]; // 시
@@ -1023,9 +1020,9 @@ bit SaveCANRxData(void)
 				cRxSec		= CAN_RcvBuf[7]; // 초
 
 				if (cRxCMD == CMD_TIMER_1SEC) byr1Sec_TimerUpd = TRUE;
-				
+
 				_LED_CAN_RX = !_LED_CAN_RX;
-				
+
 				return TRUE;
 			}
 		}
@@ -1038,37 +1035,37 @@ bit SaveCANRxData(void)
 
 bit LoadCANTxData(unsigned char CanCmd)
 {
-	// CAN Tx 처리 
+	// CAN Tx 처리
 	// 내부 타이머에 의해 1초마다 tx를 할 수 있다.
-	// fu를 사용 할 때는 fu가 on, off 할 때마다 tx를 해야 한다. 
-	if (myAdr == MASTER) // master , 딥스위치 5번이 off인 보드만 tx가능하다. 
+	// fu를 사용 할 때는 fu가 on, off 할 때마다 tx를 해야 한다.
+	if (myAdr == MASTER) // master , 딥스위치 5번이 off인 보드만 tx가능하다.
 	{
-		if (bCanTxAct) // 외부 GPS 수신 시 또는 1초마다 참이 되도록 하였다. 내부 GPS 수신시 시, 1분이 되는 순간에도 참이 되도록 해야 한다. 
-		{	
+		if (bCanTxAct) // 외부 GPS 수신 시 또는 1초마다 참이 되도록 하였다. 내부 GPS 수신시 시, 1분이 되는 순간에도 참이 되도록 해야 한다.
+		{
 
-			// 낮, 밤, 박명 상태 tx 처리 			        
+			// 낮, 밤, 박명 상태 tx 처리
 	        CanDataCnt0 = 8;
 
-			CanKeyValue[0] = CanCmd; // 메인 시시알에서 서브 시시알 또는 지피에스 보드로 tx / 낮,밤,박명 상태 tx 
-			
-	        CanKeyValue[1] = CurD_T_N; // 낮,밤,박명 상태 
-	        CanKeyValue[2] = bBlkLedOn; // 현재 램프 블링크 상태 
+			CanKeyValue[0] = CanCmd; // 메인 시시알에서 서브 시시알 또는 지피에스 보드로 tx / 낮,밤,박명 상태 tx
+
+	        CanKeyValue[1] = CurD_T_N; // 낮,밤,박명 상태
+	        CanKeyValue[2] = bBlkLedOn; // 현재 램프 블링크 상태
 	        CanKeyValue[3] = 0;
 	        CanKeyValue[4] = 0;
-	        CanKeyValue[5] = Ghour; // 내부 타이머 
-	        CanKeyValue[6] = Gmin;  // 내부 타이머 
-	        CanKeyValue[7] = Gsec;  // 내부 타이머 
-			
+	        CanKeyValue[5] = Ghour; // 내부 타이머
+	        CanKeyValue[6] = Gmin;  // 내부 타이머
+	        CanKeyValue[7] = Gsec;  // 내부 타이머
+
 	        Tx0ConfirmCnt = 1;
-			
+
 	        CanTx0();
-			
+
 	        if (Tx0ConfirmCnt == 0)
 	        {
 				bCanTxAct = FALSE;
-				_LED_CAN_TX = !_LED_CAN_TX; 
-	        }			    
-		}	
+				_LED_CAN_TX = !_LED_CAN_TX;
+	        }
+		}
 	}
 
 	return bCanTxAct;
@@ -1083,34 +1080,34 @@ void ViewCurData(void)
 	UserRam_16[viewSET_DUTYCYCLE] = DutyCycle;
 	UserRam_16[viewIn_Current]	  = In_Current;
 	UserRam_16[viewCurDAY_TWL_NIG] = CurD_T_N;
-	
-	
+
+
 
 	UserRam_32[ViewZeroTimer] = CurTotalGms;
-	
-	UserRam_8[viewLOAD_ON] = _LOAD_ON; 
+
+	UserRam_8[viewLOAD_ON] = _LOAD_ON;
 	UserRam_8[ViewBlk] = bBlkLedOn;
 
-	// 최초 전원 겼을 때 gps 신호를 최초 1번 받았으면 
-	// 시간 + 9 해준다. 
-	// 전원이 꺼질 때까지 이 처리는 유효하다. 
+	// 최초 전원 겼을 때 gps 신호를 최초 1번 받았으면
+	// 시간 + 9 해준다.
+	// 전원이 꺼질 때까지 이 처리는 유효하다.
 	hour = Ghour;
 	if (b_gps_first_received)
 	{
 		hour += 9;
 		if (hour >= 24)
-			hour -= 24;	
+			hour -= 24;
 	}
 
 	UserRam_8[gpsGhour] = hour;
 	UserRam_8[gpsGmin] = Gmin;
-	UserRam_8[gpsGsec] = Gsec;	
-	
+	UserRam_8[gpsGsec] = Gsec;
+
 }
 
 void SaveZeroVoltage(void)
 {
-	
+
 	if (bAD_A_IN_mV_Upd)
 	{
 		bAD_A_IN_mV_Upd = FALSE;
@@ -1133,7 +1130,7 @@ void IsFirmwareTest(void)
 
 uint8_t GetUserSystemStatus(void)
 {
-	uint8_t message; 
+	uint8_t message;
 
 
 	if (bZeroVoltageSaved == FALSE)
@@ -1157,7 +1154,7 @@ uint8_t GetUserSystemStatus(void)
 	{
 		message = 8;
 	}
-	else if (myMode == MYMODE_NONE_SETTING)	
+	else if (myMode == MYMODE_NONE_SETTING)
 	{
 		// 로더에서 현재 상태 값을 보여 주기위한 상태 값이다. <<<
 		if (CurD_T_N == DTN_DAY) message = 5;
@@ -1172,8 +1169,8 @@ uint8_t GetUserSystemStatus(void)
 
 void initial_zeroTimer(unsigned char d_t_n)
 {
-	unsigned long tmp; 
-	
+	unsigned long tmp;
+
 	Ghour	= 0;
 
 	tmp = myFlashing[d_t_n].duty_msec / 60000;
@@ -1196,7 +1193,7 @@ void out_Load_on(void)
 {
 	if (_LAMP_ON)
 	{
-		if (In_Current > 200) // 현재 입력 전류 값이 100 mA 이상이면 
+		if (In_Current > 200) // 현재 입력 전류 값이 100 mA 이상이면
 		{
 			_LOAD_ON = 1;
 		}
@@ -1228,7 +1225,7 @@ void main(void)
     InitTimer0();
     InitAD();
     InitPwm1();
-    InitCom2(); // GPS용 
+    InitCom2(); // GPS용
     InitComLoader(); // 로더 관련
     InitCAN();
     ei();
@@ -1260,54 +1257,54 @@ void main(void)
 
 //		for(i=0; i<LONG_SIZE; i++) testbuf[i] = information[i];
 
-		
+
 		In_Current = GetInCurrent(AD_A_IN_mV);	// 현재 Setting 및 In 전류 값 가져오기
 		CurGapProc(CurD_T_N);
-		ProcAD(); // AD 처리   
+		ProcAD(); // AD 처리
 
 		IsFirmwareTest();
 
         Loader_Func(); // 로더 관련 함수
-        
-        // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다. 
-		edit_setValue_by_maxSetValue(); 
+
+        // Max전류값에 따라 셋팅전류 값의 설정할수 있는 값을 제한 한다.
+		edit_setValue_by_maxSetValue();
 
 
-		read_write_settingValue(); // 쓰기 / 읽기 처리 
+		read_write_settingValue(); // 쓰기 / 읽기 처리
 
 
-		ProcDAY_TWL_NIG(); // CDS 낮, 박명, 밤 처리          
+		ProcDAY_TWL_NIG(); // CDS 낮, 박명, 밤 처리
 
 
         ProcGPS(); // GPS 시리얼 통신 및 펄스 수신 처리
 
 
-        ProcBlink(CurD_T_N); // BLink모드별 블링크 처리    
+        ProcBlink(CurD_T_N); // BLink모드별 블링크 처리
 
-              
-		ViewCurData(); // 현재 데이타 모니터링 
-		
+
+		ViewCurData(); // 현재 데이타 모니터링
+
 
 		SelDipSW();
 
-// CAN 처리 
+// CAN 처리
 		SaveCANRxData();
-		LoadCANTxData(CanCmd);	
+		LoadCANTxData(CanCmd);
 
-		UserSystemStatus = GetUserSystemStatus();		
-		
+		UserSystemStatus = GetUserSystemStatus();
+
 // CCR 기능 (APL LAMP 출력 제어) ///////////////////////////////////////
-        
+
         if (eSETMODE) // 셋팅 모드 !!!
-        {	
+        {
 
 			myMode = MYMODE_SETTING;
-            
+
 			if (eSETMODE == SETMODE_ZERO_VOLTAGE_CHK)
 			{
 				_LAMP_ON = FALSE;
 				OutPWM(0);
-				SaveZeroVoltage();				
+				SaveZeroVoltage();
 			}
 			else if (bZeroVoltageSaved)
 			{
@@ -1323,38 +1320,38 @@ void main(void)
 		        {
 					_LAMP_ON = TRUE;
 		            OutAplLamp_WhenSetMode(eSETMODE - 1);
-		        }       		
-			}   
-			bSettingModed = TRUE;	
+		        }
+			}
+			bSettingModed = TRUE;
 
         }
 		else
 		{
 			bSetModeReady = FALSE;
-			
+
 			if (CurD_T_N == DTN_NONE)
 			{
 				myMode = MYMODE_NONE_CDS;
-				
+
 				_LAMP_ON = FALSE; // LAMP OFF
 				OutPWM(cF_SET_stDUTYCYCLE_N);
 			}
-	        else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 (동작 모드) 
+	        else if (sAPL[CurD_T_N].Set_DutyCycle) // 일반 모드 (동작 모드)
 	        {
 				myMode = MYMODE_NORMAL;
-				
+
 	            OutAplLamp_Nomal(CurD_T_N);
-	            
+
 	        }
 	        else
 	        {
-				myMode = MYMODE_NONE_SETTING;	
-	        }			
+				myMode = MYMODE_NONE_SETTING;
+	        }
 		}
 
 		out_Load_on();
 
-		
+
     } // end while(1)
 }
 
@@ -1373,7 +1370,7 @@ void interrupt isr(void)
 
 
         // Int_Gps Timer에 의한 Blink 처리
-        bBlkDutyOn = IsBlk_DutyOn_ByTimer(); // GPS(내,외) Timer 또는 내부 Timer에 의한 Blink Duty On 여부 
+        bBlkDutyOn = IsBlk_DutyOn_ByTimer(); // GPS(내,외) Timer 또는 내부 Timer에 의한 Blink Duty On 여부
 
 
         Com2SerialTime++;
@@ -1383,7 +1380,7 @@ void interrupt isr(void)
 		if (OutLampWhenPowerOnTimer_12 < 0xffff)
         	OutLampWhenPowerOnTimer_12++;
 		if (StTimer < 0xffff)
-        	StTimer++;			
+        	StTimer++;
 
         if (AnalogValidTime < 200)
             AnalogValidTime++;
@@ -1401,7 +1398,7 @@ void interrupt isr(void)
             SetModeReady_Timer++;
 
 		if (GIJUN_Timer < 0xffff) GIJUN_Timer++;
-		
+
         msec++;
         if (msec > 50)
         {
@@ -1410,11 +1407,11 @@ void interrupt isr(void)
             _LED_CPU_RUN = !_LED_CPU_RUN;
 
         }
-		
+
 		myTestTimerTx++;
 		if (myTestTimerTx > 1000)
 		{
-			myTestTimerTx = 0;			
+			myTestTimerTx = 0;
 		}
 
 		if (Com2RxStatusTimer < 0xffff)
